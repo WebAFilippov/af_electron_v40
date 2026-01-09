@@ -1,0 +1,37 @@
+{
+  "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
+  "include": [
+    "src/renderer/src/env.d.ts",
+    "src/renderer/src/**/*",
+    "src/renderer/src/**/*.tsx",
+    "src/preload/*.d.ts",
+    "src/shared/**/*"
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "jsx": "react-jsx",
+
+    "paths": {
+      "@/app/*": [
+         "./src/renderer/src/app/*"
+      ],
+      "@/widgets/*": [
+         "./src/renderer/src/widgets/*"
+      ],
+      "@/pages/*": [
+         "./src/renderer/src/pages/*"
+      ],
+      "@/shared/*": [
+         "./src/renderer/src/shared/*"
+      ],
+      "@/renderer/*": [
+        "./src/renderer/src/*"
+      ],
+      "@shared/*": [
+        "./src/shared/*"
+      ]
+    },
+    "esModuleInterop": true,
+    "resolveJsonModule": true
+  }
+}
