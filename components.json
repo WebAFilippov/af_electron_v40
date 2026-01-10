@@ -10,7 +10,7 @@
     "cssVariables": true,
     "prefix": ""
   },
-    "iconLibrary": "hugeicons",
+  "iconLibrary": "hugeicons",
   "aliases": {
     "components": "src/renderer/src/shared/components",
     "ui": "src/renderer/src/shared/ui",
@@ -22,4 +22,3 @@
   "menuAccent": "bold",
   "registries": {}
 }
-

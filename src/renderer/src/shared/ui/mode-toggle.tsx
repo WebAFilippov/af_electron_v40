@@ -1,5 +1,5 @@
+import { ReactElement } from 'react'
 import { Moon, Sun } from 'lucide-react'
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,10 +7,11 @@ import {
   DropdownMenuTrigger
 } from './dropdown-menu'
 import { Button } from './button'
-import { useTheme } from '@/app/providers/theme-providers'
+import { useUnit } from 'effector-react'
+import { setTheme } from '../model'
 
-export function ModeToggle() {
-  const { setTheme } = useTheme()
+export function ModeToggle(): ReactElement {
+  const [handleSetTheme] = useUnit([setTheme])
 
   return (
     <DropdownMenu>
@@ -22,9 +23,8 @@ export function ModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme('light')}>Light</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('dark')}>Dark</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('system')}>System</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleSetTheme('light')}>Light</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleSetTheme('dark')}>Dark</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

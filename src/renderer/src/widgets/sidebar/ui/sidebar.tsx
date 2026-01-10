@@ -1,12 +1,4 @@
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-  ModeToggle,
-  SidebarFooter,
-  SidebarHeader,
-
-} from '@/shared/ui'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger, ModeToggle } from '@/shared/ui'
 import {
   Sidebar,
   SidebarContent,
@@ -38,10 +30,11 @@ import {
   ArrowRight01Icon
 } from '@hugeicons/core-free-icons'
 import { cn } from '@/shared/lib'
+import { ReactNode } from 'react'
+import { Outlet } from 'react-router'
+import { SidebarWindowHeader } from './sidebar-window-header'
 
-export function SidebarInsetExample() {
-
-
+export function SidebarApp(): ReactNode {
   const data = {
     navMain: [
       {
@@ -140,92 +133,83 @@ export function SidebarInsetExample() {
   }
 
   return (
-    <SidebarProvider>
-      <Sidebar variant='inset'>
-        <SidebarHeader>
-          <ModeToggle />
-        </SidebarHeader>
-        
-        <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
-            <SidebarMenu>
-              {data.navMain.map((item) => (
-                <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                      <a href={item.url}>
-                        {item.icon}
-                        <span>{item.title}</span>
-                      </a>
-                    </SidebarMenuButton>
-                    {item.items?.length ? (
-                      <>
-                        <CollapsibleTrigger asChild>
-                          <SidebarMenuAction className="data-[state=open]:rotate-90">
-                            <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2} />
-                            <span className="sr-only">Toggle</span>
-                          </SidebarMenuAction>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent>
-                          <SidebarMenuSub>
-                            {item.items.map((subItem) => (
-                              <SidebarMenuSubItem key={subItem.title}>
-                                <SidebarMenuSubButton asChild>
-                                  <a href={subItem.url}>
-                                    <span>{subItem.title}</span>
-                                  </a>
-                                </SidebarMenuSubButton>
-                              </SidebarMenuSubItem>
-                            ))}
-                          </SidebarMenuSub>
-                        </CollapsibleContent>
-                      </>
-                    ) : null}
-                  </SidebarMenuItem>
-                </Collapsible>
-              ))}
-            </SidebarMenu>
-          </SidebarGroup>
-          <SidebarGroup className="mt-auto">
-            <SidebarGroupContent>
+    <SidebarProvider className="flex flex-col w-screen h-screen overflow-hidden">
+      <SidebarWindowHeader />
+      <div className="flex flex-1">
+        <Sidebar variant="inset" className="drag-on top-9 h-[calc(100svh-36px)]">
+          <SidebarContent>
+            <SidebarGroup>
+              <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
               <SidebarMenu>
-                {data.navSecondary.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild size="sm">
-                      <a href={item.url}>
-                        {item.icon}
-                        <span>{item.title}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
+                {data.navMain.map((item) => (
+                  <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
+                        <a href={item.url}>
+                          {item.icon}
+                          <span>{item.title}</span>
+                        </a>
+                      </SidebarMenuButton>
+                      {item.items?.length ? (
+                        <>
+                          <CollapsibleTrigger asChild>
+                            <SidebarMenuAction className="data-[state=open]:rotate-90">
+                              <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2} />
+                              <span className="sr-only">Toggle</span>
+                            </SidebarMenuAction>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent>
+                            <SidebarMenuSub>
+                              {item.items.map((subItem) => (
+                                <SidebarMenuSubItem key={subItem.title}>
+                                  <SidebarMenuSubButton asChild>
+                                    <a href={subItem.url}>
+                                      <span>{subItem.title}</span>
+                                    </a>
+                                  </SidebarMenuSubButton>
+                                </SidebarMenuSubItem>
+                              ))}
+                            </SidebarMenuSub>
+                          </CollapsibleContent>
+                        </>
+                      ) : null}
+                    </SidebarMenuItem>
+                  </Collapsible>
                 ))}
               </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-        <SidebarFooter>
-          <ModeToggle />
-        </SidebarFooter>
-      </Sidebar>
-      <SidebarInset className=''>
-        <header
-          className={cn(
-            'flex h-16  shrink-0 bg-background items-center justify-between gap-2 border-b px-4 sticky'
-          )}
-        >
-          <SidebarTrigger className="-ml-1" />
-          <ModeToggle />
-        </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
-            <div className="bg-muted/50 aspect-video rounded-xl" />
+            </SidebarGroup>
+            <SidebarGroup className="mt-auto">
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {data.navSecondary.map((item) => (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton asChild size="sm">
+                        <a href={item.url}>
+                          {item.icon}
+                          <span>{item.title}</span>
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+        </Sidebar>
+        <SidebarInset className=" overflow-hidden h-[calc(100svh-36px)]">
+          <header
+            className={cn(
+              'flex h-16 shrink-0 bg-background items-center justify-between gap-2 border-b px-4 sticky'
+            )}
+          >
+            <SidebarTrigger className="-ml-1" />
+            <ModeToggle />
+          </header>
+          <div className="overflow-auto">
+            <Outlet />
           </div>
-          <div className="bg-muted/50 min-h-screen flex-1 rounded-xl md:min-h-min" />
-        </div>
-      </SidebarInset>
+        </SidebarInset>
+      </div>
     </SidebarProvider>
   )
 }
