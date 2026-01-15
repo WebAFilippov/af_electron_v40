@@ -1,147 +1,35 @@
-import { Collapsible, CollapsibleContent, CollapsibleTrigger, ModeToggle } from '@/shared/ui'
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarInset,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   SidebarProvider,
   SidebarTrigger
 } from '@/shared/ui'
-import { HugeiconsIcon } from '@hugeicons/react'
-import {
-  Home01Icon,
-  ChartIcon,
-  ShoppingBag01Icon,
-  ShoppingCart01Icon,
-  File01Icon,
-  UserIcon,
-  Settings05Icon,
-  ChartRingIcon,
-  SentIcon,
-  ArrowRight01Icon
-} from '@hugeicons/core-free-icons'
+
 import { cn } from '@/shared/lib'
 import { ReactNode } from 'react'
-import { Outlet } from 'react-router'
-import { SidebarWindowHeader } from './sidebar-window-header'
+import { NavLink, Outlet } from 'react-router'
+import { NAVIGATION_LIST } from '../model/navigation-list'
+import { useUnit } from 'effector-react'
+import { $windowFullscreen } from '@/shared/model/window-header-model'
 
-export function SidebarApp(): ReactNode {
-  const data = {
-    navMain: [
-      {
-        title: 'Dashboard',
-        url: '#',
-        icon: <HugeiconsIcon icon={Home01Icon} strokeWidth={2} />,
-        isActive: true,
-        items: [
-          {
-            title: 'Overview',
-            url: '#'
-          },
-          {
-            title: 'Analytics',
-            url: '#'
-          }
-        ]
-      },
-      {
-        title: 'Analytics',
-        url: '#',
-        icon: <HugeiconsIcon icon={ChartIcon} strokeWidth={2} />,
-        items: [
-          {
-            title: 'Reports',
-            url: '#'
-          },
-          {
-            title: 'Metrics',
-            url: '#'
-          }
-        ]
-      },
-      {
-        title: 'Orders',
-        url: '#',
-        icon: <HugeiconsIcon icon={ShoppingBag01Icon} strokeWidth={2} />,
-        items: [
-          {
-            title: 'All Orders',
-            url: '#'
-          },
-          {
-            title: 'Pending',
-            url: '#'
-          },
-          {
-            title: 'Completed',
-            url: '#'
-          }
-        ]
-      },
-      {
-        title: 'Products',
-        url: '#',
-        icon: <HugeiconsIcon icon={ShoppingCart01Icon} strokeWidth={2} />,
-        items: [
-          {
-            title: 'фыввввввввввфывфыв',
-            url: '#'
-          },
-          {
-            title: 'Categories',
-            url: '#'
-          }
-        ]
-      },
-      {
-        title: 'Invoices',
-        url: '#',
-        icon: <HugeiconsIcon icon={File01Icon} strokeWidth={2} />
-      },
-      {
-        title: 'Customers',
-        url: '#',
-        icon: <HugeiconsIcon icon={UserIcon} strokeWidth={2} />
-      },
-      {
-        title: 'Settings',
-        url: '#',
-        icon: <HugeiconsIcon icon={Settings05Icon} strokeWidth={2} />
-      }
-    ],
-    navSecondary: [
-      {
-        title: 'Support',
-        url: '#',
-        icon: <HugeiconsIcon icon={ChartRingIcon} strokeWidth={2} />
-      },
-      {
-        title: 'Feedback',
-        url: '#',
-        icon: <HugeiconsIcon icon={SentIcon} strokeWidth={2} />
-      }
-    ]
-  }
+export function SidebarWidget(): ReactNode {
+  const [windowFullscreen] = useUnit([$windowFullscreen])
 
   return (
-    <SidebarProvider className="flex flex-col w-screen h-screen overflow-hidden">
-      <SidebarWindowHeader />
+    <SidebarProvider className="flex flex-1 flex-col w-screen h-screen">
       <div className="flex flex-1">
-        <Sidebar variant="inset" className="drag-on top-9 h-[calc(100svh-36px)]">
+        <Sidebar variant="inset" className="top-9 h-[calc(100svh-36px)] ">
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+              {/* <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
               <SidebarMenu>
-                {data.navMain.map((item) => (
+                {NAVIGATION_LIST.navMain.map((item) => (
                   <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
                     <SidebarMenuItem>
                       <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
@@ -176,36 +64,46 @@ export function SidebarApp(): ReactNode {
                     </SidebarMenuItem>
                   </Collapsible>
                 ))}
-              </SidebarMenu>
+              </SidebarMenu> */}
             </SidebarGroup>
             <SidebarGroup className="mt-auto">
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {data.navSecondary.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild size="sm">
-                        <a href={item.url}>
-                          {item.icon}
-                          <span>{item.title}</span>
-                        </a>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
+                  {NAVIGATION_LIST.navSecondary.map((item) => (
+                    <NavLink to={item.url} key={item.title} draggable={false}>
+                      {({ isActive }) => {
+                        return (
+                          <SidebarMenuItem className="select-none">
+                            <SidebarMenuButton size="default" isActive={isActive}>
+                              <>
+                                {item.icon}
+                                <span>{item.title}</span>
+                              </>
+                            </SidebarMenuButton>
+                          </SidebarMenuItem>
+                        )
+                      }}
+                    </NavLink>
                   ))}
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
           </SidebarContent>
         </Sidebar>
-        <SidebarInset className=" overflow-hidden h-[calc(100svh-36px)]">
+        <SidebarInset
+          className={cn(
+            windowFullscreen && 'h-[calc(100svh-15px)]!',
+            'h-[calc(100svh-36px)] md:peer-data-[variant=inset]:h-[calc(100svh-53px)]'
+          )}
+        >
           <header
             className={cn(
-              'flex h-16 shrink-0 bg-background items-center justify-between gap-2 border-b px-4 sticky'
+              'flex h-16 shrink-0 bg-background items-center justify-between gap-2 border-b px-4 sticky '
             )}
           >
             <SidebarTrigger className="-ml-1" />
-            <ModeToggle />
           </header>
-          <div className="overflow-auto">
+          <div className="overflow-x-hidden overflow-y-auto px-8 py-4">
             <Outlet />
           </div>
         </SidebarInset>

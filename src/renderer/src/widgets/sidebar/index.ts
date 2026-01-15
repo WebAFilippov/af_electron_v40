@@ -1,1 +1,1 @@
-export { SidebarInsetExample } from './ui/sidebar'
+export { SidebarWidget } from './ui/sidebar'

@@ -1,38 +1,38 @@
+import { ReactNode } from 'react'
+import { useGate, useUnit } from 'effector-react'
 import { cn } from '@/shared/lib'
-import { Button } from '@/shared/ui'
 import {
   Cancel01Icon,
   ChangeScreenModeIcon,
   Remove01Icon,
   SquareIcon
 } from '@hugeicons/core-free-icons'
-import { useGate, useUnit } from 'effector-react'
-import { ReactNode } from 'react'
+import { HugeiconsIcon } from '@hugeicons/react'
 import {
   $windowFullscreen,
   $windowMaximize,
-  GateWindow,
-  setWindowClose,
-  setWindowMaximize,
-  setWindowMinimize
-} from '../models/window-header'
-import { HugeiconsIcon } from '@hugeicons/react'
+  GateWindowHeader,
+  handleWindowClose,
+  handleWindowMaximaze,
+  handleWindowMinimaze
+} from '../model/window-header-model'
+import { Button } from '@/shared/ui'
 
-export const SidebarWindowHeader = (): ReactNode => {
-  useGate(GateWindow)
+export const WindowHeader = (): ReactNode => {
+  useGate(GateWindowHeader)
 
   const [windowFullscreen, windowMaximize, handleMinimize, handleMaximize, handleClose] = useUnit([
     $windowFullscreen,
     $windowMaximize,
-    setWindowMinimize,
-    setWindowMaximize,
-    setWindowClose
+    handleWindowMinimaze,
+    handleWindowMaximaze,
+    handleWindowClose
   ])
 
   return (
     <header
       className={cn(
-        'drag-on bg-sidebar z-50 flex h-9 w-full shrink-0 items-center justify-end',
+        'drag-on bg-sidebar text-sidebar-foreground z-50 flex h-9 w-full shrink-0 items-center justify-end',
         windowFullscreen && 'hidden'
       )}
     >

@@ -3,7 +3,7 @@
 @import 'shadcn/tailwind.css';
 @import '@fontsource-variable/figtree';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:is([data-theme="dark"]*));
 
 :root {
   --background: oklch(1 0 0);

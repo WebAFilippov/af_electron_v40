@@ -8,7 +8,7 @@ import {
 } from './dropdown-menu'
 import { Button } from './button'
 import { useUnit } from 'effector-react'
-import { setTheme } from '../model'
+import { setTheme } from '@/entities/theme/model/model'
 
 export function ModeToggle(): ReactElement {
   const [handleSetTheme] = useUnit([setTheme])

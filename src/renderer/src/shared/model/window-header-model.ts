@@ -1,30 +1,28 @@
 import { createEffect, createEvent, createStore, sample } from 'effector'
 import { createGate } from 'effector-react'
+import { WindowState } from '../../../../shared/types'
 
 window.api.windowState((state) => changeWindowState(state))
 
 const KeyDownToWindow = (event: KeyboardEvent): void => {
   if (event.altKey && event.key === 'Enter') {
     event.preventDefault()
-    setWindowFullscreen()
+    handleToggleFullScreen()
   }
 
   if (event.ctrlKey && event.key === 'Enter') {
     event.preventDefault()
-    setWindowMaximize()
+    handleWindowMaximaze()
   }
 }
+const handleToggleFullScreen = createEffect(() => window.api.windowToggleFullScreen())
+const handleWindowMaximaze = createEffect(() => window.api.windowMaximaze())
+const handleWindowMinimaze = createEffect(() => window.api.windowMinimaze())
+const handleWindowClose = createEffect(() => window.api.windowClose())
 
-interface WindowState {
-  minimize: boolean
-  maximize: boolean
-  fullscreen: boolean
-  show: boolean
-}
+const GateWindowHeader = createGate()
 
 const changeWindowState = createEvent<WindowState>()
-
-const GateWindow = createGate()
 
 const $window = createStore<WindowState>({
   minimize: false,
@@ -43,10 +41,6 @@ const addKeydownWindowFx = createEffect(() => {
 const removeKeydownWindowFx = createEffect(() => {
   window.removeEventListener('keydown', KeyDownToWindow)
 })
-const setWindowClose = createEffect(() => window.api.closeWindow())
-const setWindowFullscreen = createEffect(() => window.api.toggleFullscreenWindow())
-const setWindowMaximize = createEffect(() => window.api.maximazeWindow())
-const setWindowMinimize = createEffect(() => window.api.minimazeWindow())
 
 sample({
   clock: changeWindowState,
@@ -54,22 +48,22 @@ sample({
 })
 
 sample({
-  clock: GateWindow.open,
+  clock: GateWindowHeader.open,
   target: [addKeydownWindowFx]
 })
 sample({
-  clock: GateWindow.close,
+  clock: GateWindowHeader.close,
   target: [removeKeydownWindowFx]
 })
 
 export {
-  GateWindow,
+  GateWindowHeader,
   $window,
   $windowFullscreen,
   $windowMaximize,
   $windowMinimize,
   $windowShow,
-  setWindowClose,
-  setWindowMaximize,
-  setWindowMinimize
+  handleWindowClose,
+  handleWindowMaximaze,
+  handleWindowMinimaze
 }

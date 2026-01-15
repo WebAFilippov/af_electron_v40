@@ -1,59 +1,32 @@
+import { Api } from './index.types'
 import { electronAPI } from '@electron-toolkit/preload'
+
 import { contextBridge, ipcRenderer } from 'electron'
+import { IPCChannels, Theme, ThemeMode, WindowState } from '../shared/types'
 
 const api = {
-  // === System Info ===
-  getSystemInfo: (): Promise<unknown> => ipcRenderer.invoke('get-system-info'),
-  getProcesses: (): Promise<unknown> => ipcRenderer.invoke('get-processes'),
-  // === Display ===
-  getDisplays: () => ipcRenderer.invoke('get_displays'),
-  addedDisplay: (callback: (arg0: Electron.Display) => void) => {
-    ipcRenderer.on('added_display', (_event, data: Electron.Display) => callback(data))
-  },
-  removedDisplay: (callback: (arg0: Electron.Display) => void) => {
-    ipcRenderer.on('removed_display', (_event, data: Electron.Display) => callback(data))
-  },
-  displayMetricsChange: (
-    callback: (arg0: { display: Electron.Display; changeMetrics: string[] }) => void
-  ) => {
-    ipcRenderer.on(
-      'display-metrics-changed',
-      (_event, data: { display: Electron.Display; changeMetrics: string[] }) => callback(data)
-    )
-  },
-
-  // === Updater ===
-  onUpdateData: (callback: (arg0: unknown) => void) => {
-    ipcRenderer.on('update_data', (_event, data: unknown) => callback(data))
-  },
-  successfulUpdate: () => ipcRenderer.invoke('successful_update'),
-  checkForUpdates: () => ipcRenderer.invoke('checking_for_update'),
-  retryDowmload: () => ipcRenderer.send('retry_checking_for_update'),
-  startDownload: () => ipcRenderer.send('start_download'),
-  installNow: () => ipcRenderer.send('install_now'),
-  installOnQuit: () => ipcRenderer.send('install_on_quit'),
-
+  // === App ===
+  appStarted: () => ipcRenderer.invoke(IPCChannels.APP_STARTED),
   // === Window ===
-  windowState: (callback: (arg0: unknown) => void) => {
-    ipcRenderer.on('window_state', (_event, state: unknown) => callback(state))
+  windowState: (callback) => {
+    ipcRenderer.on(IPCChannels.STATE, (_, state: WindowState) => callback(state))
   },
-  updateWindowTheme: (theme: unknown) => ipcRenderer.send('update_theme', theme),
-  getWindowTheme: () => ipcRenderer.invoke('get_theme'),
-  toggleFullscreenWindow: () => ipcRenderer.send('toggle_fullscreen'),
-  minimazeWindow: () => ipcRenderer.send('minimaze'),
-  maximazeWindow: () => ipcRenderer.send('maximize'),
-  closeWindow: () => ipcRenderer.send('close'),
+  windowToggleFullScreen: () => ipcRenderer.send(IPCChannels.TOGGLE_FULLSCREEN),
+  windowMinimaze: () => ipcRenderer.send(IPCChannels.MINIMIZE),
+  windowMaximaze: () => ipcRenderer.send(IPCChannels.MAXIMIZE),
+  windowClose: () => ipcRenderer.send(IPCChannels.CLOSE),
 
-  // === External ===
-  openExternal: (url: unknown) => ipcRenderer.send('external_open', url),
+  //  === i18n ===
+  i18nGetLanguage: () => ipcRenderer.invoke(IPCChannels.GET_LANGUAGE),
+  i18nSetLanguage: (language) => ipcRenderer.send(IPCChannels.SET_LANGUAGE, language),
 
-  onUdpData: (callback: (arg0: unknown) => void) => {
-    ipcRenderer.on('udp-data', (_event, data) => callback(data))
+  // === Theme ===
+  updateSystemTheme: (callback) => {
+    ipcRenderer.on(IPCChannels.UPDATE_SYSTEM_THEME, (_, state: Theme) => callback(state))
   },
-  onMediaData: (callback: (arg0: unknown) => void) => {
-    ipcRenderer.on('media-data', (_event, data) => callback(data))
-  }
-}
+  getTheme: () => ipcRenderer.invoke(IPCChannels.GET_THEME),
+  setTheme: (mode: ThemeMode) => ipcRenderer.invoke(IPCChannels.SET_THEME, mode)
+} satisfies Api
 
 if (process.contextIsolated) {
   try {

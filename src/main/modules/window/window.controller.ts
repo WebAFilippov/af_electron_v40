@@ -1,0 +1,59 @@
+import { BrowserWindow, ipcMain } from 'electron'
+import { IPCChannels, WindowState } from '../../../shared/types'
+
+const sendWindowState = (
+  window: BrowserWindow,
+  key?: 'enter-full-screen' | 'leave-full-screen'
+): void => {
+  if (window.isDestroyed()) return
+
+  const state: WindowState = {
+    minimize: window.isMinimized(),
+    maximize: window.isMaximized(),
+    fullscreen:
+      key === 'enter-full-screen'
+        ? true
+        : key === 'leave-full-screen'
+          ? false
+          : window.isFullScreen(),
+    show: window.isVisible()
+  }
+
+  window.webContents.send(IPCChannels.STATE, state)
+}
+
+export const registerWindowIPC = (window: BrowserWindow): void => {
+  ipcMain.on(IPCChannels.TOGGLE_FULLSCREEN, () => {
+    window.setFullScreen(!window.isFullScreen())
+  })
+
+  ipcMain.on(IPCChannels.MINIMIZE, () => {
+    window.minimize()
+  })
+
+  ipcMain.on(IPCChannels.MAXIMIZE, () => {
+    if (window.isMaximized()) {
+      window.unmaximize()
+    } else {
+      window.maximize()
+    }
+  })
+
+  ipcMain.on(IPCChannels.CLOSE, () => {
+    window.hide()
+  })
+
+  window.on('maximize', () => sendWindowState(window))
+  window.on('minimize', () => sendWindowState(window))
+  window.on('restore', () => sendWindowState(window))
+  window.on('unmaximize', () => sendWindowState(window))
+  window.on('enter-full-screen', () => sendWindowState(window, 'enter-full-screen'))
+  window.on('leave-full-screen', () => sendWindowState(window, 'leave-full-screen'))
+  window.on('show', () => sendWindowState(window))
+  window.on('hide', () => sendWindowState(window))
+  window.on('close', () => sendWindowState(window))
+
+  window.once('ready-to-show', () => {
+    sendWindowState(window)
+  })
+}

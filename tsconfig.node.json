@@ -4,6 +4,7 @@
     "electron.vite.config.*",
     "src/main/**/*",
     "src/preload/**/*",
+    "src/shared/**/*",
   ],
   "compilerOptions": {
     "composite": true,
@@ -11,9 +12,18 @@
       "electron-vite/node"
     ],
     "paths": {
-      "@*": [
-        "./src/main/*"
+      "@/app/*": [
+         "./src/main/app/*"
       ],
+      "@/ipc/*": [
+         "./src/main/ipc/*"
+      ], 
+      "@/modules/*": [
+         "./src/main/modules/*"
+      ],
+      "@/shared/*": [
+         "./src/main/shared/*"
+      ],       
     }
   }
 }
