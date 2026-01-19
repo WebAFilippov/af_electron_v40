@@ -78,3 +78,5 @@ export {
   SelectScrollUpButton,
   SelectScrollDownButton
 } from './select'
+export { Switch } from './switch'
+export { Toaster } from './sonner'

@@ -124,7 +124,7 @@ function SidebarProvider({
           } as React.CSSProperties
         }
         className={cn(
-          'group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full',
+          'group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-[100svh-36px] w-full',
           className
         )}
         {...props}
@@ -177,11 +177,11 @@ function Sidebar({
               '--sidebar-width': SIDEBAR_WIDTH_MOBILE
             } as React.CSSProperties
           }
-          side={side}
+          side={'left'}
         >
-          <SheetHeader className="sr-only">
+          <SheetHeader className='sr-only'>
             <SheetTitle>Sidebar</SheetTitle>
-            <SheetDescription>Displays the mobile sidebar.</SheetDescription>
+            <SheetDescription>Sidebar Description</SheetDescription>
           </SheetHeader>
           <div className="flex h-full w-full flex-col">{children}</div>
         </SheetContent>

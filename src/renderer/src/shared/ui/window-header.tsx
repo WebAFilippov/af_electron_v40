@@ -32,7 +32,7 @@ export const WindowHeader = (): ReactNode => {
   return (
     <header
       className={cn(
-        'drag-on bg-sidebar text-sidebar-foreground z-50 flex h-9 w-full shrink-0 items-center justify-end',
+        'drag-on bg-sidebar text-sidebar-foreground z-1000 flex h-9 w-full shrink-0 items-center justify-end',
         windowFullscreen && 'hidden'
       )}
     >

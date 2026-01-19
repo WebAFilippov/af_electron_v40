@@ -23,6 +23,11 @@ export type Theme = {
   darken: boolean
 }
 
+export type SettingsStore = {
+  isAutoStart: boolean
+  isStartMinimized: boolean
+}
+
 export interface AppStarted {
   language: Language
   theme: Theme

@@ -23,12 +23,14 @@ type ToggleGroupProps<T> = {
   value: T
   onChange: (value: T) => void
   children: ReactNode
-}
+} & Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'>
 
 export const ToggleGroupCustom = <T,>({
   value,
   onChange,
-  children
+  children,
+
+  ...props
 }: ToggleGroupProps<T>): ReactNode => {
   const items = useRef<T[]>([])
   const [focusedIndex, setFocusedIndex] = useState<number>(0)
@@ -76,9 +78,10 @@ export const ToggleGroupCustom = <T,>({
     >
       <div
         role="radiogroup"
-        tabIndex={0}
+        tabIndex={-1}
         onKeyDown={handleKeyDown}
         className="flex h-10 items-center focus-visible:outline-none justify-center shadow-xs rounden-md"
+        {...props}
       >
         {children}
       </div>
@@ -89,11 +92,12 @@ export const ToggleGroupCustom = <T,>({
 type ToggleGroupItemProps<T> = {
   value: T
   children: ReactNode
-}
+} & React.ButtonHTMLAttributes<HTMLButtonElement>
 
 export const ToggleGroupItemCustom = <T,>({
   value,
-  children
+  children,
+  ...props
 }: ToggleGroupItemProps<T>): ReactNode => {
   const ctx = useContext(ToggleGroupContext) as ToggleGroupContextType<T> | null
 
@@ -130,11 +134,13 @@ export const ToggleGroupItemCustom = <T,>({
       onFocus={() => setFocusedIndex(index)}
       data-selected={selected}
       className="
-      w-1/3 min-w-fit h-full  shrink-0  focus:z-10 focus-visible:z-10 shadow-none border border-sidebar-border  text-sm font-medium 
-      bg-transparent hover:text-muted-foreground hover:bg-muted data-selected:bg-sidebar-accent data-selected:hover:bg-sidebar-accent 
+      w-1/3 min-w-fit h-full shrink-0 focus:z-10 focus-visible:z-10 shadow-none border border-sidebar-border text-sm font-medium select-none 
+      bg-background text-secondary-foreground hover:bg-secondary hover:text-secondary-foreground data-selected:bg-sidebar-accent data-selected:hover:bg-sidebar-accent data-selected:text-accent-foreground
+      focus-visible:not-data-selected:bg-secondary focus-visible:not-data-selected:text-secondary-foreground
       rounded-none  first:rounded-l-md last:rounded-r-md border-l-0 first:border-l
-      px-2.5  whitespace-nowrap transition-all cursor-pointer 
+      px-2.5  whitespace-nowrap transition-all
       inline-flex items-center justify-center ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50 data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 gap-2"
+      {...props}
     >
       {children}
     </button>

@@ -1,31 +1,45 @@
 import { ReactNode } from 'react'
 import { useUnit } from 'effector-react'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { Moon02Icon, Sun } from '@hugeicons/core-free-icons'
 
-import { ToggleGroupCustom, ToggleGroupItemCustom } from '@/shared/ui'
+import {
+  Label,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectScrollDownButton,
+  SelectScrollUpButton,
+  SelectTrigger,
+  SelectValue
+} from '@/shared/ui'
 import { $theme, setTheme } from '../model/model'
 
 export const ThemeSwitcher = (): ReactNode => {
   const [theme, handleSetTheme] = useUnit([$theme, setTheme])
 
   return (
-    <div className="flex w-full justify-between items-center">
-      <p className="text-[16px] font-medium select-none">Оформление приложения</p>
-
-      <ToggleGroupCustom value={theme.mode} onChange={handleSetTheme}>
-        <ToggleGroupItemCustom value="light">
-          <HugeiconsIcon icon={Sun} />
-          <span >Светлая</span>
-        </ToggleGroupItemCustom>
-        <ToggleGroupItemCustom value="dark">
-          <HugeiconsIcon icon={Moon02Icon} />
-          <span >Темная</span>
-        </ToggleGroupItemCustom>
-        <ToggleGroupItemCustom value="system">
-          <span >Системная</span>
-        </ToggleGroupItemCustom>
-      </ToggleGroupCustom>
+    <div className="flex items-center justify-between">
+      <Label htmlFor="lang-swither">Тема приложения</Label>
+      <Select value={theme.mode} onValueChange={handleSetTheme}>
+        <SelectTrigger className="min-w-45 w-fit" id="lang-swither">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent className="max-h-70">
+          <SelectScrollUpButton />
+          <SelectGroup>
+            <SelectItem value="light" disabled={theme.mode === 'light'}>
+              Светлая
+            </SelectItem>
+            <SelectItem value="dark" disabled={theme.mode === 'dark'}>
+              Темная
+            </SelectItem>
+            <SelectItem value="system" disabled={theme.mode === 'system'}>
+              Системная
+            </SelectItem>
+            <SelectScrollDownButton />
+          </SelectGroup>
+        </SelectContent>
+      </Select>
     </div>
   )
 }

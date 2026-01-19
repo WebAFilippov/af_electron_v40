@@ -5,7 +5,7 @@ import { app, BrowserWindow, Menu, nativeImage, Tray } from 'electron'
 import { AppUpdater } from 'electron-updater'
 
 let tray: Tray | null = null
-let currentUpdater: AppUpdater | null = null
+let currentUpdater: AppUpdater | undefined = undefined
 
 const toggleWindowVisibility = (): void => {
   const [window] = BrowserWindow.getAllWindows()
@@ -40,7 +40,7 @@ const buildMenu = (): Menu => {
   ])
 }
 
-export const createTray = (updater: AppUpdater): Tray => {
+export const createTray = (updater?: AppUpdater): Tray => {
   currentUpdater = updater
 
   tray = new Tray(nativeImage.createFromPath(appIcon))

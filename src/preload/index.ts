@@ -24,7 +24,7 @@ const api = {
   updateSystemTheme: (callback) => {
     ipcRenderer.on(IPCChannels.UPDATE_SYSTEM_THEME, (_, state: Theme) => callback(state))
   },
-  getTheme: () => ipcRenderer.invoke(IPCChannels.GET_THEME),
+  // getTheme: () => ipcRenderer.invoke(IPCChannels.GET_THEME),
   setTheme: (mode: ThemeMode) => ipcRenderer.invoke(IPCChannels.SET_THEME, mode)
 } satisfies Api
 

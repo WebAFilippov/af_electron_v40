@@ -4,7 +4,7 @@ import { InstallingUpdates02Icon, Settings02Icon, Settings03Icon } from '@hugeic
 export const NAVIGATION_LIST = {
   navMain: [
     {
-      title: 'Settings',
+      title: 'Настройки',
       url: '/settings',
       icon: <HugeiconsIcon icon={Settings03Icon} strokeWidth={2} />,
       isActive: true,
@@ -22,12 +22,12 @@ export const NAVIGATION_LIST = {
   ],
   navSecondary: [
     {
-      title: 'Update',
+      title: 'Обновления',
       url: '/update',
       icon: <HugeiconsIcon icon={InstallingUpdates02Icon} strokeWidth={2} />
     },
     {
-      title: 'Settings',
+      title: 'Настройки',
       url: '/settings',
       icon: <HugeiconsIcon icon={Settings02Icon} strokeWidth={2} />
     }

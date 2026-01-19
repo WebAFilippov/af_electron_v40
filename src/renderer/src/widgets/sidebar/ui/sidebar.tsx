@@ -66,11 +66,11 @@ export function SidebarWidget(): ReactNode {
                 ))}
               </SidebarMenu> */}
             </SidebarGroup>
-            <SidebarGroup className="mt-auto">
+            <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu>
                   {NAVIGATION_LIST.navSecondary.map((item) => (
-                    <NavLink to={item.url} key={item.title} draggable={false}>
+                    <NavLink to={item.url} key={item.title} draggable={false} tabIndex={-1}>
                       {({ isActive }) => {
                         return (
                           <SidebarMenuItem className="select-none">

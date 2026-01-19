@@ -1,17 +1,19 @@
 import appIcon from '../../../build/icon.ico?asset'
-import { BrowserWindow, Menu, nativeImage, screen } from 'electron'
+import { BrowserWindow, nativeImage, screen } from 'electron'
 import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
 import { setTheme } from '@/modules/theme/theme.service'
 import { themeStore } from '@/modules/theme/theme.store'
 import { t } from '@/modules/i18n/trans'
+import { settingsStore } from '@/modules/settings/settings.store'
 
 let mainWindow: BrowserWindow | null = null
 
-const isAutoLaunch = process.argv.includes('--auto-launch')
-const shouldStartHidden = isAutoLaunch
-
 export const createWindow = (): BrowserWindow => {
+  const isAutoStart = settingsStore.get('isAutoStart')
+  const isStartMinimized = settingsStore.get('isStartMinimized')
+  const shouldStartHidden = isAutoStart || isStartMinimized
+
   const {
     bounds: { width, height }
   } = screen.getPrimaryDisplay()
@@ -22,7 +24,7 @@ export const createWindow = (): BrowserWindow => {
     width: width * 0.8,
     height: height * 0.8,
     center: true,
-    show: true,
+    show: shouldStartHidden,
     resizable: true,
     focusable: true,
     fullscreen: false,

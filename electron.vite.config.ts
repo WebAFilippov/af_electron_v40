@@ -1,13 +1,11 @@
 import { resolve } from 'path'
 import { defineConfig } from 'electron-vite'
 import react from '@vitejs/plugin-react'
-import { lingui } from '@lingui/vite-plugin'
-
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   main: {
-    plugins: [lingui()],
+    plugins: [],
     resolve: {
       alias: {
         '@/app': resolve('src/main/app'),
@@ -15,10 +13,26 @@ export default defineConfig({
         '@/modules': resolve('src/main/modules'),
         '@/shared': resolve('src/main/shared')
       }
+    },
+    build: {
+      reportCompressedSize: false,
+      minify: 'esbuild',
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              return id.toString().split('node_modules/')[1].split('/')[0].toString()
+            }
+          }
+        }
+      }
     }
   },
   preload: {
-    plugins: []
+    plugins: [],
+    build: {
+      reportCompressedSize: false
+    }
   },
   renderer: {
     resolve: {
@@ -31,6 +45,26 @@ export default defineConfig({
         '@/shared': resolve('src/renderer/src/shared')
       }
     },
-    plugins: [react(), tailwindcss(), lingui()]
+    build: {
+      reportCompressedSize: false,
+      minify: 'esbuild',
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              return id.toString().split('node_modules/')[1].split('/')[0].toString()
+            }
+          }
+        }
+      }
+    },
+    plugins: [
+      react({
+        babel: {
+          plugins: ['effector/babel-plugin']
+        }
+      }),
+      tailwindcss()
+    ]
   }
 })

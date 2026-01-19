@@ -2,27 +2,23 @@ import { createEffect, createEvent, createStore, sample } from 'effector'
 import { Theme, ThemeMode } from '../../../../../shared/types'
 import { appStarted } from '@/shared/model'
 
-window.api.updateSystemTheme((payload) => {
-  applyThemeFx(payload)
+window.api.updateSystemTheme((value) => {
+  applyThemeFx(value)
 })
 
 const getThemeFx = createEffect<void, Theme, Error>(async () => {
-  try {
-    return await window.api.getTheme()
-  } catch {
-    throw new Error('Error getting window theme')
-  }
+  return await window.api.getTheme()
 })
 
-const applyThemeFx = createEffect<Theme, Theme, Error>((payload) => {
+const applyThemeFx = createEffect<Theme, Theme, Error>((value) => {
   const body = document.body
   if (!body) {
     throw new Error('Body element not found')
   }
   body.classList.remove('light', 'dark')
-  switch (payload.mode) {
+  switch (value.mode) {
     case 'system':
-      if (payload.darken) {
+      if (value.darken) {
         body.classList.add('dark')
       } else {
         body.classList.add('light')
@@ -36,7 +32,7 @@ const applyThemeFx = createEffect<Theme, Theme, Error>((payload) => {
       break
   }
 
-  return payload
+  return value
 })
 
 const setThemeFx = createEffect<ThemeMode, Theme, Error>(async (mode) => {
