@@ -1,4 +1,4 @@
-import { t } from '@/modules/i18n/trans'
+import { t } from '@/modules/settings/translations'
 import appIcon from '../../../build/icon.ico?asset'
 import { app, BrowserWindow, Menu, nativeImage, Tray } from 'electron'
 

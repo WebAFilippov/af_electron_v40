@@ -1,3 +1,10 @@
+import { settingsStore } from './settings.store'
+
+export const t = (key: keyof (typeof translations)['ru']): string => {
+  const lang = settingsStore.get('language')
+  return translations[lang][key] ?? key
+}
+
 export const translations = {
   ru: {
     app_title: 'еффектори',

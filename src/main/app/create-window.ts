@@ -2,17 +2,17 @@ import appIcon from '../../../build/icon.ico?asset'
 import { BrowserWindow, nativeImage, screen } from 'electron'
 import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
-import { setTheme } from '@/modules/theme/theme.service'
-import { themeStore } from '@/modules/theme/theme.store'
-import { t } from '@/modules/i18n/trans'
+
 import { settingsStore } from '@/modules/settings/settings.store'
+import { applyThemeToWindow } from '@/modules/settings/settings.controller'
+import { t } from '@/modules/settings/translations'
 
 let mainWindow: BrowserWindow | null = null
 
 export const createWindow = (): BrowserWindow => {
-  const isAutoStart = settingsStore.get('isAutoStart')
-  const isStartMinimized = settingsStore.get('isStartMinimized')
-  const shouldStartHidden = isAutoStart || isStartMinimized
+  const autoLaunch = settingsStore.get('autoLaunch')
+  const startMinimized = settingsStore.get('startMinimized')
+  const shouldStartHidden = autoLaunch || startMinimized
 
   const {
     bounds: { width, height }
@@ -49,11 +49,7 @@ export const createWindow = (): BrowserWindow => {
     }
   })
 
-  if (themeStore.get('mode') === 'system') {
-    setTheme(mainWindow, 'system')
-  } else {
-    setTheme(mainWindow, themeStore.get('mode'))
-  }
+  applyThemeToWindow(mainWindow, settingsStore.get('theme'))
 
   mainWindow.flashFrame(false)
   mainWindow.setOverlayIcon(nativeImage.createFromPath(appIcon), 'Effectory')

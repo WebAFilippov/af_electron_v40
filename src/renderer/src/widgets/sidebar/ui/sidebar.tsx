@@ -16,7 +16,7 @@ import { ReactNode } from 'react'
 import { NavLink, Outlet } from 'react-router'
 import { NAVIGATION_LIST } from '../model/navigation-list'
 import { useUnit } from 'effector-react'
-import { $windowFullscreen } from '@/shared/model/window-header-model'
+import { $windowFullscreen } from '@/widgets/window-control-panel/model'
 
 export function SidebarWidget(): ReactNode {
   const [windowFullscreen] = useUnit([$windowFullscreen])

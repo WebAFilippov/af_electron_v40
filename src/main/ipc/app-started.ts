@@ -1,17 +1,12 @@
-import { ipcMain } from 'electron'
-import { IPCChannels } from '../../shared/types'
-import { getTheme } from '@/modules/theme/theme.service'
-import { getLanguage } from '@/modules/i18n/i18n.service'
+import { app, ipcMain } from 'electron'
+import { channels } from '../../shared/types'
+import { settingsStore } from '@/modules/settings/settings.store'
 
-export const AppStartedIPC = (): void => {
-  ipcMain.handle(IPCChannels.APP_STARTED, () => {
-    const language = getLanguage()
-    const theme = getTheme()
-    console.log(theme, 'dsad')
+export const ipcAppStarted = (): void => {
+  const currentVersion = app.getVersion()
+  if (currentVersion !== settingsStore.get('version')) settingsStore.set('version', currentVersion)
 
-    return {
-      language,
-      theme
-    }
+  ipcMain.handle(channels.app_started, () => {
+    return { settings: settingsStore.store }
   })
 }

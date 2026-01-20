@@ -1,25 +1,23 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
-import { AppStarted, Language, Theme, ThemeMode, WindowState } from '../shared/types'
+import { AppStarted, ISettings, IWindow } from '../shared/types'
 
 export interface Api {
   // === App ===
   appStarted: () => Promise<AppStarted>
 
+  // === Settings ===
+  settingsSetAutoLaunch: (value: boolean) => void
+  settingSetStartMininaze: (value: boolean) => void
+  settingsUpdateSystemTheme: (callback: (theme: ISettings['theme']) => void) => void
+  settingsSetTheme: (mode: ISettings['theme']['mode']) => Promise<ISettings['theme']>
+  settingsSetLanguage: (mode: ISettings['language']) => void
+
   // === Window ===
-  windowState: (callback: (state: WindowState) => void) => void
+  windowState: (callback: (state: IWindow) => void) => void
   windowToggleFullScreen: () => void
   windowMinimaze: () => void
   windowMaximaze: () => void
   windowClose: () => void
-
-  //  === i18n ===
-  i18nGetLanguage: () => Promise<Language>
-  i18nSetLanguage: (language: Language) => void
-
-  // === Theme ===
-  updateSystemTheme: (callback: (state: Theme) => void) => void
-  getTheme: () => Promise<Theme>
-  setTheme: (mode: ThemeMode) => Promise<Theme>
 }
 
 declare global {

@@ -1,1 +1,1 @@
-export { appStarted } from './app-started'
+export { appStarted, appStartedFx } from './app-started'

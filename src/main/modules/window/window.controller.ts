@@ -1,5 +1,5 @@
 import { BrowserWindow, ipcMain } from 'electron'
-import { IPCChannels, WindowState } from '../../../shared/types'
+import { channels, Window } from '../../../shared/types'
 
 const sendWindowState = (
   window: BrowserWindow,
@@ -7,7 +7,7 @@ const sendWindowState = (
 ): void => {
   if (window.isDestroyed()) return
 
-  const state: WindowState = {
+  const state: Window = {
     minimize: window.isMinimized(),
     maximize: window.isMaximized(),
     fullscreen:
@@ -19,19 +19,19 @@ const sendWindowState = (
     show: window.isVisible()
   }
 
-  window.webContents.send(IPCChannels.STATE, state)
+  window.webContents.send(channels.window_updated, state)
 }
 
-export const registerWindowIPC = (window: BrowserWindow): void => {
-  ipcMain.on(IPCChannels.TOGGLE_FULLSCREEN, () => {
+export const ipcWindow = (window: BrowserWindow): void => {
+  ipcMain.on(channels.window_fullscreen, () => {
     window.setFullScreen(!window.isFullScreen())
   })
 
-  ipcMain.on(IPCChannels.MINIMIZE, () => {
+  ipcMain.on(channels.window_minimaze, () => {
     window.minimize()
   })
 
-  ipcMain.on(IPCChannels.MAXIMIZE, () => {
+  ipcMain.on(channels.window_maximaze, () => {
     if (window.isMaximized()) {
       window.unmaximize()
     } else {
@@ -39,7 +39,7 @@ export const registerWindowIPC = (window: BrowserWindow): void => {
     }
   })
 
-  ipcMain.on(IPCChannels.CLOSE, () => {
+  ipcMain.on(channels.window_close, () => {
     window.hide()
   })
 

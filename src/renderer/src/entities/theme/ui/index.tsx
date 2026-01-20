@@ -7,15 +7,13 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectScrollDownButton,
-  SelectScrollUpButton,
   SelectTrigger,
   SelectValue
 } from '@/shared/ui'
-import { $theme, setTheme } from '../model/model'
+import { $theme, setThemeFx } from '../model'
 
 export const ThemeSwitcher = (): ReactNode => {
-  const [theme, handleSetTheme] = useUnit([$theme, setTheme])
+  const [theme, handleSetTheme] = useUnit([$theme, setThemeFx])
 
   return (
     <div className="flex items-center justify-between">
@@ -25,7 +23,6 @@ export const ThemeSwitcher = (): ReactNode => {
           <SelectValue />
         </SelectTrigger>
         <SelectContent className="max-h-70">
-          <SelectScrollUpButton />
           <SelectGroup>
             <SelectItem value="light" disabled={theme.mode === 'light'}>
               Светлая
@@ -36,7 +33,6 @@ export const ThemeSwitcher = (): ReactNode => {
             <SelectItem value="system" disabled={theme.mode === 'system'}>
               Системная
             </SelectItem>
-            <SelectScrollDownButton />
           </SelectGroup>
         </SelectContent>
       </Select>

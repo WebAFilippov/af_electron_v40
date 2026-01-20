@@ -1,41 +1,37 @@
-export const IPCChannels = {
-  APP_STARTED: 'app:started',
+export const channels = {
+  app_started: 'app:started',
 
-  STATE: 'window:state',
-  TOGGLE_FULLSCREEN: 'window:toggle-fullscreen',
-  MINIMIZE: 'window:minimize',
-  MAXIMIZE: 'window:maximize',
-  CLOSE: 'window:close',
+  settings_set_autolaunch: 'settings:setAutoLaunch',
+  settings_set_startMinimaze: 'settings:setStartMinimized',
+  settings_update_systemTheme: 'settings:update_systemTheme',
+  settings_set_theme: 'settings:set_theme',
+  settings_set_language: 'settings:set_language',
 
-  GET_LANGUAGE: 'i18n:getLanguage',
-  SET_LANGUAGE: 'i18n:setLanguage',
-
-  UPDATE_SYSTEM_THEME: 'theme:update',
-  GET_THEME: 'theme:get',
-  SET_THEME: 'theme:set'
+  window_updated: 'window:state',
+  window_fullscreen: 'window:toggle-fullscreen',
+  window_minimaze: 'window:minimize',
+  window_maximaze: 'window:maximize',
+  window_close: 'window:close'
 } as const
 
-export type Language = 'en' | 'ru'
-
-export type ThemeMode = 'system' | 'dark' | 'light'
-export type Theme = {
-  mode: ThemeMode
-  darken: boolean
+export interface ISettings {
+  version: string
+  autoLaunch: boolean
+  startMinimized: boolean
+  language: 'en' | 'ru'
+  theme: {
+    mode: 'system' | 'dark' | 'light'
+    darken: boolean
+  }
 }
 
-export type SettingsStore = {
-  isAutoStart: boolean
-  isStartMinimized: boolean
-}
-
-export interface AppStarted {
-  language: Language
-  theme: Theme
-}
-
-export interface WindowState {
+export interface IWindow {
   minimize: boolean
   maximize: boolean
   fullscreen: boolean
   show: boolean
+}
+
+export interface AppStarted {
+  settings: ISettings
 }

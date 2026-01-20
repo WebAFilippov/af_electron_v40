@@ -59,8 +59,7 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuRadioGroup
 } from './dropdown-menu'
-export { ModeToggle } from './mode-toggle'
-export { WindowHeader } from './window-header'
+
 export { ToggleGroup, ToggleGroupItem } from './toggle-group'
 export { Toggle, toggleVariants } from './toggle'
 export { ToggleGroupCustom, ToggleGroupItemCustom } from './custom-toggle-group'

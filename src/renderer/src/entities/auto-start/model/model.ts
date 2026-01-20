@@ -29,5 +29,3 @@ sample({
 })
 
 export { $autoStart, toggleAutoStart }
-
-$autoStart.watch(console.log)

@@ -1,30 +1,38 @@
 import { createEffect, createEvent, createStore, sample } from 'effector'
 import { createGate } from 'effector-react'
-import { WindowState } from '../../../../shared/types'
+import { IWindow } from '../../../../../shared/types'
 
 window.api.windowState((state) => changeWindowState(state))
 
 const KeyDownToWindow = (event: KeyboardEvent): void => {
   if (event.altKey && event.key === 'Enter') {
     event.preventDefault()
-    handleToggleFullScreen()
+    handleToggleFullScreenFx()
   }
 
   if (event.ctrlKey && event.key === 'Enter') {
     event.preventDefault()
-    handleWindowMaximaze()
+    handleWindowMaximazeFx()
   }
 }
-const handleToggleFullScreen = createEffect(() => window.api.windowToggleFullScreen())
-const handleWindowMaximaze = createEffect(() => window.api.windowMaximaze())
-const handleWindowMinimaze = createEffect(() => window.api.windowMinimaze())
-const handleWindowClose = createEffect(() => window.api.windowClose())
 
-const GateWindowHeader = createGate()
+const addKeydownWindowFx = createEffect(() => {
+  window.addEventListener('keydown', KeyDownToWindow)
+})
+const removeKeydownWindowFx = createEffect(() => {
+  window.removeEventListener('keydown', KeyDownToWindow)
+})
 
-const changeWindowState = createEvent<WindowState>()
+const GateWindowControlPanel = createGate()
 
-const $window = createStore<WindowState>({
+const handleToggleFullScreenFx = createEffect(() => window.api.windowToggleFullScreen())
+const handleWindowMaximazeFx = createEffect(() => window.api.windowMaximaze())
+const handleWindowMinimazeFx = createEffect(() => window.api.windowMinimaze())
+const handleWindowCloseFx = createEffect(() => window.api.windowClose())
+
+const changeWindowState = createEvent<IWindow>()
+
+const $window = createStore<IWindow>({
   minimize: false,
   maximize: false,
   fullscreen: false,
@@ -35,35 +43,28 @@ const $windowMaximize = $window.map((state) => state.maximize)
 const $windowFullscreen = $window.map((state) => state.fullscreen)
 const $windowShow = $window.map((state) => state.show)
 
-const addKeydownWindowFx = createEffect(() => {
-  window.addEventListener('keydown', KeyDownToWindow)
-})
-const removeKeydownWindowFx = createEffect(() => {
-  window.removeEventListener('keydown', KeyDownToWindow)
-})
-
 sample({
   clock: changeWindowState,
   target: $window
 })
 
 sample({
-  clock: GateWindowHeader.open,
+  clock: GateWindowControlPanel.open,
   target: [addKeydownWindowFx]
 })
 sample({
-  clock: GateWindowHeader.close,
+  clock: GateWindowControlPanel.close,
   target: [removeKeydownWindowFx]
 })
 
 export {
-  GateWindowHeader,
+  GateWindowControlPanel,
   $window,
   $windowFullscreen,
   $windowMaximize,
   $windowMinimize,
   $windowShow,
-  handleWindowClose,
-  handleWindowMaximaze,
-  handleWindowMinimaze
+  handleWindowCloseFx,
+  handleWindowMaximazeFx,
+  handleWindowMinimazeFx
 }

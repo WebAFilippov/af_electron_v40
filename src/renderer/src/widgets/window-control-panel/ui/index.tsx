@@ -8,25 +8,25 @@ import {
   SquareIcon
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { Button } from '@/shared/ui'
 import {
   $windowFullscreen,
   $windowMaximize,
-  GateWindowHeader,
-  handleWindowClose,
-  handleWindowMaximaze,
-  handleWindowMinimaze
-} from '../model/window-header-model'
-import { Button } from '@/shared/ui'
+  GateWindowControlPanel,
+  handleWindowCloseFx,
+  handleWindowMaximazeFx,
+  handleWindowMinimazeFx
+} from '../model'
 
-export const WindowHeader = (): ReactNode => {
-  useGate(GateWindowHeader)
+export const WindowControlPanel = (): ReactNode => {
+  useGate(GateWindowControlPanel)
 
   const [windowFullscreen, windowMaximize, handleMinimize, handleMaximize, handleClose] = useUnit([
     $windowFullscreen,
     $windowMaximize,
-    handleWindowMinimaze,
-    handleWindowMaximaze,
-    handleWindowClose
+    handleWindowMinimazeFx,
+    handleWindowMaximazeFx,
+    handleWindowCloseFx
   ])
 
   return (

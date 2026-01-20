@@ -1,2 +1,2 @@
-export { $theme, setTheme } from './model/model'
-export { ThemeSwitcher } from './ui/theme-switcher'
+export { ThemeSwitcher } from './ui'
+export { $theme } from './model'

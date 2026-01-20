@@ -10,7 +10,7 @@ import {
   SelectValue
 } from '@/shared/ui'
 import { ReactNode, useState } from 'react'
-import { Language } from '../../../../../shared/types'
+import { ISettings } from '../../../../../shared/types'
 
 const countries = { france: '🇫🇷', 'united-kingdom': '🇬🇧', spain: '🇪🇸' }
 
@@ -21,9 +21,9 @@ export const LanguageSwitcher = (): ReactNode => {
       <Label htmlFor="lang-swither">Язык</Label>
       <Select
         value={lang}
-        onValueChange={(state: Language) => {
-          window.api.i18nSetLanguage(state)
-          setLang(state)
+        onValueChange={(language: ISettings['language']) => {
+          window.api.settingsSetLanguage(language)
+          setLang(language)
         }}
       >
         <SelectTrigger className="min-w-45  w-fit" id="lang-swither">
