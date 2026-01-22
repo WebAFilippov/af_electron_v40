@@ -22,11 +22,11 @@ const Toaster = ({ ...props }: ToasterProps): ReactNode => {
       }}
       style={
         {
+          fontFamily: 'var(--font-sans)',
           '--normal-bg': 'var(--popover)',
           '--normal-text': 'var(--popover-foreground)',
           '--normal-border': 'var(--border)',
           '--border-radius': 'var(--radius)',
-          // Задаём zIndex ниже, чем у sidebar (z-10) и sheet/overlay (z-50)
           zIndex: 5
         } as React.CSSProperties
       }

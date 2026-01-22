@@ -37,7 +37,7 @@ nsis:
 npmRebuild: false
 
 publish:
-  provider: github
-  owner: WebAFilippov
-  repo: af-electron
-  releaseType: draft
+  - provider: github
+    owner: WebAFilippov
+    repo: af_electron_v40
+    releaseType: draft

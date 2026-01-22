@@ -8,7 +8,9 @@ export const AutoLaunch = (): ReactNode => {
 
   return (
     <div className="w-full flex justify-between items-center h-10">
-      <Label htmlFor="switch-auto-launch">Запуск при загрузке</Label>
+      <Label htmlFor="switch-auto-launch" className="text-base">
+        Запуск при загрузке
+      </Label>
       <Switch
         id="switch-auto-launch"
         checked={autoLaunch}

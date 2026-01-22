@@ -18,7 +18,9 @@ export const LanguageSwitcher = (): ReactNode => {
   const [lang, setLang] = useState('ru')
   return (
     <div className="flex items-center justify-between">
-      <Label htmlFor="language-switcher">Язык</Label>
+      <Label htmlFor="language-switcher" className="text-base">
+        Язык
+      </Label>
       <Select
         value={lang}
         onValueChange={(language: ISettings['language']) => {

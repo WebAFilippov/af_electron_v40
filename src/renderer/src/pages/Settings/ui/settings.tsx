@@ -11,7 +11,7 @@ export const SettingsPage = (): ReactNode => {
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap gap-2">
         <Button variant="outline" onClick={() => toast('Event has been created')}>
-          Default
+          Default 0123456789 @ / * & ? ^ $ #
         </Button>
         <Button variant="outline" onClick={() => toast.success('Event has been created')}>
           Success

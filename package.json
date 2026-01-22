@@ -20,14 +20,14 @@
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run savebuild && electron-builder --win",
-    "build:publish": "npm run savebuild && electron-builder --win --publish always",
-    "build:publish_never": "npm run savebuild && electron-builder --win --publish never"
+    "build:publish": "npm run build && electron-builder --win --publish always --debug",
+    "build:publish_never": "npm run build && electron-builder --win --publish never --debug"
   },
   "dependencies": {
     "@base-ui/react": "^1.0.0",
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
-    "@fontsource-variable/figtree": "^5.2.10",
+    "@fontsource-variable/geologica": "^5.2.8",
     "@hookform/resolvers": "^5.2.2",
     "@hugeicons/core-free-icons": "^3.1.1",
     "@hugeicons/react": "^1.1.4",
