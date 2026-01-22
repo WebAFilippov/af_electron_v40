@@ -18,7 +18,7 @@ export const LanguageSwitcher = (): ReactNode => {
   const [lang, setLang] = useState('ru')
   return (
     <div className="flex items-center justify-between">
-      <Label htmlFor="lang-swither">Язык</Label>
+      <Label htmlFor="language-switcher">Язык</Label>
       <Select
         value={lang}
         onValueChange={(language: ISettings['language']) => {
@@ -26,7 +26,7 @@ export const LanguageSwitcher = (): ReactNode => {
           setLang(language)
         }}
       >
-        <SelectTrigger className="min-w-45  w-fit" id="lang-swither">
+        <SelectTrigger className="min-w-45  w-fit" id="language-switcher">
           <SelectValue>{countries[lang]}</SelectValue>
         </SelectTrigger>
         <SelectContent className="max-h-70">

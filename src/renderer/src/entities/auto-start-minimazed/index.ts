@@ -1,1 +1,1 @@
-export { AutoStartMinimazed } from './ui/auto-start-minimazed'
+export { AutoStartMinimaze } from './ui/auto-start-minimazed'

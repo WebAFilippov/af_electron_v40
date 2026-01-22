@@ -17,6 +17,7 @@ import { NavLink, Outlet } from 'react-router'
 import { NAVIGATION_LIST } from '../model/navigation-list'
 import { useUnit } from 'effector-react'
 import { $windowFullscreen } from '@/widgets/window-control-panel/model'
+import { SidebarBreadcrumbs } from './sidebar-bredcrumb'
 
 export function SidebarWidget(): ReactNode {
   const [windowFullscreen] = useUnit([$windowFullscreen])
@@ -26,46 +27,6 @@ export function SidebarWidget(): ReactNode {
       <div className="flex flex-1">
         <Sidebar variant="inset" className="top-9 h-[calc(100svh-36px)] ">
           <SidebarContent>
-            <SidebarGroup>
-              {/* <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
-              <SidebarMenu>
-                {NAVIGATION_LIST.navMain.map((item) => (
-                  <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild tooltip={item.title} isActive={item.isActive}>
-                        <a href={item.url}>
-                          {item.icon}
-                          <span>{item.title}</span>
-                        </a>
-                      </SidebarMenuButton>
-                      {item.items?.length ? (
-                        <>
-                          <CollapsibleTrigger asChild>
-                            <SidebarMenuAction className="data-[state=open]:rotate-90">
-                              <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2} />
-                              <span className="sr-only">Toggle</span>
-                            </SidebarMenuAction>
-                          </CollapsibleTrigger>
-                          <CollapsibleContent>
-                            <SidebarMenuSub>
-                              {item.items.map((subItem) => (
-                                <SidebarMenuSubItem key={subItem.title}>
-                                  <SidebarMenuSubButton asChild>
-                                    <a href={subItem.url}>
-                                      <span>{subItem.title}</span>
-                                    </a>
-                                  </SidebarMenuSubButton>
-                                </SidebarMenuSubItem>
-                              ))}
-                            </SidebarMenuSub>
-                          </CollapsibleContent>
-                        </>
-                      ) : null}
-                    </SidebarMenuItem>
-                  </Collapsible>
-                ))}
-              </SidebarMenu> */}
-            </SidebarGroup>
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu>
@@ -101,9 +62,13 @@ export function SidebarWidget(): ReactNode {
               'flex h-16 shrink-0 bg-background items-center justify-between gap-2 border-b px-4 sticky '
             )}
           >
-            <SidebarTrigger className="-ml-1" />
+            <div className="flex gap-5 items-center justify-start">
+              <SidebarTrigger className="-ml-1" />
+              <SidebarBreadcrumbs />
+            </div>
+            <div>Notification</div>
           </header>
-          <div className="overflow-x-hidden overflow-y-auto px-8 py-4">
+          <div className="overflow-x-hidden overflow-y-auto h-full px-8 py-4">
             <Outlet />
           </div>
         </SidebarInset>

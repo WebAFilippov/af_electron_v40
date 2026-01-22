@@ -3,7 +3,7 @@ import { useUnit } from 'effector-react'
 import { ReactNode } from 'react'
 import { $autoStartMinimazed, toggleAutoStartMinimazed } from '../model/model'
 
-export const AutoStartMinimazed = (): ReactNode => {
+export const AutoStartMinimaze = (): ReactNode => {
   const [isAutoStartMinimazed, handleToggleAutoStartMinimazed] = useUnit([
     $autoStartMinimazed,
     toggleAutoStartMinimazed

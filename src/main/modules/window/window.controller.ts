@@ -1,5 +1,5 @@
 import { BrowserWindow, ipcMain } from 'electron'
-import { channels, Window } from '../../../shared/types'
+import { channels, IWindow } from '../../../shared/types'
 
 const sendWindowState = (
   window: BrowserWindow,
@@ -7,7 +7,7 @@ const sendWindowState = (
 ): void => {
   if (window.isDestroyed()) return
 
-  const state: Window = {
+  const state: IWindow = {
     minimize: window.isMinimized(),
     maximize: window.isMaximized(),
     fullscreen:
@@ -41,6 +41,13 @@ export const ipcWindow = (window: BrowserWindow): void => {
 
   ipcMain.on(channels.window_close, () => {
     window.hide()
+  })
+
+  window.webContents.on('before-input-event', (event, input) => {
+    if (input.key === 'F11' && input.type === 'keyDown') {
+      event.preventDefault()
+      window.setFullScreen(!window.isFullScreen())
+    }
   })
 
   window.on('maximize', () => sendWindowState(window))

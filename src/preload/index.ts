@@ -8,8 +8,9 @@ const api = {
   // === App ===
   appStarted: () => ipcRenderer.invoke(channels.app_started),
   // === Settings ===
-  settingsSetAutoLaunch: (value) => ipcRenderer.send(channels.settings_set_autolaunch, value),
-  settingSetStartMininaze: (value) => ipcRenderer.send(channels.settings_set_startMinimaze, value),
+  settingsSetAutoLaunch: (value) => ipcRenderer.invoke(channels.settings_set_autolaunch, value),
+  settingSetStartMininaze: (value) =>
+    ipcRenderer.invoke(channels.settings_set_startMinimaze, value),
   settingsUpdateSystemTheme: (callback) => {
     ipcRenderer.on(channels.settings_update_systemTheme, (_, theme: ISettings['theme']) =>
       callback(theme)

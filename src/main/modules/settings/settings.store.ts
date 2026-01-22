@@ -2,6 +2,7 @@ import Store from 'electron-store'
 import { ISettings } from '../../../shared/types'
 import { app } from 'electron'
 import yaml from 'js-yaml'
+import { nativeTheme } from 'electron/main'
 
 export const settingsStore = new Store<ISettings>({
   name: 'settings',
@@ -12,7 +13,7 @@ export const settingsStore = new Store<ISettings>({
     language: 'ru',
     theme: {
       mode: 'system',
-      darken: false
+      darken: nativeTheme.shouldUseDarkColors
     }
   },
   fileExtension: 'yaml',

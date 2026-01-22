@@ -6,8 +6,8 @@ export interface Api {
   appStarted: () => Promise<AppStarted>
 
   // === Settings ===
-  settingsSetAutoLaunch: (value: boolean) => void
-  settingSetStartMininaze: (value: boolean) => void
+  settingsSetAutoLaunch: (value: boolean) => Promise<boolean>
+  settingSetStartMininaze: (value: boolean) => Promise<boolean>
   settingsUpdateSystemTheme: (callback: (theme: ISettings['theme']) => void) => void
   settingsSetTheme: (mode: ISettings['theme']['mode']) => Promise<ISettings['theme']>
   settingsSetLanguage: (mode: ISettings['language']) => void

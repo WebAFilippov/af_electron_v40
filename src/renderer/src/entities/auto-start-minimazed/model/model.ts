@@ -1,31 +1,32 @@
-import { appStarted } from '@/shared/model'
+import { appStartedFx } from '@/shared/model'
 import { createEffect, createEvent, createStore, sample } from 'effector'
+import { not } from 'patronum'
 
-const getAutoStartMinimazedFx = createEffect<void, boolean, Error>(() => {
-  return true
+const setAutoStartMinimazedFx = createEffect<boolean, boolean, Error>(async (value) => {
+  return window.api.settingSetStartMininaze(value)
 })
-
-const setAutoStartMinimazedFx = createEffect<boolean, void, Error>(() => {})
 
 const toggleAutoStartMinimazed = createEvent<void>()
 
-const $autoStartMinimazed = createStore(true)
+const $autoStartMinimazed = createStore(false)
 
 sample({
-  clock: appStarted,
-  target: [getAutoStartMinimazedFx]
-})
-
-sample({
-  clock: getAutoStartMinimazedFx.doneData,
+  clock: appStartedFx.doneData,
+  fn: (data) => data.settings.startMinimized,
   target: [$autoStartMinimazed]
 })
 
 sample({
   clock: toggleAutoStartMinimazed,
+  filter: not(setAutoStartMinimazedFx.pending),
   source: $autoStartMinimazed,
   fn: (store) => !store,
-  target: [$autoStartMinimazed, setAutoStartMinimazedFx]
+  target: setAutoStartMinimazedFx
+})
+
+sample({
+  clock: setAutoStartMinimazedFx.doneData,
+  target: $autoStartMinimazed
 })
 
 export { $autoStartMinimazed, toggleAutoStartMinimazed }

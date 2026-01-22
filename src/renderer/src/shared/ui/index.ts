@@ -59,7 +59,7 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuRadioGroup
 } from './dropdown-menu'
-
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './card'
 export { ToggleGroup, ToggleGroupItem } from './toggle-group'
 export { Toggle, toggleVariants } from './toggle'
 export { ToggleGroupCustom, ToggleGroupItemCustom } from './custom-toggle-group'
@@ -79,3 +79,12 @@ export {
 } from './select'
 export { Switch } from './switch'
 export { Toaster } from './sonner'
+export {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  BreadcrumbEllipsis
+} from './breadcrumb'

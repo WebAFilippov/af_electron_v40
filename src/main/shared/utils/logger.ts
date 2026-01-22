@@ -41,7 +41,7 @@ export const loggerInit = (): void => {
       join(__dirname, '..', '..', 'logs', `${pathVariables.fileName}`)
   } else {
     log.transports.file.resolvePathFn = (pathVariables) =>
-      join(Config.PathUserData, 'logs', `${pathVariables.fileName}`)
+      join(Config.pathResources, 'logs', `${pathVariables.fileName}`)
   }
 
   // Уровни логирования: в dev выводим всё, в prod — только важное
@@ -83,6 +83,5 @@ export const loggerInit = (): void => {
     }
   })
 }
-
 
 export const logger = log

@@ -17,9 +17,9 @@ export const ThemeSwitcher = (): ReactNode => {
 
   return (
     <div className="flex items-center justify-between">
-      <Label htmlFor="lang-swither">Тема приложения</Label>
+      <Label htmlFor="theme-switcher">Тема приложения</Label>
       <Select value={theme.mode} onValueChange={handleSetTheme}>
-        <SelectTrigger className="min-w-45 w-fit" id="lang-swither">
+        <SelectTrigger className="min-w-45 w-fit" id="theme-switcher">
           <SelectValue />
         </SelectTrigger>
         <SelectContent className="max-h-70">

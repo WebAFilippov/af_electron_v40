@@ -6,8 +6,6 @@ import { createTray } from './app/create-tray'
 import { ipcRegister } from './ipc/register-ipc'
 import { applyAutoLaunch } from './modules/settings/settings.controller'
 
-applyAutoLaunch()
-
 const gotTheLock = app.requestSingleInstanceLock()
 
 if (!gotTheLock) {
@@ -28,6 +26,8 @@ if (!gotTheLock) {
 
   app.whenReady().then(async () => {
     try {
+      applyAutoLaunch()
+
       electronApp.setAppUserModelId('AFD.APP')
 
       const window = createWindow()

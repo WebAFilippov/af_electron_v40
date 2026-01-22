@@ -1,18 +1,18 @@
 import appIcon from '../../../build/icon.ico?asset'
-import { BrowserWindow, nativeImage, screen } from 'electron'
 import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
 
 import { settingsStore } from '@/modules/settings/settings.store'
 import { applyThemeToWindow } from '@/modules/settings/settings.controller'
 import { t } from '@/modules/settings/translations'
+import { BrowserWindow, Menu, screen } from 'electron/main'
+import { nativeImage } from 'electron'
 
 let mainWindow: BrowserWindow | null = null
 
 export const createWindow = (): BrowserWindow => {
-  const autoLaunch = settingsStore.get('autoLaunch')
+  const triggerStart = process.argv.includes('--auto-launch')
   const startMinimized = settingsStore.get('startMinimized')
-  const shouldStartHidden = autoLaunch || startMinimized
 
   const {
     bounds: { width, height }
@@ -24,7 +24,7 @@ export const createWindow = (): BrowserWindow => {
     width: width * 0.8,
     height: height * 0.8,
     center: true,
-    show: shouldStartHidden,
+    show: false,
     resizable: true,
     focusable: true,
     fullscreen: false,
@@ -53,16 +53,16 @@ export const createWindow = (): BrowserWindow => {
 
   mainWindow.flashFrame(false)
   mainWindow.setOverlayIcon(nativeImage.createFromPath(appIcon), 'Effectory')
-  // mainWindow.setMenu(null)
-  // mainWindow.setMenuBarVisibility(false)
-  // mainWindow.setSkipTaskbar(false)
-  // Menu.setApplicationMenu(null)
-
-  if (!shouldStartHidden) {
-    mainWindow.once('ready-to-show', () => {
-      mainWindow?.show()
-    })
+  if (!is.dev) {
+    mainWindow.setMenu(null)
+    mainWindow.setMenuBarVisibility(false)
+    mainWindow.setSkipTaskbar(false)
+    Menu.setApplicationMenu(null)
   }
+
+  mainWindow.on('ready-to-show', () =>
+    triggerStart ? mainWindow?.hide() : startMinimized ? mainWindow?.hide() : mainWindow?.show()
+  )
 
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])

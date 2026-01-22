@@ -3,15 +3,17 @@ import { ISettings } from '../../../shared/types'
 import { settingsStore } from './settings.store'
 
 export enum windowBackgroundColor {
-  DARK = '#09090b',
-  LIGHT = '#ffffff'
+  DARK = '#18181b',
+  LIGHT = '#fafafa'
 }
 
-export const setAutoLaunch = (value: boolean): void => {
+export const setAutoLaunch = (value: boolean): boolean => {
   settingsStore.set('autoLaunch', value)
+  return settingsStore.get('autoLaunch')
 }
-export const setStartMinimized = (value: boolean): void => {
+export const setStartMinimized = (value: boolean): boolean => {
   settingsStore.set('startMinimized', value)
+  return settingsStore.get('startMinimized')
 }
 export const setLanguage = (value: ISettings['language']): void => {
   settingsStore.set('language', value)

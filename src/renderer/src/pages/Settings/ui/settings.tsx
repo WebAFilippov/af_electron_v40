@@ -1,5 +1,5 @@
-import { AutoStart } from '@/entities/auto-start'
-import { AutoStartMinimazed } from '@/entities/auto-start-minimazed'
+import { AutoLaunch } from '@/entities/auto-launch'
+import { AutoStartMinimaze } from '@/entities/auto-start-minimazed'
 import { LanguageSwitcher } from '@/entities/language'
 import { ThemeSwitcher } from '@/entities/theme'
 import { Button } from '@/shared/ui'
@@ -49,8 +49,8 @@ export const SettingsPage = (): ReactNode => {
       </div>
       <LanguageSwitcher />
       <ThemeSwitcher />
-      <AutoStart />
-      <AutoStartMinimazed />
+      <AutoLaunch />
+      <AutoStartMinimaze />
     </div>
   )
 }

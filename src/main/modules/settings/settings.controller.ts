@@ -13,11 +13,15 @@ import { updateTray } from '@/app/create-tray'
 import { updateWindow } from '@/app/create-window'
 
 export const applyAutoLaunch = (): void => {
-  const autoLaunch = settingsStore.get('autoLaunch')
+  const enable = settingsStore.get('autoLaunch')
+
+  const args = enable ? ['--auto-launch'] : []
+
   app.setLoginItemSettings({
-    openAtLogin: autoLaunch,
+    openAtLogin: enable,
+    openAsHidden: enable && process.platform === 'darwin',
     path: process.execPath,
-    args: autoLaunch ? ['--auto-launch'] : []
+    args
   })
 }
 export const applyThemeToWindow = (window: BrowserWindow, theme: ISettings['theme']): void => {
@@ -28,12 +32,14 @@ export const applyThemeToWindow = (window: BrowserWindow, theme: ISettings['them
 export const ipcSettings = (): void => {
   const [window] = BrowserWindow.getAllWindows()
 
-  ipcMain.on(channels.settings_set_autolaunch, (_event, value: boolean) => {
-    setAutoLaunch(value)
+  ipcMain.handle(channels.settings_set_autolaunch, (_event, value: boolean) => {
+    const result = setAutoLaunch(value)
     applyAutoLaunch()
+
+    return result
   })
-  ipcMain.on(channels.settings_set_startMinimaze, (_event, value: boolean) => {
-    setStartMinimized(value)
+  ipcMain.handle(channels.settings_set_startMinimaze, (_event, value: boolean) => {
+    return setStartMinimized(value)
   })
 
   nativeTheme.on('updated', () => {

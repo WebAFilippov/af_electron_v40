@@ -26,7 +26,6 @@ const buildMenu = (): Menu => {
       label: t('tray_label'),
       click: toggleWindowVisibility
     },
-    { type: 'separator' },
     {
       label: t('tray_exit'),
       click: () => {
