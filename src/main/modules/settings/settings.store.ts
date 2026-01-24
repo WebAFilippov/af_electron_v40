@@ -1,8 +1,8 @@
 import Store from 'electron-store'
-import { ISettings } from '../../../shared/types'
-import { app } from 'electron'
-import yaml from 'js-yaml'
 import { nativeTheme } from 'electron/main'
+import { app } from 'electron'
+import type { ISettings } from '../../../shared/types'
+import { parse, stringify } from 'yaml'
 
 export const settingsStore = new Store<ISettings>({
   name: 'settings',
@@ -17,6 +17,9 @@ export const settingsStore = new Store<ISettings>({
     }
   },
   fileExtension: 'yaml',
-  serialize: yaml.dump,
-  deserialize: yaml.load
+  serialize: (data) => stringify(data, { lineWidth: 0 }),
+  deserialize: (str: string) => parse(str) as ISettings
 })
+
+// import bin from '../../resources/hello.exe?asset&asarUnpack'
+// import jsonFile from '../../../../resources/locale/ru.json?commonjs-external&asset'

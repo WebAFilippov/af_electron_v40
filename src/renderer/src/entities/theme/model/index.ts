@@ -1,6 +1,6 @@
 import { createEffect, createStore, sample } from 'effector'
 import { appStartedFx } from '@/shared/model/app-started'
-import { ISettings } from '../../../../../shared/types'
+import type { ISettings } from '../../../../../shared/types'
 import { and, not } from 'patronum'
 
 window.api.settingsUpdateSystemTheme((value) => {

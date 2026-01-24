@@ -26,6 +26,9 @@ win:
 nsis:
   oneClick: false
   perMachine: false
+  allowToChangeInstallationDirectory: true
+  displayLanguageSelector: true
+  deleteAppDataOnUninstall: true
   createDesktopShortcut: always
   createStartMenuShortcut: true
   shortcutName: Effectory

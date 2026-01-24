@@ -1,5 +1,5 @@
 import { createEffect, createEvent, sample } from 'effector'
-import { AppStarted } from '../../../../shared/types'
+import type { AppStarted } from '../../../../shared/types'
 // import { toast } from 'sonner'
 
 const appStartedFx = createEffect<void, AppStarted, Error>(

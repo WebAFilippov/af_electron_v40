@@ -7,10 +7,10 @@ import {
   updateSystemTheme,
   windowBackgroundColor
 } from './settings.service'
-import { channels, ISettings } from '../../../shared/types'
+import type { ISettings } from '../../../shared/types'
+import { channels } from '../../../shared/types'
 import { app, BrowserWindow, ipcMain, nativeTheme } from 'electron/main'
-import { updateTray } from '@/app/create-tray'
-import { updateWindow } from '@/app/create-window'
+
 
 export const applyAutoLaunch = (): void => {
   const enable = settingsStore.get('autoLaunch')
@@ -59,7 +59,5 @@ export const ipcSettings = (): void => {
 
   ipcMain.on(channels.settings_set_language, (_event, language: ISettings['language']) => {
     setLanguage(language)
-    updateTray()
-    updateWindow()
   })
 }

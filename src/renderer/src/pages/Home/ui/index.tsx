@@ -1,5 +1,13 @@
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui'
-import { ReactNode } from 'react'
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/shared/ui'
+import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 
 export const HomePage = (): ReactNode => {
@@ -23,6 +31,10 @@ export const HomePage = (): ReactNode => {
               Настройки
             </Button>
           </Link>
+
+          <CardFooter>
+            <img src="image.jpg" />
+          </CardFooter>
         </CardContent>
       </Card>
     </div>

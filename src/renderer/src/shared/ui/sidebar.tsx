@@ -179,7 +179,7 @@ function Sidebar({
           }
           side={'left'}
         >
-          <SheetHeader className='sr-only'>
+          <SheetHeader className="sr-only">
             <SheetTitle>Sidebar</SheetTitle>
             <SheetDescription>Sidebar Description</SheetDescription>
           </SheetHeader>
@@ -674,6 +674,5 @@ export {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
-  // eslint-disable-next-line react-refresh/only-export-components
   useSidebar
 }

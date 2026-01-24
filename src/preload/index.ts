@@ -1,8 +1,9 @@
-import { Api } from './index.types'
+import type { Api } from './index.types'
 import { electronAPI } from '@electron-toolkit/preload'
 
 import { contextBridge, ipcRenderer } from 'electron'
-import { channels, ISettings, IWindow } from '../shared/types'
+import type { ISettings, IWindow } from '../shared/types'
+import { channels } from '../shared/types'
 
 const api = {
   // === App ===

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { useGate, useUnit } from 'effector-react'
 import { cn } from '@/shared/lib'
 import {

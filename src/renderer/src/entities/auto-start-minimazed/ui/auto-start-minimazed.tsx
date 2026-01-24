@@ -1,6 +1,6 @@
 import { Label, Switch } from '@/shared/ui'
 import { useUnit } from 'effector-react'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { $autoStartMinimazed, toggleAutoStartMinimazed } from '../model/model'
 
 export const AutoStartMinimaze = (): ReactNode => {
@@ -11,9 +11,7 @@ export const AutoStartMinimaze = (): ReactNode => {
 
   return (
     <div className="w-full flex justify-between items-center h-10">
-      <Label htmlFor="switch-auto-start" className="text-base">
-        Запуск в свёрнутом виде
-      </Label>
+      <Label htmlFor="switch-auto-start">Запуск в свёрнутом виде</Label>
       <Switch
         id="switch-auto-start"
         checked={isAutoStartMinimazed}

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { useUnit } from 'effector-react'
 
 import {
@@ -17,9 +17,7 @@ export const ThemeSwitcher = (): ReactNode => {
 
   return (
     <div className="flex items-center justify-between">
-      <Label htmlFor="theme-switcher" className="text-base">
-        Тема приложения
-      </Label>
+      <Label htmlFor="theme-switcher">Тема приложения</Label>
       <Select value={theme.mode} onValueChange={handleSetTheme}>
         <SelectTrigger className="min-w-45 w-fit" id="theme-switcher">
           <SelectValue />

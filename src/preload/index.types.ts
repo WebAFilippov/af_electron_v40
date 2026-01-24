@@ -1,5 +1,5 @@
-import { ElectronAPI } from '@electron-toolkit/preload'
-import { AppStarted, ISettings, IWindow } from '../shared/types'
+import type { ElectronAPI } from '@electron-toolkit/preload'
+import type { AppStarted, ISettings, IWindow } from '../shared/types'
 
 export interface Api {
   // === App ===

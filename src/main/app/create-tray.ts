@@ -1,8 +1,8 @@
-import { t } from '@/modules/settings/translations'
 import appIcon from '../../../build/icon.ico?asset'
 import { app, BrowserWindow, Menu, nativeImage, Tray } from 'electron'
 
-import { AppUpdater } from 'electron-updater'
+import type { AppUpdater } from 'electron-updater'
+import i18next, { t } from 'i18next'
 
 let tray: Tray | null = null
 let currentUpdater: AppUpdater | undefined = undefined
@@ -21,13 +21,19 @@ const toggleWindowVisibility = (): void => {
 }
 
 const buildMenu = (): Menu => {
+  const [window] = BrowserWindow.getAllWindows()
+
   return Menu.buildFromTemplate([
     {
-      label: t('tray_label'),
+      label: window.isVisible() ? t('tray.control_window.hide') : t('tray.control_window.show'),
       click: toggleWindowVisibility
     },
     {
-      label: t('tray_exit'),
+      label: 'language',
+      click: () => i18next.changeLanguage('en')
+    },
+    {
+      label: t('tray.exit'),
       click: () => {
         if (currentUpdater && currentUpdater.autoInstallOnAppQuit) {
           currentUpdater.quitAndInstall()
@@ -44,23 +50,31 @@ export const createTray = (updater?: AppUpdater): Tray => {
 
   tray = new Tray(nativeImage.createFromPath(appIcon))
 
-  tray.setToolTip(t('app_title'))
-  tray.setTitle(t('app_title'))
+  tray.setToolTip(t('tray.tooltip'))
+  tray.setTitle(t('tray.title'))
   tray.setContextMenu(buildMenu())
+
+  const [window] = BrowserWindow.getAllWindows()
+
+  window.on('show', updateTrayMenu)
+  window.on('hide', updateTrayMenu)
+  window.on('minimize', updateTrayMenu)
+  window.on('restore', updateTrayMenu)
 
   tray.on('click', toggleWindowVisibility)
   tray.on('double-click', toggleWindowVisibility)
-
-  tray.on('right-click', () => {
-    tray?.popUpContextMenu(buildMenu())
-  })
+  tray.on('right-click', () => tray?.popUpContextMenu(buildMenu()))
 
   return tray
 }
 
-export const updateTray = (): void => {
+export const updateTrayMenu = (): void => {
   if (!tray) return
-
-  tray.setToolTip(t('app_title'))
   tray.setContextMenu(buildMenu())
 }
+
+i18next.on('languageChanged', () => {
+  updateTrayMenu()
+  tray?.setToolTip(t('tray.tooltip'))
+  tray?.setTitle(t('tray.title'))
+})

@@ -1,6 +1,6 @@
 import { createEffect, createEvent, createStore, sample } from 'effector'
 import { createGate } from 'effector-react'
-import { IWindow } from '../../../../../shared/types'
+import type { IWindow } from '../../../../../shared/types'
 
 window.api.windowState((state) => changeWindowState(state))
 

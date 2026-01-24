@@ -3,7 +3,7 @@ import { AutoStartMinimaze } from '@/entities/auto-start-minimazed'
 import { LanguageSwitcher } from '@/entities/language'
 import { ThemeSwitcher } from '@/entities/theme'
 import { Button } from '@/shared/ui'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { toast } from 'sonner'
 
 export const SettingsPage = (): ReactNode => {

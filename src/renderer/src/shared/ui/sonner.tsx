@@ -1,7 +1,7 @@
 import { $theme } from '@/entities/theme'
 import { useUnit } from 'effector-react'
 import { CircleCheck, Info, LoaderCircle, OctagonX, TriangleAlert } from 'lucide-react'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { Toaster as Sonner } from 'sonner'
 
 type ToasterProps = React.ComponentProps<typeof Sonner>

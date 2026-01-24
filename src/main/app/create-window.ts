@@ -4,9 +4,10 @@ import { is } from '@electron-toolkit/utils'
 
 import { settingsStore } from '@/modules/settings/settings.store'
 import { applyThemeToWindow } from '@/modules/settings/settings.controller'
-import { t } from '@/modules/settings/translations'
+
 import { BrowserWindow, Menu, screen } from 'electron/main'
 import { nativeImage } from 'electron'
+import { t } from 'i18next'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -28,7 +29,7 @@ export const createWindow = (): BrowserWindow => {
     resizable: true,
     focusable: true,
     fullscreen: false,
-    title: t('app_title'),
+    title: t('window.title'),
     titleBarStyle: 'hidden',
     autoHideMenuBar: false,
     minimizable: true,
@@ -67,12 +68,8 @@ export const createWindow = (): BrowserWindow => {
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    mainWindow.loadFile(join(import.meta.dirname, '../renderer/index.html'), { hash: 'home' })
   }
 
   return mainWindow
-}
-
-export const updateWindow = (): void => {
-  mainWindow?.setTitle(t('app_title'))
 }

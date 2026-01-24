@@ -1,10 +1,12 @@
 import { app, BrowserWindow } from 'electron'
-import { createWindow } from './app/create-window'
 
 import { electronApp } from '@electron-toolkit/utils'
 import { createTray } from './app/create-tray'
-import { ipcRegister } from './ipc/register-ipc'
+
 import { applyAutoLaunch } from './modules/settings/settings.controller'
+import { ipcRegister } from './ipc/register-ipc'
+import { createWindow } from './app/create-window'
+import { i18nextInit } from './modules/i18next/i18next.service'
 
 const gotTheLock = app.requestSingleInstanceLock()
 
@@ -26,8 +28,9 @@ if (!gotTheLock) {
 
   app.whenReady().then(async () => {
     try {
-      applyAutoLaunch()
+      await i18nextInit()
 
+      applyAutoLaunch()
       electronApp.setAppUserModelId('AFD.APP')
 
       const window = createWindow()

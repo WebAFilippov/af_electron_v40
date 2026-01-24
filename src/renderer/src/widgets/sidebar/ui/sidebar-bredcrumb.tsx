@@ -1,4 +1,4 @@
-import { RouteHandle } from '@/app/routing'
+import type { RouteHandle } from '@/app/routing'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,8 +9,10 @@ import {
 } from '@/shared/ui'
 import { Home05Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Fragment, ReactNode } from 'react'
-import { NavLink, UIMatch, useMatches } from 'react-router'
+import type { ReactNode } from 'react'
+import { Fragment } from 'react'
+import type { UIMatch } from 'react-router'
+import { NavLink, useMatches } from 'react-router'
 
 type AppMatch = UIMatch<unknown, RouteHandle>
 

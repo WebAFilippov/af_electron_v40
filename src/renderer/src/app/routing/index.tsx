@@ -1,4 +1,5 @@
-import { createBrowserRouter, RouteObject } from 'react-router'
+import type { RouteObject } from 'react-router'
+import { createBrowserRouter } from 'react-router'
 import { BaseLayout } from '../layouts/base-layout'
 import { SettingsPage } from '@/pages/Settings'
 import { NotFound404Page } from '@/pages/NotFound404'

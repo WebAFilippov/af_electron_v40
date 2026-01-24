@@ -1,5 +1,7 @@
-import { BrowserWindow, ipcMain } from 'electron'
-import { channels, IWindow } from '../../../shared/types'
+import type { BrowserWindow } from 'electron'
+import { ipcMain } from 'electron'
+import type { IWindow } from '../../../shared/types'
+import { channels } from '../../../shared/types'
 
 const sendWindowState = (
   window: BrowserWindow,

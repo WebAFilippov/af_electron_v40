@@ -1,12 +1,5 @@
-import {
-  createContext,
-  useContext,
-  useRef,
-  useState,
-  useEffect,
-  KeyboardEvent,
-  ReactNode
-} from 'react'
+import type { KeyboardEvent, ReactNode } from 'react'
+import { createContext, useContext, useRef, useState, useEffect } from 'react'
 
 type ToggleGroupContextType<T> = {
   value: T

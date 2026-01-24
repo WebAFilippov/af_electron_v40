@@ -5,11 +5,12 @@
     "src/main/**/*",
     "src/preload/**/*",
     "src/shared/**/*",
+    "node.d.ts"
   ],
   "compilerOptions": {
     "composite": true,
     "types": [
-      "electron-vite/node"
+      "electron-vite/node",
     ],
     "paths": {
       "@/app/*": [

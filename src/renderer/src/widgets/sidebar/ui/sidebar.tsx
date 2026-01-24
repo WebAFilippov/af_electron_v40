@@ -12,7 +12,7 @@ import {
 } from '@/shared/ui'
 
 import { cn } from '@/shared/lib'
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { NavLink, Outlet } from 'react-router'
 import { NAVIGATION_LIST } from '../model/navigation-list'
 import { useUnit } from 'effector-react'
