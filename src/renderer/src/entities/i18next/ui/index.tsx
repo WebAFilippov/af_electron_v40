@@ -9,34 +9,33 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/shared/ui'
+import { useUnit } from 'effector-react'
 import type { ReactNode } from 'react'
-import { useState } from 'react'
-import type { ISettings } from '../../../../../shared/types'
-
-const countries = { france: '🇫🇷', 'united-kingdom': '🇬🇧', spain: '🇪🇸' }
+import { $instance, $isReady, $language, $t, changeLanguageFx } from '../model'
 
 export const LanguageSwitcher = (): ReactNode => {
-  const [lang, setLang] = useState('ru')
+  const [t, isReady, instance, language, handleChangeLanguageFx] = useUnit([
+    $t,
+    $isReady,
+    $instance,
+    $language,
+    changeLanguageFx
+  ])
+
   return (
     <div className="flex items-center justify-between">
-      <Label htmlFor="language-switcher">Язык</Label>
-      <Select
-        value={lang}
-        onValueChange={(language: ISettings['language']) => {
-          window.api.settingsSetLanguage(language)
-          setLang(language)
-        }}
-      >
+      <Label htmlFor="language-switcher">{t('entities.i18next.label')}</Label>
+      <Select value={language} onValueChange={handleChangeLanguageFx}>
         <SelectTrigger className="min-w-45  w-fit" id="language-switcher">
-          <SelectValue>{countries[lang]}</SelectValue>
+          <SelectValue>{}</SelectValue>
         </SelectTrigger>
         <SelectContent className="max-h-70 select-none">
           <SelectScrollUpButton />
           <SelectGroup>
-            <SelectItem value="ru" disabled={lang === 'ru'}>
+            <SelectItem value="ru" disabled={language === 'ru'}>
               Русский
             </SelectItem>
-            <SelectItem value="en" disabled={lang === 'en'}>
+            <SelectItem value="en" disabled={language === 'en'}>
               English
             </SelectItem>
           </SelectGroup>

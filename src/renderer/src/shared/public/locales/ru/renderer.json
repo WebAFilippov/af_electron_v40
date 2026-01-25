@@ -1,0 +1,12 @@
+{
+  "entities": {
+    "i18next": {
+      "label": "Язык"
+    }
+  },
+  "home": {
+    "page": {
+      "welcome": "Добро пожаловать в 'new_start'"
+    }
+  }
+}

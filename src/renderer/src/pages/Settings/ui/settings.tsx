@@ -1,6 +1,7 @@
 import { AutoLaunch } from '@/entities/auto-launch'
 import { AutoStartMinimaze } from '@/entities/auto-start-minimazed'
-import { LanguageSwitcher } from '@/entities/language'
+import { LanguageSwitcher } from '@/entities/i18next'
+
 import { ThemeSwitcher } from '@/entities/theme'
 import { Button } from '@/shared/ui'
 import type { ReactNode } from 'react'

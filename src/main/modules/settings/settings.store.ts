@@ -10,7 +10,6 @@ export const settingsStore = new Store<ISettings>({
     version: app.getVersion(),
     autoLaunch: true,
     startMinimized: false,
-    language: 'ru',
     theme: {
       mode: 'system',
       darken: nativeTheme.shouldUseDarkColors

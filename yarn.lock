@@ -2556,7 +2556,7 @@
 
 "@withease/i18next@^25.0.0":
   version "25.0.0"
-  resolved "https://registry.npmjs.org/@withease/i18next/-/i18next-25.0.0.tgz"
+  resolved "https://registry.yarnpkg.com/@withease/i18next/-/i18next-25.0.0.tgz#ae69d823bb119d2d2207edc6a3e07e9ab26f625c"
   integrity sha512-M3HaIBNlKe9zYzchVQe2bdJedTWmlcIHSkxMpAGm8y7PmxrZgHiOfSREJZWhUmu19F+Ktkz43aigNiHJgUfAyQ==
 
 "@xmldom/xmldom@^0.8.8":
@@ -3293,6 +3293,13 @@ crc@^3.8.0:
   integrity sha512-iX3mfgcTMIq3ZKLIsVFAbv7+Mc10kxabAGQb8HvjA1o3T1PIYprbakQ65d3I+2HGHt6nSKkM9PYjgoJO2KcFBQ==
   dependencies:
     buffer "^5.1.0"
+
+cross-fetch@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-4.0.0.tgz#f037aef1580bb3a1a35164ea2a848ba81b445983"
+  integrity sha512-e4a5N8lVvuLgAWgnCrLr2PP0YyDOTHa9H/Rj54dirp61qXnNq46m82bRhNqIA5VccJtWBvPTFRV3TtvHUKPB1g==
+  dependencies:
+    node-fetch "^2.6.12"
 
 cross-spawn@^7.0.1, cross-spawn@^7.0.3, cross-spawn@^7.0.5, cross-spawn@^7.0.6:
   version "7.0.6"
@@ -4735,6 +4742,13 @@ hosted-git-info@^4.1.0:
   dependencies:
     lru-cache "^6.0.0"
 
+html-parse-stringify@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/html-parse-stringify/-/html-parse-stringify-3.0.1.tgz#dfc1017347ce9f77c8141a507f233040c59c55d2"
+  integrity sha512-KknJ50kTInJ7qIScF3jeaFRpMpE8/lfiTdzf/twXyPBLAGrLRTmkz3AdTnKeh40X8k9L2fdYwEp/42WGXIRGcg==
+  dependencies:
+    void-elements "3.1.0"
+
 http-cache-semantics@^4.0.0, http-cache-semantics@^4.1.1:
   version "4.2.0"
   resolved "https://registry.npmjs.org/http-cache-semantics/-/http-cache-semantics-4.2.0.tgz"
@@ -4790,9 +4804,16 @@ i18next-fs-backend@^2.6.1:
   resolved "https://registry.yarnpkg.com/i18next-fs-backend/-/i18next-fs-backend-2.6.1.tgz#bb352278136f47599783308df29f0a1b6a0d08b6"
   integrity sha512-eYWTX7QT7kJ0sZyCPK6x1q+R63zvNKv2D6UdbMf15A8vNb2ZLyw4NNNZxPFwXlIv/U+oUtg8SakW6ZgJZcoqHQ==
 
+i18next-http-backend@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/i18next-http-backend/-/i18next-http-backend-3.0.2.tgz#7c8daa31aa69679e155ec1f96a37846225bdf907"
+  integrity sha512-PdlvPnvIp4E1sYi46Ik4tBYh/v/NbYfFFgTjkwFl0is8A18s7/bx9aXqsrOax9WUbeNS6mD2oix7Z0yGGf6m5g==
+  dependencies:
+    cross-fetch "4.0.0"
+
 i18next@^25.8.0:
   version "25.8.0"
-  resolved "https://registry.npmjs.org/i18next/-/i18next-25.8.0.tgz"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-25.8.0.tgz#8b4ac516db016ebba70d2b68f5ba17e6ffcd4935"
   integrity sha512-urrg4HMFFMQZ2bbKRK7IZ8/CTE7D8H4JRlAwqA2ZwDRFfdd0K/4cdbNNLgfn9mo+I/h9wJu61qJzH7jCFAhUZQ==
   dependencies:
     "@babel/runtime" "^7.28.4"
@@ -5792,6 +5813,13 @@ node-domexception@^1.0.0:
   resolved "https://registry.npmjs.org/node-domexception/-/node-domexception-1.0.0.tgz"
   integrity sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==
 
+node-fetch@^2.6.12:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.7.0.tgz#d0f0fa6e3e2dc1d27efcd8ad99d550bda94d187d"
+  integrity sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==
+  dependencies:
+    whatwg-url "^5.0.0"
+
 node-fetch@^3.3.2:
   version "3.3.2"
   resolved "https://registry.npmjs.org/node-fetch/-/node-fetch-3.3.2.tgz"
@@ -6432,6 +6460,15 @@ react-hook-form@^7.70.0:
   version "7.71.1"
   resolved "https://registry.npmjs.org/react-hook-form/-/react-hook-form-7.71.1.tgz"
   integrity sha512-9SUJKCGKo8HUSsCO+y0CtqkqI5nNuaDqTxyqPsZPqIwudpj4rCrAz/jZV+jn57bx5gtZKOh3neQu94DXMc+w5w==
+
+react-i18next@^16.5.3:
+  version "16.5.3"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-16.5.3.tgz#1f102c8e8e7b0c9069e21ac40cd730f32a64e180"
+  integrity sha512-fo+/NNch37zqxOzlBYrWMx0uy/yInPkRfjSuy4lqKdaecR17nvCHnEUt3QyzA8XjQ2B/0iW/5BhaHR3ZmukpGw==
+  dependencies:
+    "@babel/runtime" "^7.28.4"
+    html-parse-stringify "^3.0.1"
+    use-sync-external-store "^1.6.0"
 
 react-is@^16.13.1:
   version "16.13.1"
@@ -7395,6 +7432,11 @@ tough-cookie@^6.0.0:
   dependencies:
     tldts "^7.0.5"
 
+tr46@~0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
+  integrity sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==
+
 truncate-utf8-bytes@^1.0.0:
   version "1.0.2"
   resolved "https://registry.npmjs.org/truncate-utf8-bytes/-/truncate-utf8-bytes-1.0.2.tgz"
@@ -7671,6 +7713,11 @@ vite@^7.2.6:
   optionalDependencies:
     fsevents "~2.3.3"
 
+void-elements@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-3.1.0.tgz#614f7fbf8d801f0bb5f0661f5b2f5785750e4f09"
+  integrity sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==
+
 wcwidth@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/wcwidth/-/wcwidth-1.0.1.tgz"
@@ -7682,6 +7729,19 @@ web-streams-polyfill@^3.0.3:
   version "3.3.3"
   resolved "https://registry.npmjs.org/web-streams-polyfill/-/web-streams-polyfill-3.3.3.tgz"
   integrity sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw==
+
+webidl-conversions@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
+  integrity sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==
+
+whatwg-url@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/whatwg-url/-/whatwg-url-5.0.0.tgz#966454e8765462e37644d3626f6742ce8b70965d"
+  integrity sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==
+  dependencies:
+    tr46 "~0.0.3"
+    webidl-conversions "^3.0.0"
 
 when-exit@^2.1.4:
   version "2.1.5"

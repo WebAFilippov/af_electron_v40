@@ -1,9 +1,8 @@
 import Store from 'electron-store'
 import { stringify, parse } from 'yaml'
+import { AppLanguage } from '../../../shared/types'
 
 export type AppLanguageStore = { language: AppLanguage }
-export type AppLanguage = 'ru' | 'en' | 'be' | 'uk'
-export const SUPPORTED_LANGUAGES: AppLanguage[] = ['ru', 'en', 'be', 'uk']
 
 export const i18nextStore = new Store<AppLanguageStore>({
   name: 'i18next',

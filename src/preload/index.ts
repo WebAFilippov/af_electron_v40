@@ -18,7 +18,9 @@ const api = {
     )
   },
   settingsSetTheme: (mode) => ipcRenderer.invoke(channels.settings_set_theme, mode),
-  settingsSetLanguage: (mode) => ipcRenderer.send(channels.settings_set_language, mode),
+  // === i18next ===
+  i18nextChangeLanguage: (language) =>
+    ipcRenderer.invoke(channels.i18next_change_language, language),
   // === Window ===
   windowState: (callback) => {
     ipcRenderer.on(channels.window_updated, (_, state: IWindow) => callback(state))

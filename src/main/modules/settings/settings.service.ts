@@ -47,8 +47,3 @@ export const updateSystemTheme = (
 
   return settingsStore.get('theme')
 }
-
-export const setLanguage = (value: ISettings['language']): void => {
-  settingsStore.set('language', value)
-}
-

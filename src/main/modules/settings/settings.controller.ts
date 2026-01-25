@@ -1,7 +1,6 @@
 import { settingsStore } from './settings.store'
 import {
   setAutoLaunch,
-  setLanguage,
   setStartMinimized,
   setTheme,
   updateSystemTheme,
@@ -10,7 +9,6 @@ import {
 import type { ISettings } from '../../../shared/types'
 import { channels } from '../../../shared/types'
 import { app, BrowserWindow, ipcMain, nativeTheme } from 'electron/main'
-
 
 export const applyAutoLaunch = (): void => {
   const enable = settingsStore.get('autoLaunch')
@@ -55,9 +53,5 @@ export const ipcSettings = (): void => {
     applyThemeToWindow(window, theme)
 
     return theme
-  })
-
-  ipcMain.on(channels.settings_set_language, (_event, language: ISettings['language']) => {
-    setLanguage(language)
   })
 }

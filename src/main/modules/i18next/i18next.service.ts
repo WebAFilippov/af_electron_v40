@@ -1,10 +1,11 @@
 import i18next, { i18n, InitOptions } from 'i18next'
 import FsBackend from 'i18next-fs-backend'
-import path from 'path'
-
-import { AppLanguage, i18nextStore, SUPPORTED_LANGUAGES } from './i18next.store'
-import { Config } from '@/shared/config'
 import { is } from '@electron-toolkit/utils'
+import { join } from 'path'
+
+import { i18nextStore } from './i18next.store'
+import { Config } from '@/shared/config'
+import { AppLanguage, SUPPORTED_LANGUAGES } from '../../../shared/types'
 
 export const i18nextInit = async (): Promise<i18n> => {
   const currentLanguage = i18nextStore.get('language', 'ru') as AppLanguage
@@ -13,13 +14,15 @@ export const i18nextInit = async (): Promise<i18n> => {
     debug: false,
     lng: currentLanguage,
     fallbackLng: 'ru',
-    ns: 'backend',
-    defaultNS: 'backend',
+    ns: 'main',
+    defaultNS: 'main',
     supportedLngs: SUPPORTED_LANGUAGES,
     nonExplicitSupportedLngs: true,
     backend: {
-      loadPath: path.join(Config.pathResources, 'locales/{{lng}}/{{ns}}.json'),
-      addPath: path.join(Config.pathResources, 'locales/{{lng}}/{{ns}}.missing.json')
+      loadPath: join(Config.pathResources, 'locales/{{lng}}/{{ns}}.json'),
+      addPath: is.dev
+        ? join(Config.pathResources, 'locales/{{lng}}/{{ns}}.missing.json') // в dev можно писать
+        : undefined // в production write не нужен и не сработает
     },
     interpolation: {
       escapeValue: false
@@ -35,4 +38,21 @@ export const i18nextInit = async (): Promise<i18n> => {
   await i18next.use(FsBackend).init(options)
 
   return i18next
+}
+
+export const getLanguage = (): AppLanguage => {
+  return i18nextStore.get('language') as AppLanguage
+}
+
+export const setLanguage = (language: AppLanguage): boolean => {
+  try {
+    if (i18next.isInitialized) {
+      i18nextStore.set('language', language)
+      i18next.changeLanguage(language)
+      return true
+    }
+    return false
+  } catch {
+    return false
+  }
 }

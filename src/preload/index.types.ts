@@ -1,17 +1,16 @@
 import type { ElectronAPI } from '@electron-toolkit/preload'
-import type { AppStarted, ISettings, IWindow } from '../shared/types'
+import type { AppLanguage, AppStarted, ISettings, IWindow } from '../shared/types'
 
 export interface Api {
   // === App ===
   appStarted: () => Promise<AppStarted>
-
   // === Settings ===
   settingsSetAutoLaunch: (value: boolean) => Promise<boolean>
   settingSetStartMininaze: (value: boolean) => Promise<boolean>
   settingsUpdateSystemTheme: (callback: (theme: ISettings['theme']) => void) => void
   settingsSetTheme: (mode: ISettings['theme']['mode']) => Promise<ISettings['theme']>
-  settingsSetLanguage: (mode: ISettings['language']) => void
-
+  // === i18next ===
+  i18nextChangeLanguage: (language: AppLanguage) => Promise<boolean>
   // === Window ===
   windowState: (callback: (state: IWindow) => void) => void
   windowToggleFullScreen: () => void
