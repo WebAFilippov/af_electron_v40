@@ -3,7 +3,6 @@ import { createI18nextIntegration } from '@withease/i18next'
 import { AppLanguage, SUPPORTED_LANGUAGES } from '../../../../../shared/types'
 import { initReactI18next } from 'react-i18next'
 import { appStarted } from '@/shared/model'
-import Backend from 'i18next-http-backend'
 import { createEffect, createEvent, sample } from 'effector'
 
 const createOptions = (lang: AppLanguage): InitOptions => {
@@ -11,22 +10,18 @@ const createOptions = (lang: AppLanguage): InitOptions => {
     debug: true,
     initAsync: false,
     lng: lang,
-    fallbackLng: 'en',
+    fallbackLng: 'ru',
     ns: 'renderer',
     defaultNS: 'renderer',
+    fallbackNS: 'renderer',
     supportedLngs: SUPPORTED_LANGUAGES,
     nonExplicitSupportedLngs: true,
-    backend: {
-      loadPath: 'locales/{{lng}}/{{ns}}.json',
-      addPath: null
-    },
     interpolation: {
       escapeValue: false
     },
     returnNull: true,
     returnEmptyString: false,
-    cleanCode: true,
-    load: 'currentOnly'
+    cleanCode: true
   }
 }
 
@@ -36,7 +31,14 @@ const { $t, $isReady, $instance, $language, changeLanguageFx } = createI18nextIn
     const options = createOptions(language)
 
     const i18n = i18next.createInstance()
-    await i18n.use(Backend).use(initReactI18next).init(options)
+    await i18n.use(initReactI18next).init(options)
+
+    for (const lang of SUPPORTED_LANGUAGES) {
+      const resources = await window.api.i18nextGetResources(lang)
+
+      i18n.addResourceBundle(lang, 'renderer', resources, true, true)
+    }
+
     return i18n
   },
   setup: appStarted

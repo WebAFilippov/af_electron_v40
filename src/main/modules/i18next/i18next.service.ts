@@ -1,11 +1,11 @@
 import i18next, { i18n, InitOptions } from 'i18next'
 import FsBackend from 'i18next-fs-backend'
-import { is } from '@electron-toolkit/utils'
-import { join } from 'path'
 
 import { i18nextStore } from './i18next.store'
-import { Config } from '@/shared/config'
+
 import { AppLanguage, SUPPORTED_LANGUAGES } from '../../../shared/types'
+import { Config } from '@/shared/config'
+import { join } from 'path'
 
 export const i18nextInit = async (): Promise<i18n> => {
   const currentLanguage = i18nextStore.get('language', 'ru') as AppLanguage
@@ -16,13 +16,11 @@ export const i18nextInit = async (): Promise<i18n> => {
     fallbackLng: 'en',
     ns: 'main',
     defaultNS: 'main',
+    fallbackNS: 'main',
     supportedLngs: SUPPORTED_LANGUAGES,
     nonExplicitSupportedLngs: true,
     backend: {
-      loadPath: join(Config.pathResources, 'locales/{{lng}}/{{ns}}.json'),
-      addPath: is.dev
-        ? join(Config.pathResources, 'locales/{{lng}}/{{ns}}.missing.json')
-        : undefined
+      loadPath: join(Config.pathResources, 'locales/{{lng}}/{{ns}}.json')
     },
     interpolation: {
       escapeValue: false
@@ -30,9 +28,7 @@ export const i18nextInit = async (): Promise<i18n> => {
     returnNull: false,
     returnEmptyString: false,
     cleanCode: true,
-    saveMissing: is.dev,
-    saveMissingTo: 'fallback',
-    load: 'currentOnly'
+    load: 'languageOnly'
   }
 
   await i18next.use(FsBackend).init(options)

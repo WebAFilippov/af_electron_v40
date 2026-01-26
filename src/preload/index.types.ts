@@ -12,6 +12,7 @@ export interface Api {
   // === i18next ===
   i18nextChangeLanguage: (language: AppLanguage) => Promise<AppLanguage>
   i18nextGetLanguage: () => Promise<AppLanguage>
+  i18nextGetResources: (lang: AppLanguage) => Promise<any>
   // === Window ===
   windowState: (callback: (state: IWindow) => void) => void
   windowToggleFullScreen: () => void

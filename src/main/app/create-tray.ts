@@ -29,10 +29,6 @@ const buildMenu = (): Menu => {
       click: toggleWindowVisibility
     },
     {
-      label: 'language',
-      click: () => i18next.changeLanguage('en')
-    },
-    {
       label: t('tray.exit'),
       click: () => {
         if (currentUpdater && currentUpdater.autoInstallOnAppQuit) {

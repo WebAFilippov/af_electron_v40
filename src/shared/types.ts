@@ -9,6 +9,7 @@ export const channels = {
 
   i18next_change_language: 'i18next:change_language',
   i18next_get_language: 'i18next:get_language',
+  i18next_get_resources: 'i18next:get_resources',
 
   window_updated: 'window:state',
   window_fullscreen: 'window:toggle-fullscreen',

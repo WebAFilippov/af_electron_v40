@@ -42,6 +42,7 @@ export default defineConfig({
     }
   },
   preload: {
+    base: './',
     plugins: [],
     build: {
       isolatedEntries: true,
@@ -68,6 +69,7 @@ export default defineConfig({
     }
   },
   renderer: {
+    base: './',
     publicDir: 'src/shared/public',
     resolve: {
       alias: {

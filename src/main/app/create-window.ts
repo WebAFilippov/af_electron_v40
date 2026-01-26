@@ -7,7 +7,7 @@ import { applyThemeToWindow } from '@/modules/settings/settings.controller'
 
 import { BrowserWindow, Menu, screen } from 'electron/main'
 import { nativeImage } from 'electron'
-import { t } from 'i18next'
+import i18next, { t } from 'i18next'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -54,12 +54,11 @@ export const createWindow = (): BrowserWindow => {
 
   mainWindow.flashFrame(false)
   mainWindow.setOverlayIcon(nativeImage.createFromPath(appIcon), 'Effectory')
-  if (!is.dev) {
-    mainWindow.setMenu(null)
-    mainWindow.setMenuBarVisibility(false)
-    mainWindow.setSkipTaskbar(false)
-    Menu.setApplicationMenu(null)
-  }
+
+  mainWindow.setMenu(null)
+  mainWindow.setMenuBarVisibility(false)
+  mainWindow.setSkipTaskbar(false)
+  Menu.setApplicationMenu(null)
 
   mainWindow.on('ready-to-show', () =>
     triggerStart ? mainWindow?.hide() : startMinimized ? mainWindow?.hide() : mainWindow?.show()
@@ -71,5 +70,13 @@ export const createWindow = (): BrowserWindow => {
     mainWindow.loadFile(join(import.meta.dirname, '../renderer/index.html'), { hash: 'home' })
   }
 
+  mainWindow.webContents.once('did-finish-load', () => {
+    mainWindow?.webContents.openDevTools({ mode: 'bottom' })
+  })
+
   return mainWindow
 }
+
+i18next.on('languageChanged', () => {
+  mainWindow?.setTitle(t('window.title'))
+})
