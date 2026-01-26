@@ -13,7 +13,7 @@ export const i18nextInit = async (): Promise<i18n> => {
   const options: InitOptions = {
     debug: false,
     lng: currentLanguage,
-    fallbackLng: 'ru',
+    fallbackLng: 'en',
     ns: 'main',
     defaultNS: 'main',
     supportedLngs: SUPPORTED_LANGUAGES,
@@ -21,8 +21,8 @@ export const i18nextInit = async (): Promise<i18n> => {
     backend: {
       loadPath: join(Config.pathResources, 'locales/{{lng}}/{{ns}}.json'),
       addPath: is.dev
-        ? join(Config.pathResources, 'locales/{{lng}}/{{ns}}.missing.json') // в dev можно писать
-        : undefined // в production write не нужен и не сработает
+        ? join(Config.pathResources, 'locales/{{lng}}/{{ns}}.missing.json')
+        : undefined
     },
     interpolation: {
       escapeValue: false
@@ -44,15 +44,15 @@ export const getLanguage = (): AppLanguage => {
   return i18nextStore.get('language') as AppLanguage
 }
 
-export const setLanguage = (language: AppLanguage): boolean => {
+export const setLanguage = (language: AppLanguage): AppLanguage => {
   try {
     if (i18next.isInitialized) {
       i18nextStore.set('language', language)
       i18next.changeLanguage(language)
-      return true
+      return language
     }
-    return false
+    throw new Error('Not setted language in store')
   } catch {
-    return false
+    throw new Error('Not setted language in store')
   }
 }

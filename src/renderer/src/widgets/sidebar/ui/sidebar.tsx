@@ -18,8 +18,12 @@ import { NAVIGATION_LIST } from '../model/navigation-list'
 import { useUnit } from 'effector-react'
 import { $windowFullscreen } from '@/widgets/window-control-panel/model'
 import { SidebarBreadcrumbs } from './sidebar-bredcrumb'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { Notification } from '@hugeicons/core-free-icons'
+import { $t } from '@/entities/i18next'
 
 export function SidebarWidget(): ReactNode {
+  const t = useUnit($t)
   const [windowFullscreen] = useUnit([$windowFullscreen])
 
   return (
@@ -30,7 +34,7 @@ export function SidebarWidget(): ReactNode {
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {NAVIGATION_LIST.navSecondary.map((item) => (
+                  {NAVIGATION_LIST.navMain.map((item) => (
                     <NavLink to={item.url} key={item.title} draggable={false} tabIndex={-1}>
                       {({ isActive }) => {
                         return (
@@ -38,7 +42,7 @@ export function SidebarWidget(): ReactNode {
                             <SidebarMenuButton size="default" isActive={isActive}>
                               <>
                                 {item.icon}
-                                <span>{item.title}</span>
+                                <span>{t(item.title)}</span>
                               </>
                             </SidebarMenuButton>
                           </SidebarMenuItem>
@@ -59,14 +63,19 @@ export function SidebarWidget(): ReactNode {
         >
           <header
             className={cn(
-              'flex h-16 shrink-0 bg-background items-center justify-between gap-2 border-b px-4 sticky '
+              'flex h-16 shrink-0 bg-background items-center justify-between gap-2 border-b px-4 sticky'
             )}
           >
-            <div className="flex gap-5 items-center justify-start">
-              <SidebarTrigger className="-ml-1" />
-              <SidebarBreadcrumbs />
+            <div className="flex gap-5 items-center justify-between w-full">
+              <div className="flex items-center gap-5">
+                <SidebarTrigger />
+                <SidebarBreadcrumbs />
+              </div>
+
+              <div>
+                <HugeiconsIcon icon={Notification} size={22} />
+              </div>
             </div>
-            <div>Notification</div>
           </header>
           <div className="overflow-x-hidden overflow-y-auto h-full px-8 py-4">
             <Outlet />

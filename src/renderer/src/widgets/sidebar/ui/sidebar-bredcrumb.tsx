@@ -1,4 +1,5 @@
 import type { RouteHandle } from '@/app/routing'
+import { $t } from '@/entities/i18next'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,6 +10,7 @@ import {
 } from '@/shared/ui'
 import { Home05Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { useUnit } from 'effector-react'
 import type { ReactNode } from 'react'
 import { Fragment } from 'react'
 import type { UIMatch } from 'react-router'
@@ -17,6 +19,7 @@ import { NavLink, useMatches } from 'react-router'
 type AppMatch = UIMatch<unknown, RouteHandle>
 
 export const SidebarBreadcrumbs = (): ReactNode => {
+  const t = useUnit($t)
   const matches = useMatches() as AppMatch[]
   const breadcrumbMatches = matches.filter((match) => match.handle?.breadcrumb)
 
@@ -38,17 +41,17 @@ export const SidebarBreadcrumbs = (): ReactNode => {
 
           if (match.pathname === '/') return null
 
-          const breadcrumb = match.handle!.breadcrumb && match.handle!.breadcrumb()
-
           return (
             <Fragment key={match.pathname}>
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage>{breadcrumb}</BreadcrumbPage>
+                  <BreadcrumbPage>
+                    {match.handle!.breadcrumb && t(match.handle!.breadcrumb())}
+                  </BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
                     <NavLink to={match.pathname}>
-                      {match.handle!.breadcrumb && match.handle!.breadcrumb()}
+                      {match.handle!.breadcrumb && t(match.handle!.breadcrumb())}
                     </NavLink>
                   </BreadcrumbLink>
                 )}

@@ -10,7 +10,8 @@ export interface Api {
   settingsUpdateSystemTheme: (callback: (theme: ISettings['theme']) => void) => void
   settingsSetTheme: (mode: ISettings['theme']['mode']) => Promise<ISettings['theme']>
   // === i18next ===
-  i18nextChangeLanguage: (language: AppLanguage) => Promise<boolean>
+  i18nextChangeLanguage: (language: AppLanguage) => Promise<AppLanguage>
+  i18nextGetLanguage: () => Promise<AppLanguage>
   // === Window ===
   windowState: (callback: (state: IWindow) => void) => void
   windowToggleFullScreen: () => void

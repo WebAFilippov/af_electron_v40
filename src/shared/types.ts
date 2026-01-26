@@ -8,6 +8,7 @@ export const channels = {
   settings_set_language: 'settings:set_language',
 
   i18next_change_language: 'i18next:change_language',
+  i18next_get_language: 'i18next:get_language',
 
   window_updated: 'window:state',
   window_fullscreen: 'window:toggle-fullscreen',
@@ -33,11 +34,10 @@ export interface IWindow {
   show: boolean
 }
 
-export type AppLanguage = 'ru' | 'en' | 'be' | 'uk'
+export type AppLanguage = 'ru' | 'en' | 'be' | 'uk' | 'kk'
 
-export const SUPPORTED_LANGUAGES: AppLanguage[] = ['ru', 'en', 'be', 'uk']
+export const SUPPORTED_LANGUAGES: AppLanguage[] = ['ru', 'en', 'be', 'uk', 'kk']
 
 export interface AppStarted {
   settings: ISettings
-  language: AppLanguage
 }

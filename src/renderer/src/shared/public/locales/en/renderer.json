@@ -1,12 +1,31 @@
 {
+  "nav": {
+    "sidebar": {
+      "update": "Updates",
+      "settings": "Settings"
+    }
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "update": "Updates",
+    "settings": "Settings",
+    "404": "Page not found"
+  },
   "entities": {
     "i18next": {
       "label": "Language"
-    }
-  },
-  "home": {
-    "page": {
-      "welcome": "Welcme в 'new_start'"
+    },
+    "autoLaunch": {
+      "label": "Auto‑launch"
+    },
+    "autoStartMinimized": {
+      "label": "Start minimized"
+    },
+    "theme": {
+      "label": "App theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
     }
   }
 }

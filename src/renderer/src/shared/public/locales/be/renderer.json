@@ -1,14 +1,31 @@
 {
-  "window": {
-    "title": "AFDevice Умный стол"
+  "nav": {
+    "sidebar": {
+      "update": "Абнаўленні",
+      "settings": "Налады"
+    }
   },
-  "tray": {
-    "tooltip": "AFDevice приложение для управления умным столом",
-    "title": "AFDevice Умный стол",
-    "control_window": {
-      "show": "Открыть AFDevice",
-      "hide": "Свернуть"
+  "breadcrumb": {
+    "home": "Галоўная",
+    "update": "Абнаўленні",
+    "settings": "Налады",
+    "404": "Сторнка не знойдзена"
+  },
+  "entities": {
+    "i18next": {
+      "label": "Мова"
     },
-    "exit": "Выход"
+    "autoLaunch": {
+      "label": "Аўтаматычны запуск"
+    },
+    "autoStartMinimized": {
+      "label": "Запуск у згорнутым выглядзе"
+    },
+    "theme": {
+      "label": "Тема прыкладання",
+      "light": "Светлая",
+      "dark": "Цёмная",
+      "system": "Сістэмная"
+    }
   }
 }

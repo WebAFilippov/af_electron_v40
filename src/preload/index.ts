@@ -21,6 +21,7 @@ const api = {
   // === i18next ===
   i18nextChangeLanguage: (language) =>
     ipcRenderer.invoke(channels.i18next_change_language, language),
+  i18nextGetLanguage: () => ipcRenderer.invoke(channels.i18next_get_language),
   // === Window ===
   windowState: (callback) => {
     ipcRenderer.on(channels.window_updated, (_, state: IWindow) => callback(state))

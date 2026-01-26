@@ -17,26 +17,27 @@ const routes: AppRouteObject[] = [
   {
     path: '/',
     element: <BaseLayout />,
+    errorElement: <div>error page</div>,
     children: [
       {
         index: true,
         element: <HomePage />,
-        handle: { breadcrumb: () => 'page.home' }
+        handle: { breadcrumb: () => 'breadcrumb.home' }
       },
       {
         path: 'update',
         element: <SettingsPage />,
-        handle: { breadcrumb: () => 'page.update' }
+        handle: { breadcrumb: () => 'breadcrumb.update' }
       },
       {
         path: 'settings',
         element: <SettingsPage />,
-        handle: { breadcrumb: () => 'page.settings' }
+        handle: { breadcrumb: () => 'breadcrumb.settings' }
       },
       {
         path: '*',
         element: <NotFound404Page />,
-        handle: { breadcrumb: () => 'page.404' }
+        handle: { breadcrumb: () => 'breadcrumb.404' }
       }
     ]
   }
