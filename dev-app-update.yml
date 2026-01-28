@@ -1,3 +1,5 @@
-# provider: generic
-# url: https://example.com/auto-updates
-# updaterCacheDirName: af_electron-updater
+publish:
+  - provider: github
+    owner: WebAFilippov
+    repo: af_electron_v40
+    releaseType: release

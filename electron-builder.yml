@@ -1,18 +1,22 @@
 appId: com.AFilippov.effectory
 productName: effectory
 copyright: Copyright © 2025 WebAFilippov
-buildVersion: 0.0.1
+buildVersion: 0.0.3
+
 directories:
   buildResources: build
   output: dist
+
 files:
   - '!**/.vscode/*'
-  - '!src/*'
+  - '!src/**'
   - '!electron.vite.config.{js,ts,mjs,cjs}'
   - '!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+
 asarUnpack:
+  - node_modules/sqlite3
   - 'resources/**'
 
 win:
@@ -26,21 +30,48 @@ win:
 nsis:
   oneClick: false
   perMachine: false
-  allowToChangeInstallationDirectory: true
-  displayLanguageSelector: true
+  allowToChangeInstallationDirectory: false
+  displayLanguageSelector: false
   deleteAppDataOnUninstall: true
   createDesktopShortcut: always
   createStartMenuShortcut: true
+  menuCategory: true
+  multiLanguageInstaller: true
+  packElevateHelper: true
+  runAfterFinish: true
   shortcutName: Effectory
   artifactName: '${productName}-${version}-setup.${ext}'
   uninstallDisplayName: '${productName} ${version}'
+  installerLanguages:
+    - en-US
+    - ru-RU
   installerIcon: build/icon.ico
   uninstallerIcon: build/icon.ico
 
-npmRebuild: false
+electronLanguages:
+  - en-US
+asar: true
+compression: maximum
+npmRebuild: true
 
 publish:
   - provider: github
     owner: WebAFilippov
     repo: af_electron_v40
-    releaseType: draft
+    releaseType: release
+
+
+releaseInfo:
+  releaseDate: '2025-01-28'
+  releaseName: 'Effectory 0.0.3'
+  releaseNotes: |
+    Initial public release of Effectory.
+
+    Features:
+    - Smart desk height control
+    - Windows system volume control
+    - Modular Electron + React architecture
+    - Optimized build size and performance
+
+    This release focuses on core functionality and stability.
+  vendor: WebAFilippov

@@ -1,3 +1,5 @@
+import { ProgressInfo, UpdateDownloadedEvent, UpdateInfo } from "electron-updater"
+
 export const channels = {
   app_started: 'app:started',
 
@@ -42,3 +44,31 @@ export const SUPPORTED_LANGUAGES: AppLanguage[] = ['ru', 'en', 'be', 'uk', 'kk']
 export interface AppStarted {
   settings: ISettings
 }
+
+export type UpdateStatusDto =
+  | 'idle'
+  | 'error'
+  | 'checking-for-update'
+  | 'update-available'
+  | 'update-not-available'
+  | 'update-downloaded'
+  | 'download-progress'
+
+export type UpdateDataDto =
+  | {
+      status: 'idle'
+    }
+  | {
+      status: 'error'
+      data: {
+        error: Error
+        message: string | undefined
+      }
+    }
+  | {
+      status: 'checking-for-update'
+    }
+  | { status: 'update-available'; data: UpdateInfo }
+  | { status: 'update-not-available'; data: UpdateInfo }
+  | { status: 'update-downloaded'; data: UpdateDownloadedEvent }
+  | { status: 'download-progress'; data: ProgressInfo }

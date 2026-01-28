@@ -1,6 +1,6 @@
 {
   "name": "af_electron",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "productname": "Effectory App",
   "description": "Description Effectory App",
   "main": "./out/main/main.js",
@@ -20,8 +20,8 @@
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
-    "build:publish": "npm run build && electron-builder --win --publish always --debug",
-    "build:publish_never": "npm run build && electron-builder --win --publish never --debug"
+    "build:publish": "npm run build && electron-builder --win --publish always",
+    "build:publish_never": "npm run build && electron-builder --win --publish never"
   },
   "dependencies": {
     "@base-ui/react": "^1.0.0",
@@ -71,8 +71,7 @@
     "electron-updater": "^6.7.3",
     "embla-carousel-react": "^8.6.0",
     "i18next": "^25.8.0",
-    "i18next-electron-fs-backend": "^3.0.3",
-    "i18next-http-backend": "^3.0.2",
+    "i18next-fs-backend": "^2.6.1",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.562.0",
     "patronum": "^2.3.0",

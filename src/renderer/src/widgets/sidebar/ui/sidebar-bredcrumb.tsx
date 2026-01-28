@@ -14,7 +14,7 @@ import { useUnit } from 'effector-react'
 import type { ReactNode } from 'react'
 import { Fragment } from 'react'
 import type { UIMatch } from 'react-router'
-import { NavLink, useMatches } from 'react-router'
+import { NavLink,  useMatches } from 'react-router'
 
 type AppMatch = UIMatch<unknown, RouteHandle>
 
@@ -23,6 +23,7 @@ export const SidebarBreadcrumbs = (): ReactNode => {
   const matches = useMatches() as AppMatch[]
   const breadcrumbMatches = matches.filter((match) => match.handle?.breadcrumb)
 
+  console.log(breadcrumbMatches)
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -50,7 +51,7 @@ export const SidebarBreadcrumbs = (): ReactNode => {
                   </BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink asChild>
-                    <NavLink to={match.pathname}>
+                    <NavLink to={match.pathname} className={' bg-sidebar'}>
                       {match.handle!.breadcrumb && t(match.handle!.breadcrumb())}
                     </NavLink>
                   </BreadcrumbLink>

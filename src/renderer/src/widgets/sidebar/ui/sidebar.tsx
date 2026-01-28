@@ -8,7 +8,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarTrigger
+  SidebarTrigger,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem
 } from '@/shared/ui'
 
 import { cn } from '@/shared/lib'
@@ -35,16 +38,40 @@ export function SidebarWidget(): ReactNode {
               <SidebarGroupContent>
                 <SidebarMenu>
                   {NAVIGATION_LIST.navMain.map((item) => (
-                    <NavLink to={item.url} key={item.title} draggable={false} tabIndex={-1}>
+                    <NavLink to={item.url} end key={item.title} draggable={false} tabIndex={-1}>
                       {({ isActive }) => {
                         return (
                           <SidebarMenuItem className="select-none">
-                            <SidebarMenuButton size="default" isActive={isActive}>
+                            <SidebarMenuButton
+                              size="default"
+                              variant={'default'}
+                              isActive={isActive}
+                            >
                               <>
                                 {item.icon}
                                 <span>{t(item.title)}</span>
                               </>
                             </SidebarMenuButton>
+                            <SidebarMenuSub>
+                              {item.children?.map((subItem) => (
+                                <SidebarMenuSubItem>
+                                  <NavLink to={subItem.url} end key={subItem.title}>
+                                    {({ isActive: isActive2 }) => (
+                                      <SidebarMenuSubButton
+                                        className="select-none"
+                                        size="sm"
+                                        isActive={isActive2}
+                                        key={subItem.title}
+                                      >
+                                        <>
+                                          <span>{t(subItem.title)}</span>
+                                        </>
+                                      </SidebarMenuSubButton>
+                                    )}
+                                  </NavLink>
+                                </SidebarMenuSubItem>
+                              ))}
+                            </SidebarMenuSub>
                           </SidebarMenuItem>
                         )
                       }}

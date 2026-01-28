@@ -1,7 +1,14 @@
 import { HugeiconsIcon } from '@hugeicons/react'
 import { InstallingUpdates02Icon, Settings02Icon } from '@hugeicons/core-free-icons'
 
-export const NAVIGATION_LIST = {
+interface NavigationItem {
+  title: string
+  url: string
+  icon?: React.ReactNode
+  children?: NavigationItem[]
+}
+
+export const NAVIGATION_LIST: Record<string, NavigationItem[]> = {
   navMain: [
     {
       title: 'nav.sidebar.update',

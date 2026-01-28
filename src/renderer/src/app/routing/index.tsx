@@ -1,9 +1,11 @@
 import type { RouteObject } from 'react-router'
-import { createBrowserRouter } from 'react-router'
+import { createHashRouter, Outlet } from 'react-router'
 import { BaseLayout } from '../layouts/base-layout'
-import { SettingsPage } from '@/pages/Settings'
+
 import { NotFound404Page } from '@/pages/NotFound404'
 import { HomePage } from '@/pages/Home'
+import { UpdatePage } from '@/pages/Updates'
+import { SettingsPage } from '@/pages/Settings'
 
 export type RouteHandle = {
   breadcrumb?: () => string
@@ -25,14 +27,20 @@ const routes: AppRouteObject[] = [
         handle: { breadcrumb: () => 'breadcrumb.home' }
       },
       {
-        path: 'update',
-        element: <SettingsPage />,
-        handle: { breadcrumb: () => 'breadcrumb.update' }
+        path: 'settings',
+        element: <Outlet />,
+        handle: { breadcrumb: () => 'breadcrumb.settings' },
+        children: [
+          {
+            index: true,
+            element: <SettingsPage />
+          }
+        ]
       },
       {
-        path: 'settings',
-        element: <SettingsPage />,
-        handle: { breadcrumb: () => 'breadcrumb.settings' }
+        path: 'update',
+        element: <UpdatePage />,
+        handle: { breadcrumb: () => 'breadcrumb.update' }
       },
       {
         path: '*',
@@ -43,6 +51,6 @@ const routes: AppRouteObject[] = [
   }
 ]
 
-export const router = createBrowserRouter(routes, {
-  basename: window.location.pathname
+export const router = createHashRouter(routes, {
+  basename: window.location.hash.slice(1).split('?')[0]
 })

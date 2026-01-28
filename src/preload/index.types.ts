@@ -1,5 +1,6 @@
 import type { ElectronAPI } from '@electron-toolkit/preload'
-import type { AppLanguage, AppStarted, ISettings, IWindow } from '../shared/types'
+import type { AppLanguage, AppStarted, ISettings, IWindow, UpdateDataDto } from '../shared/types'
+import { UpdateCheckResult } from 'electron-updater'
 
 export interface Api {
   // === App ===
@@ -19,6 +20,14 @@ export interface Api {
   windowMinimaze: () => void
   windowMaximaze: () => void
   windowClose: () => void
+  // === Updater ===
+  onUpdateData: (callback: (data: UpdateDataDto) => void) => void
+  successfulUpdate: () => Promise<{ version: string; updated: boolean }>
+  checkForUpdates: () => Promise<UpdateCheckResult | null>
+  retryDownload: () => void
+  startDownload: () => void
+  installNow: () => void
+  installOnQuit: () => void
 }
 
 declare global {

@@ -3,9 +3,6 @@ import { defineConfig, swcPlugin } from 'electron-vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-/**
- * @type {import('electron-vite').UserConfig}
- */
 export default defineConfig({
   main: {
     plugins: [swcPlugin()],
@@ -19,55 +16,42 @@ export default defineConfig({
     },
     build: {
       outDir: 'out/main',
-      reportCompressedSize: true,
       minify: 'esbuild',
+      sourcemap: false,
       rollupOptions: {
         external: ['sqlite3'],
         treeshake: {
           preset: 'recommended',
-          annotations: true,
           moduleSideEffects: false
         },
         output: {
-          minifyInternalExports: true,
-          compact: true,
           format: 'es',
-          manualChunks(id): string | void {
-            if (id.includes('node_modules')) {
-              return id.toString().split('node_modules/')[1].split('/')[0].toString()
-            }
-          }
+          compact: true
         }
       }
     }
   },
+
   preload: {
     base: './',
-    plugins: [],
     build: {
       isolatedEntries: true,
       outDir: 'out/preload',
-      reportCompressedSize: true,
       minify: 'esbuild',
+      sourcemap: false,
       rollupOptions: {
         treeshake: {
           preset: 'recommended',
-          annotations: true,
           moduleSideEffects: false
         },
         output: {
-          minifyInternalExports: true,
-          compact: true,
           format: 'es',
-          manualChunks(id): string | void {
-            if (id.includes('node_modules')) {
-              return id.toString().split('node_modules/')[1].split('/')[0].toString()
-            }
-          }
+          compact: true
         }
       }
     }
   },
+
   renderer: {
     base: './',
     publicDir: 'src/shared/public',
@@ -83,32 +67,21 @@ export default defineConfig({
     build: {
       isolatedEntries: true,
       outDir: 'out/renderer',
-      reportCompressedSize: true,
       minify: 'esbuild',
+      sourcemap: false,
+      target: 'es2020',
+      cssCodeSplit: true,
       rollupOptions: {
         treeshake: {
           preset: 'recommended',
-          annotations: true,
           moduleSideEffects: false
         },
         output: {
-          minifyInternalExports: true,
-          compact: true,
           format: 'es',
-          indent: false,
-          manualChunks(id): string | void {
-            if (id.includes('node_modules')) {
-              return id.toString().split('node_modules/')[1].split('/')[0].toString()
-            }
-          }
+          compact: true
         }
       }
     },
-    plugins: [
-      react({
-        babel: {}
-      }),
-      tailwindcss()
-    ]
+    plugins: [react(), tailwindcss()]
   }
 })

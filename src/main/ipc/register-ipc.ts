@@ -10,4 +10,5 @@ export const ipcRegister = (window: BrowserWindow): void => {
   ipci18next()
   ipcWindow(window)
   ipcSettings()
+  
 }

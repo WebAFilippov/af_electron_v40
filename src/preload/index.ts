@@ -2,7 +2,7 @@ import type { Api } from './index.types'
 import { electronAPI } from '@electron-toolkit/preload'
 
 import { contextBridge, ipcRenderer } from 'electron'
-import type { ISettings, IWindow } from '../shared/types'
+import type { ISettings, IWindow, UpdateDataDto } from '../shared/types'
 import { channels } from '../shared/types'
 
 const api = {
@@ -30,7 +30,17 @@ const api = {
   windowToggleFullScreen: () => ipcRenderer.send(channels.window_fullscreen),
   windowMinimaze: () => ipcRenderer.send(channels.window_minimaze),
   windowMaximaze: () => ipcRenderer.send(channels.window_maximaze),
-  windowClose: () => ipcRenderer.send(channels.window_close)
+  windowClose: () => ipcRenderer.send(channels.window_close),
+    // === Updater ===
+  onUpdateData: (callback) => {
+    ipcRenderer.on('update_data', (_event, data: UpdateDataDto) => callback(data))
+  },
+  successfulUpdate: () => ipcRenderer.invoke('successful_update'),
+  checkForUpdates: () => ipcRenderer.invoke('checking_for_update'),
+  retryDownload: () => ipcRenderer.send('retry_checking_for_update'),
+  startDownload: () => ipcRenderer.send('start_download'),
+  installNow: () => ipcRenderer.send('install_now'),
+  installOnQuit: () => ipcRenderer.send('install_on_quit'),
 } satisfies Api
 
 if (process.contextIsolated) {

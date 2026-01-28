@@ -88,3 +88,4 @@ export {
   BreadcrumbSeparator,
   BreadcrumbEllipsis
 } from './breadcrumb'
+export { Progress } from './progress'
