@@ -58,9 +58,10 @@ export default defineConfig({
     resolve: {
       alias: {
         '@/app': resolve(__dirname, 'src/renderer/src/app'),
-        '@/entities': resolve(__dirname, 'src/renderer/src/entities'),
         '@/pages': resolve(__dirname, 'src/renderer/src/pages'),
         '@/widgets': resolve(__dirname, 'src/renderer/src/widgets'),
+        '@/features': resolve(__dirname, 'src/renderer/src/features'),
+        '@/entities': resolve(__dirname, 'src/renderer/src/entities'),
         '@/shared': resolve(__dirname, 'src/renderer/src/shared')
       }
     },

@@ -1,11 +1,8 @@
 import { nativeTheme } from 'electron/main'
-import type { ISettings } from '../../../shared/types'
-import { settingsStore } from './settings.store'
 
-export enum windowBackgroundColor {
-  DARK = '#18181b',
-  LIGHT = '#fafafa'
-}
+
+import { settingsStore } from './store'
+
 
 export const setAutoLaunch = (value: boolean): boolean => {
   settingsStore.set('autoLaunch', value)
@@ -16,7 +13,7 @@ export const setStartMinimized = (value: boolean): boolean => {
   return settingsStore.get('startMinimized')
 }
 
-export const setTheme = (mode: ISettings['theme']['mode']): ISettings['theme'] => {
+export const setTheme = (mode: SettingsProps['theme']['mode']): SettingsProps['theme'] => {
   settingsStore.set('theme.mode', mode)
 
   switch (mode) {
@@ -38,8 +35,8 @@ export const setTheme = (mode: ISettings['theme']['mode']): ISettings['theme'] =
   return settingsStore.get('theme')
 }
 export const updateSystemTheme = (
-  darken: ISettings['theme']['darken']
-): ISettings['theme'] | null => {
+  darken: SettingsProps['theme']['darken']
+): SettingsProps['theme'] | null => {
   const theme = settingsStore.get('theme')
   if (theme.mode !== 'system') return null
 

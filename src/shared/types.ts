@@ -1,4 +1,4 @@
-import { ProgressInfo, UpdateDownloadedEvent, UpdateInfo } from "electron-updater"
+import { ProgressInfo, UpdateDownloadedEvent, UpdateInfo } from 'electron-updater'
 
 export const channels = {
   app_started: 'app:started',
@@ -8,6 +8,7 @@ export const channels = {
   settings_update_systemTheme: 'settings:update_systemTheme',
   settings_set_theme: 'settings:set_theme',
   settings_set_language: 'settings:set_language',
+  settings_set_checkUpdateOnStart: 'settings:set_checkUpdateOnStart',
 
   i18next_change_language: 'i18next:change_language',
   i18next_get_language: 'i18next:get_language',
@@ -20,29 +21,26 @@ export const channels = {
   window_close: 'window:close'
 } as const
 
-export interface ISettings {
-  version: string
-  autoLaunch: boolean
-  startMinimized: boolean
-  theme: {
-    mode: 'system' | 'dark' | 'light'
-    darken: boolean
-  }
-}
-
-export interface IWindow {
+export interface WindowAppProps {
   minimize: boolean
   maximize: boolean
   fullscreen: boolean
   show: boolean
 }
 
-export type AppLanguage = 'ru' | 'en' | 'be' | 'uk' | 'kk'
+export interface SettingsProps {
+  version: string
+  autoLaunch: boolean
+  startMinimizedOnStart: boolean
+  checkUpdateOnStart: boolean
+}
 
-export const SUPPORTED_LANGUAGES: AppLanguage[] = ['ru', 'en', 'be', 'uk', 'kk']
+export type LanguageApp = 'ru' | 'en' | 'be' | 'uk' | 'kk'
+export const SUPPORTED_LANGUAGES: LanguageApp[] = ['ru', 'en', 'be', 'uk', 'kk']
 
-export interface AppStarted {
-  settings: ISettings
+export type ThemeProps = {
+  mode: 'system' | 'dark' | 'light'
+  darken: boolean
 }
 
 export type UpdateStatusDto =

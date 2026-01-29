@@ -2,8 +2,8 @@ import appIcon from '../../../build/icon.ico?asset'
 import { join } from 'path'
 import { is } from '@electron-toolkit/utils'
 
-import { settingsStore } from '@/modules/settings/settings.store'
-import { applyThemeToWindow } from '@/modules/settings/settings.controller'
+import { settingsStore } from '@/modules/settings/store'
+import { applyThemeToWindow } from '@/modules/settings/controller'
 
 import { BrowserWindow, Menu, screen } from 'electron/main'
 import { nativeImage } from 'electron'
@@ -41,7 +41,7 @@ export const createWindow = (): BrowserWindow => {
       y: 5
     },
     webPreferences: {
-      preload: join(__dirname, '..', 'preload', 'index.mjs'),
+      preload: join(__dirname, '..', 'preload', 'preload.mjs'),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: false,

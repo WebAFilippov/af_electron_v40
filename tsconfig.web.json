@@ -22,6 +22,9 @@
       "@/widgets/*": [
          "./src/renderer/src/widgets/*"
       ],
+      "@/features/*": [
+         "./src/renderer/src/features/*"
+      ],
       "@/entities/*": [
          "./src/renderer/src/entities/*"
       ],
@@ -30,6 +33,9 @@
       ],
       "@/renderer/*": [
         "./src/renderer/src/*"
+      ],
+      "@/shared_app/*": [
+        "./src/shared/*"
       ],
     },
     "esModuleInterop": true,

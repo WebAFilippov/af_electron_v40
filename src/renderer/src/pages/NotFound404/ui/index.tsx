@@ -1,15 +1,24 @@
+import { $t } from '@/entities/i18next'
+import { Button, Empty, EmptyContent, EmptyDescription, EmptyHeader } from '@/shared/ui'
+import { useUnit } from 'effector-react'
 import type { ReactNode } from 'react'
+import { useNavigate } from 'react-router'
 
 export const NotFound404Page = (): ReactNode => {
+  const t = useUnit($t)
+  const navigate = useNavigate()
+
+  const goBack = () => {
+    navigate(-1)
+  }
+
   return (
-    <div className="w-full h-full flex flex-col justify-center items-center bg-background px-4">
-      <div className="text-center max-w-md">
-        <div className="text-8xl font-bold text-foreground mb-4">404</div>
-        <h1 className="text-3xl font-medium text-foreground/80 mb-4">Страница не найдена</h1>
-        <p className="text-muted-foreground mb-8">
-          К сожалению, запрошенная страница не существует или была перемещена.
-        </p>
-      </div>
-    </div>
+    <Empty>
+      <EmptyHeader>{t('page.404.title')}</EmptyHeader>
+      <EmptyDescription>{t('page.404.description')}</EmptyDescription>
+      <EmptyContent>
+        <Button onClick={goBack}>{t('page.404.button_go_back')}</Button>
+      </EmptyContent>
+    </Empty>
   )
 }

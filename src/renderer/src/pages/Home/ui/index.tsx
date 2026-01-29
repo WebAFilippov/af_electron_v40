@@ -31,7 +31,7 @@ export const HomePage = (): ReactNode => {
           <Link to="/update">
             <Button className="w-full">Обновления</Button>
           </Link>
-          <Link to="/settings">
+          <Link to="/setting3123213s">
             <Button variant="outline" className="w-full">
               Настройки
             </Button>

@@ -1,11 +1,11 @@
-import { settingsStore } from './settings.store'
+import { settingsStore } from './store'
 import {
   setAutoLaunch,
   setStartMinimized,
   setTheme,
   updateSystemTheme,
   windowBackgroundColor
-} from './settings.service'
+} from './service'
 import type { ISettings } from '../../../shared/types'
 import { channels } from '../../../shared/types'
 import { app, BrowserWindow, ipcMain, nativeTheme } from 'electron/main'

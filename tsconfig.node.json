@@ -25,6 +25,12 @@
       "@/shared/*": [
          "./src/main/shared/*"
       ],       
+      "@/main/*": [
+        "./src/main/*"
+      ],
+      "@/shared_app/*": [
+        "./src/shared/*"
+      ],
     }
   }
 }

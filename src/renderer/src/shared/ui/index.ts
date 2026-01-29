@@ -89,3 +89,4 @@ export {
   BreadcrumbEllipsis
 } from './breadcrumb'
 export { Progress } from './progress'
+export { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyContent, EmptyMedia } from './empty'
