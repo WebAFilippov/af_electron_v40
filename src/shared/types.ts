@@ -1,20 +1,21 @@
 import { ProgressInfo, UpdateDownloadedEvent, UpdateInfo } from 'electron-updater'
 
 export const channels = {
-  app_started: 'app:started',
-
+  settings_get_by_property: 'settings:get_by_property',
   settings_set_autolaunch: 'settings:setAutoLaunch',
   settings_set_startMinimaze: 'settings:setStartMinimized',
-  settings_update_systemTheme: 'settings:update_systemTheme',
-  settings_set_theme: 'settings:set_theme',
   settings_set_language: 'settings:set_language',
-  settings_set_checkUpdateOnStart: 'settings:set_checkUpdateOnStart',
+  settings_set_checkForUpdatesOnStartup: 'settings:set_checkForUpdatesOnStartup',  
+
+  theme_get_theme: 'settings:get_theme',
+  theme_set_theme: 'settings:set_theme',
+  theme_on_update: 'settings:on_update',
 
   i18next_change_language: 'i18next:change_language',
   i18next_get_language: 'i18next:get_language',
   i18next_get_resources: 'i18next:get_resources',
 
-  window_updated: 'window:state',
+  window_on_update: 'window:on_update',
   window_fullscreen: 'window:toggle-fullscreen',
   window_minimaze: 'window:minimize',
   window_maximaze: 'window:maximize',
@@ -31,12 +32,15 @@ export interface WindowAppProps {
 export interface SettingsProps {
   version: string
   autoLaunch: boolean
-  startMinimizedOnStart: boolean
-  checkUpdateOnStart: boolean
+  startMinimized: boolean
+  checkForUpdatesOnStartup: boolean
 }
 
-export type LanguageApp = 'ru' | 'en' | 'be' | 'uk' | 'kk'
 export const SUPPORTED_LANGUAGES: LanguageApp[] = ['ru', 'en', 'be', 'uk', 'kk']
+export type LanguageApp = 'ru' | 'en' | 'be' | 'uk' | 'kk'
+export interface LanguageProps {
+  language: LanguageApp
+}
 
 export type ThemeProps = {
   mode: 'system' | 'dark' | 'light'

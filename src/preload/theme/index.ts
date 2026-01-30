@@ -1,9 +1,11 @@
 import { ipcRenderer } from 'electron/renderer'
+
+import { channels, ThemeProps } from '@/shared_app/types'
 import { IThemeApp } from './types'
-import { channels, ThemeProps } from '../../shared/types'
 
 export const theme_app = {
-  setTheme: (mode) => ipcRenderer.invoke(channels.settings_set_theme, mode),
+  getTheme: () => ipcRenderer.invoke(channels.theme_get_theme),
+  setTheme: (mode) => ipcRenderer.invoke(channels.theme_set_theme, mode),
   onUpdateSystemTheme: (callback) =>
-    ipcRenderer.on(channels.settings_update_systemTheme, (_, theme: ThemeProps) => callback(theme))
+    ipcRenderer.on(channels.theme_on_update, (_, theme: ThemeProps) => callback(theme))
 } satisfies IThemeApp

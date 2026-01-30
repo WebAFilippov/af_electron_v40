@@ -7,17 +7,17 @@ const DEFAULT_UPDATE_DATA = { status: 'idle' } as const
 const ID_TOKEN_LOADING = 'token_toast_check_for_update' as const
 
 // Update status
-window.api.onUpdateData((data) => {
+window.updater_app.onUpdateData((data) => {
   setUpdateData(data)
 })
 
 // Error effect
 const retryDownloadFx = createEffect(() => {
-  window.api.retryDownload()
+  window.updater_app.retryDownload()
 })
 
 // Successful effect
-const successfulFx = createEffect(() => window.api.successfulUpdate())
+const successfulFx = createEffect(() => window.updater_app.successfulUpdate())
 const toastSuccessfulFx = createEffect((updated: boolean) => {
   updated && toast.success('Обновление успешно установлено!')
 })
@@ -27,7 +27,7 @@ const toastErrorSuccessfulFx = createEffect((error: Error) => {
 
 // CheckForUpdate effect
 const checkForUpdateFx = createEffect<void, UpdateCheckResult | null, Error>(() =>
-  window.api.checkForUpdates()
+  window.updater_app.checkForUpdates()
 )
 const toastLoadingCheckForUpdateFx = createEffect(() => {
   toast.loading('Проверяется обновление ПО...', { id: ID_TOKEN_LOADING })
@@ -37,7 +37,7 @@ const cancelToastCheckForUpdateFx = createEffect(() => {
 })
 
 // Download effect
-const downloadUpdateFx = createEffect(() => window.api.startDownload())
+const downloadUpdateFx = createEffect(() => window.updater_app.startDownload())
 
 // Update not available effect
 const toastUpdateNotAvailableFx = createEffect(() => {
@@ -46,13 +46,13 @@ const toastUpdateNotAvailableFx = createEffect(() => {
 
 // Install now effect
 const installNowUpdateFx = createEffect(() => {
-  window.api.installNow()
+  window.updater_app.installNow()
   setUpdateData(DEFAULT_UPDATE_DATA)
 })
 
 // install on quit effect
 const InstallOnQuitUpdateFx = createEffect(() => {
-  window.api.installOnQuit()
+  window.updater_app.installOnQuit()
   setUpdateData(DEFAULT_UPDATE_DATA)
   setIsDownloaded(true)
 })

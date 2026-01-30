@@ -1,26 +1,18 @@
 import type { ReactNode } from 'react'
 import { useUnit } from 'effector-react'
 
-import {
-  Label,
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/shared/ui'
-import { $theme, setThemeFx } from '../model'
 import { $t } from '@/entities/i18next'
+import { Label, Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui'
+import { $theme, updateThemeMode } from '../model'
 
 export const ThemeSwitcher = (): ReactNode => {
   const t = useUnit($t)
-  const [theme, handleSetTheme] = useUnit([$theme, setThemeFx])
+  const [theme, handleUpdateTheme] = useUnit([$theme, updateThemeMode])
 
   return (
     <div className="flex items-center justify-between">
       <Label htmlFor="theme-switcher">{t('entities.theme.label')}</Label>
-      <Select value={theme.mode} onValueChange={handleSetTheme}>
+      <Select value={theme.mode} onValueChange={handleUpdateTheme}>
         <SelectTrigger className="min-w-45 w-fit" id="theme-switcher">
           <SelectValue />
         </SelectTrigger>

@@ -1,5 +1,6 @@
 import { ipcRenderer } from 'electron/renderer'
 import { IUpdaterApp } from './types'
+import { UpdateDataDto } from '@/shared_app/types'
 
 export const updater_app = {
   onUpdateData: (callback) => {

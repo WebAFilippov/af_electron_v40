@@ -1,5 +1,6 @@
-import { UpdatePanel } from '@/entities/updater'
 import type { ReactNode } from 'react'
+
+import { UpdatePanel } from '@/entities/updater'
 
 export const UpdatePage = (): ReactNode => {
   return (

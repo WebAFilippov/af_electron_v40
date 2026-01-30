@@ -1,14 +1,11 @@
 import { app, BrowserWindow } from 'electron'
-
 import { electronApp } from '@electron-toolkit/utils'
-import { createTray } from './app/create-tray'
 
-import { applyAutoLaunch } from './modules/settings/controller'
+import { createTray } from './app/create-tray'
 import { ipcRegister } from './ipc'
 import { createWindow } from './app/create-window'
-import { i18nextInit } from './modules/i18next/i18next.service'
-import { autoUpdater } from './modules/auto-updater/auto-apdater.service'
-import { ipcUpdater } from './modules/auto-updater/auto-update.controller'
+import { i18nextInit } from './modules/i18next/service'
+import { autoUpdater } from './modules/auto-updater/service'
 
 const gotTheLock = app.requestSingleInstanceLock()
 
@@ -30,17 +27,15 @@ if (!gotTheLock) {
 
   app.whenReady().then(async () => {
     try {
-      await i18nextInit()
-
-      applyAutoLaunch()
       electronApp.setAppUserModelId('AFD.APP')
 
-      const window = createWindow()
-      createTray()
-      const updt = autoUpdater()
+      await i18nextInit()
 
-      ipcRegister(window)
-      ipcUpdater(updt)
+      const window = createWindow()
+      const tray = createTray()
+      const updater = autoUpdater()
+
+      ipcRegister(window, tray, updater)
     } catch (error) {
       throw new Error(`Ошибка при инициализации приложения: ${error}}`)
     }

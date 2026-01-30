@@ -19,15 +19,15 @@ import type { ReactNode } from 'react'
 import { NavLink, Outlet } from 'react-router'
 import { NAVIGATION_LIST } from '../model/navigation-list'
 import { useUnit } from 'effector-react'
-import { $windowFullscreen } from '@/widgets/window-control-panel/model'
 import { SidebarBreadcrumbs } from './sidebar-bredcrumb'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Notification } from '@hugeicons/core-free-icons'
 import { $t } from '@/entities/i18next'
+import { $isFullscreen } from '@/widgets/window-control-panel/model'
 
 export function SidebarWidget(): ReactNode {
   const t = useUnit($t)
-  const [windowFullscreen] = useUnit([$windowFullscreen])
+  const [isFullscreen] = useUnit([$isFullscreen])
 
   return (
     <SidebarProvider className="flex flex-1 flex-col w-screen h-screen">
@@ -84,7 +84,7 @@ export function SidebarWidget(): ReactNode {
         </Sidebar>
         <SidebarInset
           className={cn(
-            windowFullscreen && 'h-[calc(100svh-15px)]!',
+            isFullscreen && 'h-[calc(100svh-15px)]!',
             'h-[calc(100svh-36px)] md:peer-data-[variant=inset]:h-[calc(100svh-53px)]'
           )}
         >

@@ -1,13 +1,13 @@
-import appIcon from '../../../build/icon.ico?asset'
-import { join } from 'path'
-import { is } from '@electron-toolkit/utils'
-
-import { settingsStore } from '@/modules/settings/store'
-import { applyThemeToWindow } from '@/modules/settings/controller'
-
 import { BrowserWindow, Menu, screen } from 'electron/main'
+import { join } from 'path'
 import { nativeImage } from 'electron'
-import i18next, { t } from 'i18next'
+import { is } from '@electron-toolkit/utils'
+import { t } from 'i18next'
+
+import appIcon from '../../../build/icon.ico?asset'
+import { settingsStore } from '@/modules/settings/store'
+import { applyThemeToWindow } from '@/modules/theme'
+import { themeStore } from '@/modules/theme/store'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -50,11 +50,10 @@ export const createWindow = (): BrowserWindow => {
     }
   })
 
-  applyThemeToWindow(mainWindow, settingsStore.get('theme'))
+  applyThemeToWindow(mainWindow, themeStore.store)
 
   mainWindow.flashFrame(false)
   mainWindow.setOverlayIcon(nativeImage.createFromPath(appIcon), 'Effectory')
-
   mainWindow.setMenu(null)
   mainWindow.setMenuBarVisibility(false)
   mainWindow.setSkipTaskbar(false)
@@ -76,7 +75,3 @@ export const createWindow = (): BrowserWindow => {
 
   return mainWindow
 }
-
-i18next.on('languageChanged', () => {
-  mainWindow?.setTitle(t('window.title'))
-})

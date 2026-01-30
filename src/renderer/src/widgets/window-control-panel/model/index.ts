@@ -1,70 +1,56 @@
 import { createEffect, createEvent, createStore, sample } from 'effector'
-import { createGate } from 'effector-react'
-import type { IWindow } from '../../../../../shared/types'
 
-window.api.windowState((state) => changeWindowState(state))
+import { WindowAppProps } from '@/shared_app/types'
 
-const KeyDownToWindow = (event: KeyboardEvent): void => {
+const onWindowKeyDown = (event: KeyboardEvent): void => {
   if (event.altKey && event.key === 'Enter') {
     event.preventDefault()
-    handleToggleFullScreenFx()
+    toggleFullscreenFx()
   }
 
   if (event.ctrlKey && event.key === 'Enter') {
     event.preventDefault()
-    handleWindowMaximazeFx()
+    maximizeWindowFx()
   }
 }
 
-const addKeydownWindowFx = createEffect(() => {
-  window.addEventListener('keydown', KeyDownToWindow)
+const initWindowControlsFx = createEffect(() => window.window_app.onState((state) => updateWindow(state)))
+const setupWindowShortcutsFx = createEffect(() => {
+  window.addEventListener('keydown', onWindowKeyDown)
 })
-const removeKeydownWindowFx = createEffect(() => {
-  window.removeEventListener('keydown', KeyDownToWindow)
-})
+const toggleFullscreenFx = createEffect(() => window.window_app.toggleFullScreen())
+const maximizeWindowFx = createEffect(() => window.window_app.setMaximize())
+const minimizeWindowFx = createEffect(() => window.window_app.setMinimize())
+const closeWindowFx = createEffect(() => window.window_app.setClose())
 
-const GateWindowControlPanel = createGate()
+const updateWindow = createEvent<WindowAppProps>()
 
-const handleToggleFullScreenFx = createEffect(() => window.api.windowToggleFullScreen())
-const handleWindowMaximazeFx = createEffect(() => window.api.windowMaximaze())
-const handleWindowMinimazeFx = createEffect(() => window.api.windowMinimaze())
-const handleWindowCloseFx = createEffect(() => window.api.windowClose())
-
-const changeWindowState = createEvent<IWindow>()
-
-const $window = createStore<IWindow>({
+const $window = createStore<WindowAppProps>({
   minimize: false,
   maximize: false,
   fullscreen: false,
   show: false
-})
-const $windowMinimize = $window.map((state) => state.minimize)
-const $windowMaximize = $window.map((state) => state.maximize)
-const $windowFullscreen = $window.map((state) => state.fullscreen)
-const $windowShow = $window.map((state) => state.show)
+}).on(updateWindow, (_, state) => state)
+
+const $isMinimized = $window.map((state) => state.minimize)
+const $isMaximized = $window.map((state) => state.maximize)
+const $isFullscreen = $window.map((state) => state.fullscreen)
+const $isVisible = $window.map((state) => state.show)
 
 sample({
-  clock: changeWindowState,
-  target: $window
-})
-
-sample({
-  clock: GateWindowControlPanel.open,
-  target: [addKeydownWindowFx]
-})
-sample({
-  clock: GateWindowControlPanel.close,
-  target: [removeKeydownWindowFx]
+  clock: setupWindowShortcutsFx,
+  target: setupWindowShortcutsFx
 })
 
 export {
-  GateWindowControlPanel,
+  initWindowControlsFx,
   $window,
-  $windowFullscreen,
-  $windowMaximize,
-  $windowMinimize,
-  $windowShow,
-  handleWindowCloseFx,
-  handleWindowMaximazeFx,
-  handleWindowMinimazeFx
+  $isMinimized,
+  $isMaximized,
+  $isFullscreen,
+  $isVisible,
+  toggleFullscreenFx,
+  maximizeWindowFx,
+  minimizeWindowFx,
+  closeWindowFx
 }

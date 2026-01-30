@@ -1,12 +1,22 @@
-import { AppLanguage } from './../../../shared/types'
-import { ipcMain } from 'electron/main'
-import { channels } from '../../../shared/types'
-import { getLanguage, setLanguage } from './i18next.service'
+import { BrowserWindow, ipcMain, Tray } from 'electron/main'
 import { join } from 'path'
 import { readFile } from 'node:fs'
-import { Config } from '@/shared/config'
 
-export const ipci18next = (): void => {
+import { getLanguage, setLanguage } from './service'
+import { Config } from '@/shared/config'
+import { channels, LanguageApp } from '@/shared_app/types'
+import i18next, { t } from 'i18next'
+import { updateTrayMenu } from '@/app/create-tray'
+
+export const ipcI18next = (window: BrowserWindow, tray: Tray): void => {
+  i18next.on('languageChanged', () => {
+    window.setTitle(t('window.title'))
+
+    updateTrayMenu()
+    tray.setToolTip(t('tray.tooltip'))
+    tray.setTitle(t('tray.title'))
+  })
+
   ipcMain.handle(channels.i18next_change_language, (_, language) => {
     return setLanguage(language)
   })
@@ -15,8 +25,8 @@ export const ipci18next = (): void => {
     return getLanguage()
   })
 
-  ipcMain.handle(channels.i18next_get_resources, (_, lang: AppLanguage) => {
-    const filePath = join(Config.pathResources, `locales/${lang}/renderer.json`)
+  ipcMain.handle(channels.i18next_get_resources, (_, language: LanguageApp) => {
+    const filePath = join(Config.pathResources, `locales/${language}/renderer.json`)
 
     return new Promise((resolve, reject) => {
       readFile(filePath, 'utf8', (err, data) => {

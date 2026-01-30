@@ -9,11 +9,9 @@ export const autoUpdater = (): AppUpdater => {
   autoUpdater.autoRunAppAfterInstall = true
   autoUpdater.autoDownload = false
   autoUpdater.autoInstallOnAppQuit = false
-  autoUpdater.forceDevUpdateConfig = true
 
   // Проверка обновлений
   autoUpdater.on('checking-for-update', () => {
-    console.log('object');
     const data = {
       status: 'checking-for-update'
     }

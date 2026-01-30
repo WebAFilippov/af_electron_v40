@@ -1,32 +1,26 @@
-import { appStartedFx } from '@/shared/model'
 import { createEffect, createEvent, createStore, sample } from 'effector'
-import { not } from 'patronum'
+import { and, not } from 'patronum'
 
-const setAutoLaunchFx = createEffect<boolean, boolean, Error>(async (value) => {
-  return await window.api.settingsSetAutoLaunch(value)
-})
+import { SettingsProps } from '@/shared_app/types'
 
-const toggleAutoLaunch = createEvent<void>()
+const fetchAutoLaunchFx = createEffect<void, SettingsProps['autoLaunch']>(() =>
+  window.settings_app.getSettingsByProperty('autoLaunch')
+)
+
+const updateAutoLaunchFx = createEffect<boolean, boolean>((value) => window.settings_app.setAutoLaunch(value))
+
+const toggleAutoLaunch = createEvent()
 
 const $autoLaunch = createStore(true)
-
-sample({
-  clock: appStartedFx.doneData,
-  fn: (data) => data.settings.autoLaunch,
-  target: [$autoLaunch]
-})
+  .on(fetchAutoLaunchFx.doneData, (_, data) => data)
+  .on(updateAutoLaunchFx.doneData, (_, data) => data)
 
 sample({
   clock: toggleAutoLaunch,
-  filter: not(setAutoLaunchFx.pending),
+  filter: and(not(updateAutoLaunchFx.pending), not(fetchAutoLaunchFx.pending)),
   source: $autoLaunch,
-  fn: (store) => !store,
-  target: setAutoLaunchFx
+  fn: (current) => !current,
+  target: updateAutoLaunchFx
 })
 
-sample({
-  clock: setAutoLaunchFx.doneData,
-  target: $autoLaunch
-})
-
-export { $autoLaunch, toggleAutoLaunch }
+export { $autoLaunch, toggleAutoLaunch, fetchAutoLaunchFx }

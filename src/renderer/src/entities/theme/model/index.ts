@@ -1,25 +1,19 @@
-import { createEffect, createStore, sample } from 'effector'
-import { appStartedFx } from '@/shared/model/app-started'
-import type { ISettings } from '../../../../../shared/types'
+import { createEffect, createEvent, createStore, sample } from 'effector'
 import { and, not } from 'patronum'
 
-window.api.settingsUpdateSystemTheme((value) => {
-  applyThemeFx(value)
-})
+import { ThemeProps } from '@/shared_app/types'
 
-const applyThemeFx = createEffect<ISettings['theme'], ISettings['theme']>((value) => {
+const applyThemeFx = createEffect<ThemeProps, ThemeProps>((theme) => {
   const html = document.documentElement
   if (!html) {
     throw new Error('html element not found')
   }
+
   html.classList.remove('light', 'dark')
-  switch (value.mode) {
+
+  switch (theme.mode) {
     case 'system':
-      if (value.darken) {
-        html.classList.add('dark')
-      } else {
-        html.classList.add('light')
-      }
+      html.classList.add(theme.darken ? 'dark' : 'light')
       break
     case 'dark':
       html.classList.add('dark')
@@ -29,33 +23,39 @@ const applyThemeFx = createEffect<ISettings['theme'], ISettings['theme']>((value
       break
   }
 
-  return value
+  return theme
 })
 
-const setThemeFx = createEffect<ISettings['theme']['mode'], ISettings['theme']>((mode) =>
-  window.api.settingsSetTheme(mode)
-)
+const initThemeFx = createEffect(() => {
+  window.theme_app.onUpdateSystemTheme((newTheme: ThemeProps) => applyThemeFx(newTheme))
+  fetchThemeFx()
+})
 
-const $theme = createStore<ISettings['theme']>({
+const fetchThemeFx = createEffect<void, ThemeProps>(() => window.theme_app.getTheme())
+
+const updateThemeModeFx = createEffect<ThemeProps['mode'], ThemeProps>((mode) => window.theme_app.setTheme(mode))
+
+const updateThemeMode = createEvent<ThemeProps['mode']>()
+
+const $theme = createStore<ThemeProps>({
   mode: 'light',
   darken: false
-})
+}).on(applyThemeFx.doneData, (_, theme) => theme)
 
 sample({
-  clock: appStartedFx.doneData,
-  fn: (data) => data.settings.theme,
+  clock: fetchThemeFx.doneData,
   target: applyThemeFx
 })
 
 sample({
-  clock: setThemeFx.doneData,
-  filter: and(not(setThemeFx.pending), not(applyThemeFx.pending)),
+  clock: updateThemeModeFx.doneData,
   target: applyThemeFx
 })
 
 sample({
-  clock: applyThemeFx.doneData,
-  target: $theme
+  clock: updateThemeMode,
+  filter: and(not(updateThemeModeFx.pending), not(fetchThemeFx.pending), not(applyThemeFx.pending)),
+  target: updateThemeModeFx
 })
 
-export { $theme, setThemeFx }
+export { $theme, updateThemeMode, initThemeFx }

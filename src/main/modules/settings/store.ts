@@ -8,7 +8,7 @@ export const settingsStore = new Store<SettingsProps>({
   defaults: {
     version: app.getVersion(),
     autoLaunch: true,
-    startMinimizedOnStart: false,
-    checkUpdateOnStart: true
+    startMinimized: false,
+    checkForUpdatesOnStartup: true
   }
 })

@@ -1,8 +1,9 @@
-import appIcon from '../../../build/icon.ico?asset'
-import { app, BrowserWindow, Menu, nativeImage, Tray } from 'electron'
-
+import { app, BrowserWindow, Menu, Tray } from 'electron/main'
+import { nativeImage } from 'electron'
 import type { AppUpdater } from 'electron-updater'
-import i18next, { t } from 'i18next'
+import { t } from 'i18next'
+
+import appIcon from '../../../build/icon.ico?asset'
 
 let tray: Tray | null = null
 let currentUpdater: AppUpdater | undefined = undefined
@@ -68,9 +69,3 @@ export const updateTrayMenu = (): void => {
   if (!tray) return
   tray.setContextMenu(buildMenu())
 }
-
-i18next.on('languageChanged', () => {
-  updateTrayMenu()
-  tray?.setToolTip(t('tray.tooltip'))
-  tray?.setTitle(t('tray.title'))
-})

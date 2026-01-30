@@ -1,11 +1,16 @@
-import type { BrowserWindow } from 'electron'
+import { BrowserWindow, Tray } from 'electron/main'
+import type { AppUpdater } from 'electron-updater'
 
-import { ipcWindow } from '@/modules/window/window.controller'
+import { ipcI18next } from '@/modules/i18next/controller'
+import { ipcTheme } from '@/modules/theme'
+import { ipcWindow } from '@/modules/window'
+import { ipcUpdater } from '@/modules/auto-updater/controller'
 import { ipcSettings } from '@/modules/settings/controller'
-import { ipci18next } from '@/modules/i18next/i18next.controller'
 
-export const ipcRegister = (window: BrowserWindow): void => {
-  ipci18next()
+export const ipcRegister = (window: BrowserWindow, tray: Tray, updater: AppUpdater): void => {
   ipcWindow(window)
-  ipcSettings()
+  ipcTheme(window)
+  ipcI18next(window, tray)
+  ipcSettings(window, updater)
+  ipcUpdater(window, updater)
 }

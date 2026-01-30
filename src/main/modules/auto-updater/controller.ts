@@ -1,7 +1,16 @@
-import { app, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron/main'
+import type { AppUpdater } from 'electron-updater'
+import { settingsStore } from '../settings'
 
+export const ipcUpdater = (window: BrowserWindow, autoUpdater: AppUpdater) => {
+  window.on('ready-to-show', () => {
+    const checkForUpdatesOnStartup = settingsStore.get('checkForUpdatesOnStartup', true)
 
-export const ipcUpdater = (autoUpdater) => {
+    if (checkForUpdatesOnStartup) {
+      autoUpdater.checkForUpdates()
+    }
+  })
+
   ipcMain.handle('successful_update', async () => {
     const version = app.getVersion()
     const updated = version !== '0.0.1'

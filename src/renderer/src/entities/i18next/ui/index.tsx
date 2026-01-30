@@ -14,12 +14,7 @@ import type { ReactNode } from 'react'
 import { $isReady, $language, $t, changeLanguage } from '../model'
 
 export const LanguageSwitcher = (): ReactNode => {
-  const [t, isReady, language, handleChangeLanguageFx] = useUnit([
-    $t,
-    $isReady,
-    $language,
-    changeLanguage
-  ])
+  const [t, isReady, language, handleChangeLanguageFx] = useUnit([$t, $isReady, $language, changeLanguage])
 
   return (
     <div className="flex items-center justify-between">

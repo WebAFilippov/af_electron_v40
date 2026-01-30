@@ -1,17 +1,13 @@
-import { $theme } from '@/entities/theme'
-import { useUnit } from 'effector-react'
+
 import { CircleCheck, Info, LoaderCircle, OctagonX, TriangleAlert } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Toaster as Sonner } from 'sonner'
 
-type ToasterProps = React.ComponentProps<typeof Sonner>
+type ToasterProps = React.ComponentProps<typeof Sonner> 
 
 const Toaster = ({ ...props }: ToasterProps): ReactNode => {
-  const [theme] = useUnit([$theme])
-
   return (
     <Sonner
-      theme={theme.mode as ToasterProps['theme']}
       className="toaster group"
       icons={{
         success: <CircleCheck className="size-4" />,

@@ -1,15 +1,12 @@
-import type { BrowserWindow } from 'electron'
-import { ipcMain } from 'electron'
-import type { IWindow } from '../../../shared/types'
-import { channels } from '../../../shared/types'
+import { BrowserWindow, ipcMain } from 'electron/main'
+
+import { channels, WindowAppProps } from '@/shared_app/types'
 
 const sendWindowState = (
   window: BrowserWindow,
   key?: 'enter-full-screen' | 'leave-full-screen'
 ): void => {
-  if (window.isDestroyed()) return
-
-  const state: IWindow = {
+  const state: WindowAppProps = {
     minimize: window.isMinimized(),
     maximize: window.isMaximized(),
     fullscreen:
@@ -21,10 +18,14 @@ const sendWindowState = (
     show: window.isVisible()
   }
 
-  window.webContents.send(channels.window_updated, state)
+  window.webContents.send(channels.window_on_update, state)
 }
 
-export const ipcWindow = (window: BrowserWindow): void => {
+const ipcWindow = (window: BrowserWindow): void => {
+  window.once('ready-to-show', () => {
+    sendWindowState(window)
+  })
+
   ipcMain.on(channels.window_fullscreen, () => {
     window.setFullScreen(!window.isFullScreen())
   })
@@ -46,7 +47,7 @@ export const ipcWindow = (window: BrowserWindow): void => {
   })
 
   window.webContents.on('before-input-event', (event, input) => {
-    if (input.key === 'F11' && input.type === 'keyDown') {
+    if (input.key === 'F11' && input.type === 'keyDown' && window.isFocused()) {
       event.preventDefault()
       window.setFullScreen(!window.isFullScreen())
     }
@@ -61,8 +62,6 @@ export const ipcWindow = (window: BrowserWindow): void => {
   window.on('show', () => sendWindowState(window))
   window.on('hide', () => sendWindowState(window))
   window.on('close', () => sendWindowState(window))
-
-  window.once('ready-to-show', () => {
-    sendWindowState(window)
-  })
 }
+
+export { ipcWindow }

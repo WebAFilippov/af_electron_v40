@@ -1,15 +1,16 @@
-import i18next, { InitOptions } from 'i18next'
-import { createI18nextIntegration } from '@withease/i18next'
-import { AppLanguage, SUPPORTED_LANGUAGES } from '../../../../../shared/types'
-import { initReactI18next } from 'react-i18next'
-import { appStarted } from '@/shared/model'
 import { createEffect, createEvent, sample } from 'effector'
+import { and, not } from 'patronum'
+import i18next, { InitOptions } from 'i18next'
+import { initReactI18next } from 'react-i18next'
+import { createI18nextIntegration } from '@withease/i18next'
 
-const createOptions = (lang: AppLanguage): InitOptions => {
+import { LanguageApp, SUPPORTED_LANGUAGES } from '@/shared_app/types'
+
+const createOptions = (language: LanguageApp): InitOptions => {
   return {
     debug: true,
     initAsync: false,
-    lng: lang,
+    lng: language,
     fallbackLng: 'ru',
     ns: 'renderer',
     defaultNS: 'renderer',
@@ -25,33 +26,35 @@ const createOptions = (lang: AppLanguage): InitOptions => {
   }
 }
 
+const setLanguageFx = createEffect<LanguageApp, LanguageApp>((lang) => {
+  return window.i18next_app.changeLanguage(lang)
+})
+
+const initI18Next = createEvent()
+const changeLanguage = createEvent<LanguageApp>()
+
 const { $t, $isReady, $instance, $language, changeLanguageFx } = createI18nextIntegration({
   instance: async () => {
-    const language = (await window.api.i18nextGetLanguage()) ?? 'ru'
+    const language = (await window.i18next_app.getLanguage()) ?? 'ru'
     const options = createOptions(language)
 
     const i18n = i18next.createInstance()
     await i18n.use(initReactI18next).init(options)
 
     for (const lang of SUPPORTED_LANGUAGES) {
-      const resources = await window.api.i18nextGetResources(lang)
+      const resources = await window.i18next_app.getResources(lang)
 
       i18n.addResourceBundle(lang, 'renderer', resources, true, true)
     }
 
     return i18n
   },
-  setup: appStarted
+  setup: initI18Next
 })
-
-const setLanguageFx = createEffect<AppLanguage, AppLanguage>((lang) => {
-  return window.api.i18nextChangeLanguage(lang)
-})
-
-const changeLanguage = createEvent<AppLanguage>()
 
 sample({
   clock: changeLanguage,
+  filter: and(not(setLanguageFx.pending), not(setLanguageFx.pending)),
   target: setLanguageFx
 })
 
@@ -60,4 +63,5 @@ sample({
   target: changeLanguageFx
 })
 
-export { $t, $isReady, $instance, $language, changeLanguage }
+export { $t, $isReady, $instance, $language, changeLanguage, initI18Next }
+

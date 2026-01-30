@@ -3,6 +3,10 @@ import { defineConfig, swcPlugin } from 'electron-vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
+// "@/shared_app/*": [
+//         "./src/shared/*"
+//       ],
+
 export default defineConfig({
   main: {
     plugins: [swcPlugin()],
@@ -11,7 +15,8 @@ export default defineConfig({
         '@/app': resolve('src/main/app'),
         '@/ipc': resolve('src/main/ipc'),
         '@/modules': resolve('src/main/modules'),
-        '@/shared': resolve('src/main/shared')
+        '@/shared': resolve('src/main/shared'),
+        '@/shared_app': resolve('src/shared/')
       }
     },
     build: {
@@ -34,6 +39,11 @@ export default defineConfig({
 
   preload: {
     base: './',
+    resolve: {
+      alias: {
+        '@/shared_app': resolve('src/shared/')
+      }
+    },
     build: {
       isolatedEntries: true,
       outDir: 'out/preload',
@@ -62,7 +72,8 @@ export default defineConfig({
         '@/widgets': resolve(__dirname, 'src/renderer/src/widgets'),
         '@/features': resolve(__dirname, 'src/renderer/src/features'),
         '@/entities': resolve(__dirname, 'src/renderer/src/entities'),
-        '@/shared': resolve(__dirname, 'src/renderer/src/shared')
+        '@/shared': resolve(__dirname, 'src/renderer/src/shared'),
+        '@/shared_app': resolve(__dirname,'src/shared/')
       }
     },
     build: {

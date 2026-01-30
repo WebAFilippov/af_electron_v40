@@ -1,14 +1,9 @@
+import { app, BrowserWindow, ipcMain } from 'electron/main'
+
 import { settingsStore } from './store'
-import {
-  setAutoLaunch,
-  setStartMinimized,
-  setTheme,
-  updateSystemTheme,
-  windowBackgroundColor
-} from './service'
-import type { ISettings } from '../../../shared/types'
-import { channels } from '../../../shared/types'
-import { app, BrowserWindow, ipcMain, nativeTheme } from 'electron/main'
+import { channels, SettingsProps } from '@/shared_app/types'
+import { getSettingsByProperty, setAutoLaunch, setCheckForUpdatesOnStartup, setStartMinimized } from './service'
+import type { AppUpdater } from 'electron-updater'
 
 export const applyAutoLaunch = (): void => {
   const enable = settingsStore.get('autoLaunch')
@@ -22,36 +17,30 @@ export const applyAutoLaunch = (): void => {
     args
   })
 }
-export const applyThemeToWindow = (window: BrowserWindow, theme: ISettings['theme']): void => {
-  nativeTheme.themeSource = theme.mode
-  window.setBackgroundColor(theme.darken ? windowBackgroundColor.DARK : windowBackgroundColor.LIGHT)
-}
 
-export const ipcSettings = (): void => {
-  const [window] = BrowserWindow.getAllWindows()
+export const ipcSettings = (window: BrowserWindow, updater: AppUpdater): void => {
+  updater
+  window.once('ready-to-show', () => applyAutoLaunch())
 
-  ipcMain.handle(channels.settings_set_autolaunch, (_event, value: boolean) => {
+  ipcMain.handle(channels.settings_get_by_property, (_event, value: keyof SettingsProps) =>
+    getSettingsByProperty(value)
+  )
+
+  ipcMain.handle(channels.settings_set_autolaunch, (_event, value: SettingsProps['autoLaunch']) => {
     const result = setAutoLaunch(value)
     applyAutoLaunch()
 
     return result
   })
-  ipcMain.handle(channels.settings_set_startMinimaze, (_event, value: boolean) => {
+
+  ipcMain.handle(channels.settings_set_startMinimaze, (_event, value: SettingsProps['startMinimized']) => {
     return setStartMinimized(value)
   })
 
-  nativeTheme.on('updated', () => {
-    const theme = updateSystemTheme(nativeTheme.shouldUseDarkColors)
-    if (!theme) return
-
-    applyThemeToWindow(window, theme)
-
-    window.webContents.send(channels.settings_update_systemTheme, theme)
-  })
-  ipcMain.handle(channels.settings_set_theme, (_, mode: ISettings['theme']['mode']) => {
-    const theme = setTheme(mode)
-    applyThemeToWindow(window, theme)
-
-    return theme
-  })
+  ipcMain.handle(
+    channels.settings_set_checkForUpdatesOnStartup,
+    (_event, value: SettingsProps['checkForUpdatesOnStartup']) => {
+      return setCheckForUpdatesOnStartup(value)
+    }
+  )
 }
