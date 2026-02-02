@@ -17,6 +17,7 @@ files:
 
 asarUnpack:
   - node_modules/sqlite3
+  - node_modules/yandex-music-desktop-library/bin/**/*
   - 'resources/**'
 
 win:

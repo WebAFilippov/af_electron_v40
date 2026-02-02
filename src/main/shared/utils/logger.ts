@@ -1,87 +1,119 @@
-// import { is } from '@electron-toolkit/utils'
-// import log from 'electron-log/main.js'
-// import { join } from 'path'
-// import { Config, linkCreateIssue } from '../config'
-// import type { LogMessage } from 'electron-log'
-// import { app as electronApp, dialog } from 'electron'
+import { is } from '@electron-toolkit/utils'
+import { app } from 'electron'
+import { join } from 'path'
+import pino from 'pino'
+import { roll } from 'pino-roll'
+import { Config } from '../config'
 
-// const firstLine = (message: string): string => {
-//   if (typeof message === 'string') {
-//     const [line] = message.split('\n')
-//     return line
-//   }
-//   return message
-// }
+// Определяем путь к логам в зависимости от режима
+const getLogPath = (): string => {
+  if (is.dev) {
+    // В dev режиме - рядом с проектом в папке logs/
+    return join(process.cwd(), 'logs')
+  } else {
+    // В prod режиме - в userData
+    return join(Config.pathUserData, 'logs')
+  }
+}
 
-// const dateFormatter = new Intl.DateTimeFormat('ru', {
-//   year: '2-digit',
-//   month: '2-digit',
-//   day: '2-digit',
-//   hour: '2-digit',
-//   minute: '2-digit',
-//   second: '2-digit',
-//   fractionalSecondDigits: 3,
-//   hour12: false
-// })
+const logDir = getLogPath()
+const logFile = join(logDir, 'app.log')
 
-// const formatMessage = ({ message }: { message: LogMessage }): string[] => {
-//   const date = dateFormatter.format(message.date)
-//   const prefix = `[${date}] ${message.variables?.processType ? `(${message.variables.processType}) ` : ''}[${message.level}] `
-//   const data = message.data.map((chunk) =>
-//     chunk instanceof Error ? `${chunk.name} ${firstLine(chunk.message)}` : chunk
-//   )
-//   return [prefix, ...data]
-// }
+// Настройка ротации: 10MB максимум, храним последние 3 дня
+const logStream = roll(logFile, {
+  maxSize: 10 * 1024 * 1024, // 10MB
+  maxFiles: 3, // храним 3 файла (текущий + 2 архивных)
+  dateFormat: 'yyyy-MM-dd',
+  frequency: 'daily',
+  extension: '.log'
+})
 
-// export const loggerInit = (): void => {
-//   log.initialize()
+// Базовая конфигурация pino
+const baseOptions: pino.LoggerOptions = {
+  level: is.dev ? 'info' : 'info',
+  formatters: {
+    level: (label) => ({ level: label }),
+    bindings: (bindings) => ({
+      pid: bindings.pid,
+      context: 'main'
+    })
+  },
+  timestamp: pino.stdTimeFunctions.isoTime
+}
 
-//   if (is.dev) {
-//     log.transports.file.resolvePathFn = (pathVariables) =>
-//       join(__dirname, '..', '..', 'logs', `${pathVariables.fileName}`)
-//   } else {
-//     log.transports.file.resolvePathFn = (pathVariables) =>
-//       join(Config.pathResources, 'logs', `${pathVariables.fileName}`)
-//   }
+// Создаем логгер
+let logger: pino.Logger
 
-//   // Уровни логирования: в dev выводим всё, в prod — только важное
-//   log.transports.file.level = is.dev ? 'silly' : 'info'
-//   log.transports.console.level = is.dev ? 'debug' : 'info'
+if (is.dev) {
+  // В dev режиме: пишем и в файл и в консоль (pretty print)
+  logger = pino(
+    baseOptions,
+    pino.multistream([
+      { stream: logStream, level: 'info' },
+      {
+        stream: pino.destination({
+          sync: false,
+          dest: process.stdout.fd
+        }),
+        level: 'info'
+      }
+    ])
+  )
+} else {
+  // В prod режиме: только в файл
+  logger = pino(baseOptions, logStream)
+}
 
-//   // Формат сообщений для файла и консоли
-//   log.transports.console.format = formatMessage
-//   log.transports.file.format = formatMessage
+// Перехват необработанных ошибок
+export const loggerInit = (): void => {
+  process.on('uncaughtException', (error) => {
+    logger.fatal({ error: error.message, stack: error.stack }, 'Uncaught exception')
+    // Даем время на запись лога перед выходом
+    setTimeout(() => {
+      process.exit(1)
+    }, 1000)
+  })
 
-//   // Перехват необработанных ошибок
-//   log.errorHandler.startCatching({
-//     showDialog: true,
-//     onError({ createIssue, error, processType, versions }) {
-//       if (processType === 'renderer') {
-//         return
-//       }
-//       dialog
-//         .showMessageBox({
-//           title: 'An error occurred',
-//           message: error.message,
-//           detail: error.stack,
-//           type: 'error',
-//           buttons: ['Ignore', 'Report', 'Exit']
-//         })
-//         .then((result) => {
-//           if (result.response === 1) {
-//             createIssue(linkCreateIssue, {
-//               title: `Error report for ${versions.app}`,
-//               body: 'Error:\n```' + error.stack + '\n```\n' + `OS: ${versions.os}`
-//             })
-//             return
-//           }
+  process.on('unhandledRejection', (reason) => {
+    logger.error({ reason }, 'Unhandled rejection')
+  })
 
-//           if (result.response === 2) {
-//             electronApp.quit()
-//           }
-//         })
-//     }
-//   })
-// }
+  logger.info(
+    {
+      logDir,
+      isDev: is.dev,
+      version: app.getVersion()
+    },
+    'Logger initialized'
+  )
+}
 
-// export const logger = log
+// Обработчик логов от renderer process
+export const handleRendererLog = (level: string, message: string, meta?: Record<string, unknown>): void => {
+  const logData = { context: 'renderer', ...meta }
+
+  switch (level) {
+    case 'fatal':
+      logger.fatal(logData, message)
+      break
+    case 'error':
+      logger.error(logData, message)
+      break
+    case 'warn':
+      logger.warn(logData, message)
+      break
+    case 'info':
+      logger.info(logData, message)
+      break
+    case 'debug':
+      logger.debug(logData, message)
+      break
+    case 'trace':
+      logger.trace(logData, message)
+      break
+    default:
+      logger.info(logData, message)
+  }
+}
+
+export { logger }

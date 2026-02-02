@@ -7,6 +7,7 @@ import { Config } from '@/shared/config'
 import { channels, LanguageApp } from '@/shared_app/types'
 import i18next, { t } from 'i18next'
 import { updateTrayMenu } from '@/app/create-tray'
+import { logger } from '@/shared/utils/logger'
 
 export const ipcI18next = (window: BrowserWindow, tray: Tray): void => {
   i18next.on('languageChanged', () => {
@@ -31,7 +32,7 @@ export const ipcI18next = (window: BrowserWindow, tray: Tray): void => {
     return new Promise((resolve, reject) => {
       readFile(filePath, 'utf8', (err, data) => {
         if (err) {
-          console.error(`Failed to read locale file: ${filePath}`, err)
+          logger.error({ filePath, error: err }, 'Failed to read locale file')
           reject(new Error(`Failed to load locale: ${err.message}`))
           return
         }
@@ -40,7 +41,7 @@ export const ipcI18next = (window: BrowserWindow, tray: Tray): void => {
           const parsedData = JSON.parse(data)
           resolve(parsedData)
         } catch (parseError) {
-          console.error(`Failed to parse JSON: ${filePath}`, parseError)
+          logger.error({ filePath, error: parseError }, 'Failed to parse locale JSON')
           reject(new Error('Failed to parse locale JSON'))
         }
       })

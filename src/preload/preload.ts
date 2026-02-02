@@ -11,6 +11,9 @@ import { theme_app } from './theme'
 import { IThemeApp } from './theme/types'
 import { updater_app } from './updater'
 import { IUpdaterApp } from './updater/types'
+import { log_app } from './log'
+import { ILogApp } from './log/types'
+import { logger } from '@/shared/utils/logger'
 
 if (process.contextIsolated) {
   try {
@@ -20,8 +23,9 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('i18next_app', i18next_app)
     contextBridge.exposeInMainWorld('theme_app', theme_app)
     contextBridge.exposeInMainWorld('updater_app', updater_app)
+    contextBridge.exposeInMainWorld('log_app', log_app)
   } catch (error) {
-    console.error(error)
+    logger.error({ error }, 'Error exposing APIs in preload')
   }
 } else {
   // @ts-ignore (define in dts)
@@ -36,6 +40,8 @@ if (process.contextIsolated) {
   window.theme_app = theme_app
   // @ts-ignore (define in dts)
   window.updater_app = updater_app
+  // @ts-ignore (define in dts)
+  window.log_app = log_app
 }
 
 declare global {
@@ -46,5 +52,6 @@ declare global {
     i18next_app: II18next
     theme_app: IThemeApp
     updater_app: IUpdaterApp
+    log_app: ILogApp
   }
 }

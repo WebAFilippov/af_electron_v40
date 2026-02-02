@@ -17,8 +17,8 @@ const $autoLaunch = createStore(true)
 
 sample({
   clock: toggleAutoLaunch,
-  filter: and(not(updateAutoLaunchFx.pending), not(fetchAutoLaunchFx.pending)),
   source: $autoLaunch,
+  filter: and(not(updateAutoLaunchFx.pending), not(fetchAutoLaunchFx.pending)),
   fn: (current) => !current,
   target: updateAutoLaunchFx
 })

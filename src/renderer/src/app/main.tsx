@@ -20,6 +20,8 @@ sample({
   target: [initThemeFx, initWindowControlsFx, initI18Next]
 })
 
+window.log_app.toRenderer(console.log)
+
 appStarted()
 
 root.render(<RouterProvider router={router} />)
