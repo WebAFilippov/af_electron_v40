@@ -91,3 +91,5 @@ export {
 export { Progress } from './progress'
 export { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyContent, EmptyMedia } from './empty'
 export { Avatar, AvatarImage, AvatarFallback } from './avatar'
+export { Badge, badgeVariants } from './badge'
+export { ScrollArea } from './scroll-area'

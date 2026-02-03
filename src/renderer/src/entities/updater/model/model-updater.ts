@@ -1,10 +1,13 @@
 import { UpdateDataDto } from '../types'
-import { createEffect, createEvent, restore, sample } from 'effector'
+import { createEffect, createEvent, restore, sample, createStore } from 'effector'
 import { UpdateCheckResult } from 'electron-updater'
 import { toast } from 'sonner'
+import { persist } from 'effector-storage/local'
 
 const DEFAULT_UPDATE_DATA = { status: 'idle' } as const
 const ID_TOKEN_LOADING = 'token_toast_check_for_update' as const
+
+export type AutoUpdateMode = 'check-only' | 'check-and-download' | 'full-auto'
 
 // Update status
 window.updater_app.onUpdateData((data) => {
@@ -101,16 +104,38 @@ sample({
   target: toastUpdateNotAvailableFx
 })
 
+// Auto Update Settings
+const setAutoUpdateMode = createEvent<AutoUpdateMode>()
+const toggleCheckForUpdatesOnStartup = createEvent()
+
+const $autoUpdateMode = createStore<AutoUpdateMode>('check-only')
+const $checkForUpdatesOnStartup = createStore<boolean>(true)
+
+// Persist settings to localStorage
+persist({
+  store: $autoUpdateMode,
+  key: 'auto-update-mode'
+})
+
+persist({
+  store: $checkForUpdatesOnStartup,
+  key: 'check-updates-on-startup'
+})
+
 export {
   $versionApp,
   $updatedApp,
   $updateData,
   $isDowloaded,
+  $autoUpdateMode,
+  $checkForUpdatesOnStartup,
   successfulFx,
   checkForUpdateFx,
   retryDownloadFx,
   downloadUpdateFx,
   installNowUpdateFx,
   InstallOnQuitUpdateFx,
-  setIsDownloaded
+  setIsDownloaded,
+  setAutoUpdateMode,
+  toggleCheckForUpdatesOnStartup
 }
