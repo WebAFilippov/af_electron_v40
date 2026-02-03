@@ -42,36 +42,34 @@ export function SidebarWidget(): ReactNode {
                       {({ isActive }) => {
                         return (
                           <SidebarMenuItem className="select-none">
-                            <SidebarMenuButton
-                              size="default"
-                              variant={'default'}
-                              isActive={isActive}
-                            >
+                            <SidebarMenuButton size="default" variant={'default'} isActive={isActive}>
                               <>
                                 {item.icon}
                                 <span>{t(item.title)}</span>
                               </>
                             </SidebarMenuButton>
-                            <SidebarMenuSub>
-                              {item.children?.map((subItem) => (
-                                <SidebarMenuSubItem>
-                                  <NavLink to={subItem.url} end key={subItem.title}>
-                                    {({ isActive: isActive2 }) => (
-                                      <SidebarMenuSubButton
-                                        className="select-none"
-                                        size="sm"
-                                        isActive={isActive2}
-                                        key={subItem.title}
-                                      >
-                                        <>
-                                          <span>{t(subItem.title)}</span>
-                                        </>
-                                      </SidebarMenuSubButton>
-                                    )}
-                                  </NavLink>
-                                </SidebarMenuSubItem>
-                              ))}
-                            </SidebarMenuSub>
+                            {item.children && (
+                              <SidebarMenuSub>
+                                {item.children?.map((subItem) => (
+                                  <SidebarMenuSubItem key={subItem.title}>
+                                    <NavLink to={subItem.url} end key={subItem.title}>
+                                      {({ isActive: isActive2 }) => (
+                                        <SidebarMenuSubButton
+                                          className="select-none"
+                                          size="sm"
+                                          isActive={isActive2}
+                                          key={subItem.title}
+                                        >
+                                          <>
+                                            <span>{t(subItem.title)}</span>
+                                          </>
+                                        </SidebarMenuSubButton>
+                                      )}
+                                    </NavLink>
+                                  </SidebarMenuSubItem>
+                                ))}
+                              </SidebarMenuSub>
+                            )}
                           </SidebarMenuItem>
                         )
                       }}
@@ -89,9 +87,7 @@ export function SidebarWidget(): ReactNode {
           )}
         >
           <header
-            className={cn(
-              'flex h-16 shrink-0 bg-background items-center justify-between gap-2 border-b px-4 sticky'
-            )}
+            className={cn('flex h-16 shrink-0 bg-background items-center justify-between gap-2 border-b px-4 sticky')}
           >
             <div className="flex gap-5 items-center justify-between w-full">
               <div className="flex items-center gap-5">

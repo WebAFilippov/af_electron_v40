@@ -2,8 +2,9 @@ import { is } from '@electron-toolkit/utils'
 import { app } from 'electron'
 import { join } from 'path'
 import pino from 'pino'
-import { roll } from 'pino-roll'
+import { Temporal } from '@js-temporal/polyfill'
 import { Config } from '../config'
+import { hostname } from 'os'
 
 // Определяем путь к логам в зависимости от режима
 const getLogPath = (): string => {
@@ -17,51 +18,66 @@ const getLogPath = (): string => {
 }
 
 const logDir = getLogPath()
-const logFile = join(logDir, 'app.log')
-
-// Настройка ротации: 10MB максимум, храним последние 3 дня
-const logStream = roll(logFile, {
-  maxSize: 10 * 1024 * 1024, // 10MB
-  maxFiles: 3, // храним 3 файла (текущий + 2 архивных)
-  dateFormat: 'yyyy-MM-dd',
-  frequency: 'daily',
-  extension: '.log'
-})
+const logFile = join(logDir, 'app')
 
 // Базовая конфигурация pino
 const baseOptions: pino.LoggerOptions = {
   level: is.dev ? 'info' : 'info',
   formatters: {
-    level: (label) => ({ level: label }),
+    level: (label) => ({ level: label.toUpperCase() }),
     bindings: (bindings) => ({
-      pid: bindings.pid,
-      context: 'main'
+      context: 'main',
+      hostname: bindings.hostname,
+      pid: bindings.pid
     })
   },
-  timestamp: pino.stdTimeFunctions.isoTime
+  timestamp: () => {
+    const now = Temporal.Now.zonedDateTimeISO()
+    const date = now.toPlainDate().toString().replace(/-/g, '.')
+    const time = now.toPlainTime().toString({ smallestUnit: 'second' })
+    return `,"timestamp":"${date} ${time}"`
+  }
 }
+
+// Создаем transport для файла с ротацией
+const fileTransport = pino.transport({
+  target: 'pino-roll',
+  options: {
+    file: logFile,
+    size: '10m', // 10MB - строковое значение с единицей измерения
+    frequency: 'daily',
+    mkdir: true, // автоматически создавать папку
+    extension: '.log',
+    limit: {
+      count: 2 // храним текущий + 2 архивных = 3 файла всего
+    }
+  }
+})
 
 // Создаем логгер
 let logger: pino.Logger
 
 if (is.dev) {
-  // В dev режиме: пишем и в файл и в консоль (pretty print)
+  // В dev режиме: пишем в файл (JSON) и в консоль (красивый формат)
+  const prettyTransport = pino.transport({
+    target: 'pino-pretty',
+    options: {
+      colorize: true,
+      translateTime: 'yyyy-mm-dd HH:MM:ss',
+      levelFirst: false
+    }
+  })
+
   logger = pino(
     baseOptions,
     pino.multistream([
-      { stream: logStream, level: 'info' },
-      {
-        stream: pino.destination({
-          sync: false,
-          dest: process.stdout.fd
-        }),
-        level: 'info'
-      }
+      { stream: fileTransport, level: 'info' },
+      { stream: prettyTransport, level: 'info' }
     ])
   )
 } else {
   // В prod режиме: только в файл
-  logger = pino(baseOptions, logStream)
+  logger = pino(baseOptions, fileTransport)
 }
 
 // Перехват необработанных ошибок

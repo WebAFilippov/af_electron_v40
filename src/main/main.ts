@@ -63,8 +63,8 @@ if (!gotTheLock) {
 
           logger.info('Yandex Music controller initialized')
 
-          controller.on('media', (track) => {
-            logger.info({ track }, 'Media track received')
+          controller.on('media', (media) => {
+            logger.info({ media }, 'Media track received')
           })
 
           controller.on('volume', (volume) => {

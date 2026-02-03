@@ -6,6 +6,7 @@ import { NotFound404Page } from '@/pages/NotFound404'
 import { HomePage } from '@/pages/Home'
 import { UpdatePage } from '@/pages/Updates'
 import { SettingsPage } from '@/pages/Settings'
+import { WeatherPage } from '@/pages/Weather'
 
 export type RouteHandle = {
   breadcrumb?: () => string
@@ -41,6 +42,11 @@ const routes: AppRouteObject[] = [
         path: 'update',
         element: <UpdatePage />,
         handle: { breadcrumb: () => 'breadcrumb.update' }
+      },
+      {
+        path: 'weather',
+        element: <WeatherPage />,
+        handle: { breadcrumb: () => 'breadcrumb.weather' }
       },
       {
         path: '*',

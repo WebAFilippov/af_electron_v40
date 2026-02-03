@@ -1,0 +1,284 @@
+import { useUnit } from 'effector-react'
+import { $currentLocation } from '@/entities/location'
+import { $weatherData, $weatherPending, refreshWeather } from '@/entities/weather'
+import { CitySearch } from '@/features/search-location/ui/CitySearch'
+import { detectLocationByIP, $ipDetectionPending } from '@/features/detect-location/model/detect-location'
+import { getWeatherDescription, getWeatherIcon } from '@/shared_app/api/open-meteo/types'
+import { Card, CardContent, CardHeader, CardTitle, Button, Separator } from '@/shared/ui'
+import { RefreshCw, MapPin, Wind, Droplets, Eye, Gauge, CloudRain, Sunrise, Sunset } from 'lucide-react'
+import type { ReactNode } from 'react'
+
+const formatTime = (isoString: string): string => {
+  return new Date(isoString).toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  })
+}
+
+const getWindDirection = (degrees: number): string => {
+  const directions = [
+    'N',
+    'NNE',
+    'NE',
+    'ENE',
+    'E',
+    'ESE',
+    'SE',
+    'SSE',
+    'S',
+    'SSW',
+    'SW',
+    'WSW',
+    'W',
+    'WNW',
+    'NW',
+    'NNW'
+  ]
+  const index = Math.round(degrees / 22.5) % 16
+  return directions[index]
+}
+
+export const WeatherPage = (): ReactNode => {
+  const [location, weather, isPending, isDetecting] = useUnit([
+    $currentLocation,
+    $weatherData,
+    $weatherPending,
+    $ipDetectionPending
+  ])
+
+  if (!location) {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-6">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <MapPin className="h-5 w-5" />
+              Select Your Location
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <CitySearch />
+            <Separator />
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground mb-3">Or detect automatically</p>
+              <Button onClick={() => detectLocationByIP()} disabled={isDetecting} className="w-full">
+                {isDetecting ? (
+                  <>
+                    <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                    Detecting...
+                  </>
+                ) : (
+                  <>
+                    <MapPin className="mr-2 h-4 w-4" />
+                    Detect My Location
+                  </>
+                )}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  if (isPending && !weather) {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-6">
+        <Card className="w-full max-w-2xl">
+          <CardContent className="p-12">
+            <div className="flex flex-col items-center justify-center">
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+              <p className="mt-4 text-lg text-muted-foreground">Loading weather data...</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  if (!weather?.current) {
+    return (
+      <div className="flex min-h-screen items-center justify-center p-6">
+        <Card className="w-full max-w-2xl">
+          <CardContent className="p-12 text-center">
+            <p className="text-lg text-muted-foreground">Unable to load weather data</p>
+            <Button onClick={() => refreshWeather()} className="mt-4">
+              Retry
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const current = weather.current
+  const daily = weather.daily
+  const isDay = current.is_day === 1
+
+  return (
+    <div className="min-h-screen p-6">
+      <div className="mx-auto max-w-4xl space-y-6">
+        {/* Search Bar */}
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex gap-2">
+              <div className="flex-1">
+                <CitySearch />
+              </div>
+              <Button variant="outline" onClick={() => detectLocationByIP()} disabled={isDetecting}>
+                <MapPin className="mr-2 h-4 w-4" />
+                Detect
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Current Weather */}
+        <Card>
+          <CardHeader className="pb-2">
+            <div className="flex items-start justify-between">
+              <div>
+                <CardTitle className="text-2xl">{location.name}</CardTitle>
+                <p className="text-muted-foreground">
+                  {location.admin1 ? `${location.admin1}, ` : ''}
+                  {location.country}
+                </p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Updated: {new Date(current.time).toLocaleTimeString()}
+                </p>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => refreshWeather()} disabled={isPending}>
+                <RefreshCw className={`h-5 w-5 ${isPending ? 'animate-spin' : ''}`} />
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-6">
+                <div className="text-6xl font-bold">{Math.round(current.temperature_2m)}°</div>
+                <div>
+                  <p className="text-xl font-medium">{getWeatherDescription(current.weather_code)}</p>
+                  <p className="text-muted-foreground">Feels like {Math.round(current.apparent_temperature)}°</p>
+                  <div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground">
+                    <span>H: {daily ? Math.round(daily.temperature_2m_max[0]) : '--'}°</span>
+                    <span>L: {daily ? Math.round(daily.temperature_2m_min[0]) : '--'}°</span>
+                  </div>
+                </div>
+              </div>
+              <div className="text-7xl">{isDay ? '☀️' : '🌙'}</div>
+            </div>
+
+            {/* Details Grid */}
+            <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="flex items-center gap-3 rounded-lg bg-muted p-3">
+                <Wind className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Wind</p>
+                  <p className="font-medium">
+                    {Math.round(current.wind_speed_10m)} km/h {getWindDirection(current.wind_direction_10m)}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 rounded-lg bg-muted p-3">
+                <Droplets className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Humidity</p>
+                  <p className="font-medium">{current.relative_humidity_2m}%</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 rounded-lg bg-muted p-3">
+                <Eye className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Cloud Cover</p>
+                  <p className="font-medium">{current.cloud_cover}%</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 rounded-lg bg-muted p-3">
+                <Gauge className="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p className="text-sm text-muted-foreground">Pressure</p>
+                  <p className="font-medium">{Math.round(current.pressure_msl)} hPa</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Precipitation */}
+            {(current.precipitation > 0 || current.rain > 0 || current.snowfall > 0) && (
+              <div className="mt-4 flex items-center gap-3 rounded-lg bg-blue-50 p-3 dark:bg-blue-950">
+                <CloudRain className="h-5 w-5 text-blue-600" />
+                <div>
+                  <p className="text-sm text-blue-600 dark:text-blue-400">Precipitation</p>
+                  <p className="font-medium">
+                    {current.precipitation > 0 && `${current.precipitation}mm `}
+                    {current.rain > 0 && `rain `}
+                    {current.snowfall > 0 && `${current.snowfall}cm snow`}
+                  </p>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Daily Forecast */}
+        {daily && (
+          <Card>
+            <CardHeader>
+              <CardTitle>7-Day Forecast</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {daily.time.slice(0, 7).map((time, index) => (
+                  <div key={time} className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-3 w-24">
+                      <span className="text-sm font-medium">
+                        {index === 0 ? 'Today' : new Date(time).toLocaleDateString('en-US', { weekday: 'short' })}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 flex-1">
+                      <span className="text-2xl">{getWeatherIcon(daily.weather_code[index])}</span>
+                      <span className="text-sm text-muted-foreground">
+                        {getWeatherDescription(daily.weather_code[index])}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3 text-sm">
+                      <span className="font-medium">{Math.round(daily.temperature_2m_max[index])}°</span>
+                      <span className="text-muted-foreground">{Math.round(daily.temperature_2m_min[index])}°</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Sun Times */}
+        {daily && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Sun & Moon</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center gap-3">
+                  <Sunrise className="h-6 w-6 text-yellow-500" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Sunrise</p>
+                    <p className="font-medium">{formatTime(daily.sunrise[0])}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Sunset className="h-6 w-6 text-orange-500" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">Sunset</p>
+                    <p className="font-medium">{formatTime(daily.sunset[0])}</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+    </div>
+  )
+}

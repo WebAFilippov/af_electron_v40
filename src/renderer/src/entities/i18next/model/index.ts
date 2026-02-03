@@ -8,7 +8,7 @@ import { LanguageApp, SUPPORTED_LANGUAGES } from '@/shared_app/types'
 
 const createOptions = (language: LanguageApp): InitOptions => {
   return {
-    debug: true,
+    debug: false,
     initAsync: false,
     lng: language,
     fallbackLng: 'ru',

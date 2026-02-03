@@ -26,9 +26,7 @@ const toastErrorSuccessfulFx = createEffect((error: Error) => {
 })
 
 // CheckForUpdate effect
-const checkForUpdateFx = createEffect<void, UpdateCheckResult | null, Error>(() =>
-  window.updater_app.checkForUpdates()
-)
+const checkForUpdateFx = createEffect<void, UpdateCheckResult | null, Error>(() => window.updater_app.checkForUpdates())
 const toastLoadingCheckForUpdateFx = createEffect(() => {
   toast.loading('Проверяется обновление ПО...', { id: ID_TOKEN_LOADING })
 })
@@ -116,5 +114,3 @@ export {
   InstallOnQuitUpdateFx,
   setIsDownloaded
 }
-
-$updateData.watch((data) => console.log(`#data ${JSON.stringify(data)}`))
