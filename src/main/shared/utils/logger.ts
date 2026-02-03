@@ -4,7 +4,6 @@ import { join } from 'path'
 import pino from 'pino'
 import { Temporal } from '@js-temporal/polyfill'
 import { Config } from '../config'
-import { hostname } from 'os'
 
 // Определяем путь к логам в зависимости от режима
 const getLogPath = (): string => {

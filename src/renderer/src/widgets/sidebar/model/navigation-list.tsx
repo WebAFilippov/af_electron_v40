@@ -1,5 +1,5 @@
 import { HugeiconsIcon } from '@hugeicons/react'
-import { InstallingUpdates02Icon, Settings02Icon } from '@hugeicons/core-free-icons'
+import { Home01Icon, AiCloud01Icon, InstallingUpdates02Icon, Settings02Icon } from '@hugeicons/core-free-icons'
 
 interface NavigationItem {
   title: string
@@ -10,6 +10,16 @@ interface NavigationItem {
 
 export const NAVIGATION_LIST: Record<string, NavigationItem[]> = {
   navMain: [
+    {
+      title: 'nav.sidebar.home',
+      url: '/',
+      icon: <HugeiconsIcon icon={Home01Icon} strokeWidth={2} />
+    },
+    {
+      title: 'nav.sidebar.weather',
+      url: '/weather',
+      icon: <HugeiconsIcon icon={AiCloud01Icon} strokeWidth={2} />
+    },
     {
       title: 'nav.sidebar.update',
       url: '/update',

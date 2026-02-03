@@ -90,3 +90,4 @@ export {
 } from './breadcrumb'
 export { Progress } from './progress'
 export { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyContent, EmptyMedia } from './empty'
+export { Avatar, AvatarImage, AvatarFallback } from './avatar'

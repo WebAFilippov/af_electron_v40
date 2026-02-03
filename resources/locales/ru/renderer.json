@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "sidebar": {
+      "home": "Главная",
+      "weather": "Погода",
+      "update": "Обновления",
+      "settings": "Настройки"
+    }
+  },
+  "breadcrumb": {
+    "home": "Главная",
+    "weather": "Погода",
+    "update": "Обновления",
+    "settings": "Настройки",
+    "404": "Страница не найдена"
+  },
+  "entities": {
+    "i18next": {
+      "label": "Язык"
+    },
+    "autoLaunch": {
+      "label": "Автозапуск"
+    },
+    "startMinimized": {
+      "label": "Запуск в свёрнутом виде"
+    },
+    "checkForUpdatesOnStartup": {
+      "label": "Проверять обновления при запуске"
+    },
+    "theme": {
+      "label": "Тема приложения",
+      "light": "Светлая",
+      "dark": "Темная",
+      "system": "Системная"
+    }
+  },
+  "features": {
+    "checkUpdateOnStart": {
+      "label": "Проверять обновления при запуске"
+    }
+  },
+  "page": {
+    "404": {
+      "title": "Страница не найдена",
+      "description": "Извините, запрошенная страница не существует.",
+      "button_go_back": "Вернуться назад"
+    }
+  }
+}

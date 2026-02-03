@@ -9,9 +9,13 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarTrigger,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem
+  SidebarHeader,
+  SidebarFooter,
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Button,
+  Separator
 } from '@/shared/ui'
 
 import { cn } from '@/shared/lib'
@@ -21,7 +25,7 @@ import { NAVIGATION_LIST } from '../model/navigation-list'
 import { useUnit } from 'effector-react'
 import { SidebarBreadcrumbs } from './sidebar-bredcrumb'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Notification } from '@hugeicons/core-free-icons'
+import { Notification, AiCloud01Icon, UserIcon } from '@hugeicons/core-free-icons'
 import { $t } from '@/entities/i18next'
 import { $isFullscreen } from '@/widgets/window-control-panel/model'
 
@@ -32,8 +36,24 @@ export function SidebarWidget(): ReactNode {
   return (
     <SidebarProvider className="flex flex-1 flex-col w-screen h-screen">
       <div className="flex flex-1">
-        <Sidebar variant="inset" className="top-9 h-[calc(100svh-36px)] ">
-          <SidebarContent>
+        <Sidebar variant="inset" className="top-9 h-[calc(100svh-36px)] flex flex-col">
+          {/* Header with Logo */}
+          <SidebarHeader className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                <HugeiconsIcon icon={AiCloud01Icon} size={24} className="text-primary" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-lg font-bold leading-none">Effectory</span>
+                <span className="text-xs text-muted-foreground">Weather App</span>
+              </div>
+            </div>
+          </SidebarHeader>
+
+          <Separator className="mx-4 w-[calc(100%-32px)]" />
+
+          {/* Navigation Menu */}
+          <SidebarContent className="flex-1">
             <SidebarGroup>
               <SidebarGroupContent>
                 <SidebarMenu>
@@ -48,28 +68,6 @@ export function SidebarWidget(): ReactNode {
                                 <span>{t(item.title)}</span>
                               </>
                             </SidebarMenuButton>
-                            {item.children && (
-                              <SidebarMenuSub>
-                                {item.children?.map((subItem) => (
-                                  <SidebarMenuSubItem key={subItem.title}>
-                                    <NavLink to={subItem.url} end key={subItem.title}>
-                                      {({ isActive: isActive2 }) => (
-                                        <SidebarMenuSubButton
-                                          className="select-none"
-                                          size="sm"
-                                          isActive={isActive2}
-                                          key={subItem.title}
-                                        >
-                                          <>
-                                            <span>{t(subItem.title)}</span>
-                                          </>
-                                        </SidebarMenuSubButton>
-                                      )}
-                                    </NavLink>
-                                  </SidebarMenuSubItem>
-                                ))}
-                              </SidebarMenuSub>
-                            )}
                           </SidebarMenuItem>
                         )
                       }}
@@ -79,7 +77,29 @@ export function SidebarWidget(): ReactNode {
               </SidebarGroupContent>
             </SidebarGroup>
           </SidebarContent>
+
+          <Separator className="mx-4 w-[calc(100%-32px)]" />
+
+          {/* Footer with Profile */}
+          <SidebarFooter className="p-4">
+            <div className="flex items-center gap-3 rounded-lg bg-sidebar-accent/50 p-3">
+              <Avatar className="h-10 w-10 border-2 border-sidebar-border">
+                <AvatarImage src="" alt="User" />
+                <AvatarFallback className="bg-primary/10 text-primary">
+                  <HugeiconsIcon icon={UserIcon} size={20} />
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex flex-1 flex-col overflow-hidden">
+                <span className="truncate text-sm font-medium">Пользователь</span>
+                <span className="truncate text-xs text-muted-foreground">user@example.com</span>
+              </div>
+              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
+                <HugeiconsIcon icon={Notification} size={18} />
+              </Button>
+            </div>
+          </SidebarFooter>
         </Sidebar>
+
         <SidebarInset
           className={cn(
             isFullscreen && 'h-[calc(100svh-15px)]!',
@@ -100,7 +120,7 @@ export function SidebarWidget(): ReactNode {
               </div>
             </div>
           </header>
-          <div className="overflow-x-hidden overflow-y-auto h-full px-8 py-4">
+          <div className="overflow-x-hidden overflow-y-auto h-full px-8 py-4 no-scrollbar">
             <Outlet />
           </div>
         </SidebarInset>
