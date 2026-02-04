@@ -5,6 +5,7 @@ export {
   $searchPending,
   $searchError,
   selectLocation,
-  clearLocation
+  clearLocation,
+  clearSearchResults
 } from './model'
 export type { Location } from '@/shared_app/api/open-meteo/types'

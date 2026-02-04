@@ -109,22 +109,38 @@ sample({
   target: $currentLocation
 })
 
-// Transform geocoding results to Location array
-export const $searchResults = searchLocationsQuery.$data.map((data) => {
-  if (!data?.results) return []
+// Event to clear search results
+export const clearSearchResults = createEvent()
 
-  return data.results.map(
-    (result): Location => ({
-      id: result.id,
-      name: result.name,
-      latitude: result.latitude,
-      longitude: result.longitude,
-      country: result.country,
-      admin1: result.admin1,
-      timezone: result.timezone,
-      elevation: result.elevation
-    })
-  )
+// Transform geocoding results to Location array
+export const $searchResults = createStore<Location[]>([])
+
+// Update results from query data
+sample({
+  clock: searchLocationsQuery.$data,
+  fn: (data) => {
+    if (!data?.results) return []
+    return data.results.map(
+      (result): Location => ({
+        id: result.id,
+        name: result.name,
+        latitude: result.latitude,
+        longitude: result.longitude,
+        country: result.country,
+        admin1: result.admin1,
+        timezone: result.timezone,
+        elevation: result.elevation
+      })
+    )
+  },
+  target: $searchResults
+})
+
+// Clear results on event
+sample({
+  clock: clearSearchResults,
+  fn: () => [],
+  target: $searchResults
 })
 
 export const $searchPending = searchLocationsQuery.$pending

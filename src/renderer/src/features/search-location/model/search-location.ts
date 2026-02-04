@@ -5,7 +5,7 @@ import {
   $searchResults,
   $searchPending,
   selectLocation,
-  clearLocation
+  clearSearchResults
 } from '@/entities/location'
 
 // Event to change search query
@@ -26,18 +26,24 @@ sample({
   target: $searchQuery
 })
 
+// Clear results when query is empty or too short
+sample({
+  clock: changeSearchQuery,
+  filter: (query) => query.length < 2,
+  target: clearSearchResults
+})
+
+// Clear results when location selected
+sample({
+  clock: selectLocation,
+  target: clearSearchResults
+})
+
 // Start search when debounced
 sample({
   clock: debouncedSearch,
   filter: (query) => query.length >= 2,
   target: searchLocationsQuery.start
-})
-
-// Clear results when query is too short
-sample({
-  clock: changeSearchQuery,
-  filter: (query) => query.length < 2,
-  target: clearLocation
 })
 
 export { $searchResults, $searchPending, selectLocation }
