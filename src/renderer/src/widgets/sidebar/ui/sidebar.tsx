@@ -84,7 +84,7 @@ export function SidebarWidget(): ReactNode {
           <SidebarFooter className="p-4">
             <div className="flex items-center gap-3 rounded-lg bg-sidebar-accent/50 p-3">
               <Avatar className="h-10 w-10 border-2 border-sidebar-border">
-                <AvatarImage src="" alt="User" />
+                <AvatarImage src={undefined} alt="User" />
                 <AvatarFallback className="bg-primary/10 text-primary">
                   <HugeiconsIcon icon={UserIcon} size={20} />
                 </AvatarFallback>
