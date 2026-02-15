@@ -27,13 +27,13 @@ export function CitySearch() {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between">
+      <PopoverTrigger asChild className="w-full">
+        <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between relative">
           <span className="truncate">{query || 'Поиск города...'}</span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+      <PopoverContent className="p-0 w-full min-w-[300px]" align="start">
         <Command>
           <CommandInput placeholder="Введите название города..." value={query} onValueChange={changeSearchQuery} />
           <CommandList>
