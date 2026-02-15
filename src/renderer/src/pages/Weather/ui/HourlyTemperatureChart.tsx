@@ -12,20 +12,28 @@ interface HourlyTemperatureChartProps {
 
 export function HourlyTemperatureChart({ hourly }: HourlyTemperatureChartProps) {
   const data = useMemo(() => {
-    // Берем только следующие 24 часа
     const now = new Date()
-    const currentHour = now.getHours()
 
-    return hourly.time
-      .map((time, index) => ({
-        time,
-        hour: format(new Date(time), 'HH:mm', { locale: ru }),
-        temperature: Math.round(hourly.temperature_2m[index]),
-        feelsLike: Math.round(hourly.apparent_temperature[index]),
-        precipitation: hourly.precipitation[index],
-        isNow: index === currentHour
-      }))
-      .slice(currentHour, currentHour + 24) // Следующие 24 часа
+    // Находим индекс первого элемента, который >= текущего времени
+    const startIndex = hourly.time.findIndex((timeStr) => {
+      const itemTime = new Date(timeStr)
+      return itemTime >= now
+    })
+
+    // Если не нашли (все данные в прошлом), берем с начала
+    const actualStartIndex = startIndex === -1 ? 0 : startIndex
+
+    // Берем следующие 24 часа
+    const endIndex = Math.min(actualStartIndex + 24, hourly.time.length)
+
+    return hourly.time.slice(actualStartIndex, endIndex).map((time, index) => ({
+      time,
+      hour: format(new Date(time), 'HH:mm', { locale: ru }),
+      temperature: Math.round(hourly.temperature_2m[actualStartIndex + index]),
+      feelsLike: Math.round(hourly.apparent_temperature[actualStartIndex + index]),
+      precipitation: hourly.precipitation[actualStartIndex + index],
+      isNow: index === 0
+    }))
   }, [hourly])
 
   const maxTemp = Math.max(...data.map((d) => d.temperature))
