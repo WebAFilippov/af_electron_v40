@@ -1,9 +1,14 @@
-/**
- * Open-Meteo API Types
- * Based on Open-Meteo API documentation
- */
+export type Location = {
+  id: number
+  name: string
+  latitude: number
+  longitude: number
+  country: string
+  admin1?: string
+  timezone: string
+  elevation?: number
+}
 
-// Geocoding API Response
 export type GeocodingResult = {
   id: number
   name: string
@@ -122,18 +127,6 @@ export type WeatherResponse = {
   hourly?: HourlyWeather
   daily_units?: Record<string, string>
   daily?: DailyWeather
-}
-
-// Location Store Type
-export type Location = {
-  id: number
-  name: string
-  latitude: number
-  longitude: number
-  country: string
-  admin1?: string
-  timezone: string
-  elevation: number
 }
 
 // WMO Weather Codes (for icons/descriptions)

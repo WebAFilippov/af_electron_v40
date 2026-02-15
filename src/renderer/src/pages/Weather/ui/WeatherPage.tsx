@@ -4,42 +4,30 @@ import { $weatherData, $weatherPending, refreshWeather } from '@/entities/weathe
 import { CitySearch } from '@/features/search-location/ui/CitySearch'
 import { detectLocationByIP, $ipDetectionPending } from '@/features/detect-location/model/detect-location'
 import { getWeatherDescription, getWeatherIcon } from '@/shared_app/api/open-meteo/types'
-import { Card, CardContent, CardHeader, CardTitle, Button, Separator } from '@/shared/ui'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Button,
+  Spinner,
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  EmptyDescription,
+  EmptyContent
+} from '@/shared/ui'
 import { RefreshCw, MapPin, Wind, Droplets, Eye, Gauge, CloudRain, Sunrise, Sunset } from 'lucide-react'
 import type { ReactNode } from 'react'
-
-const formatTime = (isoString: string): string => {
-  return new Date(isoString).toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true
-  })
-}
-
-const getWindDirection = (degrees: number): string => {
-  const directions = [
-    'N',
-    'NNE',
-    'NE',
-    'ENE',
-    'E',
-    'ESE',
-    'SE',
-    'SSE',
-    'S',
-    'SSW',
-    'SW',
-    'WSW',
-    'W',
-    'WNW',
-    'NW',
-    'NNW'
-  ]
-  const index = Math.round(degrees / 22.5) % 16
-  return directions[index]
-}
+import { getWindDirection } from '../utils/getWindDirection'
+import { formatTime } from '../utils/formatTime'
+import { HugeiconsIcon } from '@hugeicons/react'
+import { FirewallIcon, Map, MapPinPlus, Refresh01Icon } from '@hugeicons/core-free-icons'
+import { $t } from '@/entities/i18next'
 
 export const WeatherPage = (): ReactNode => {
+  const t = useUnit($t)
   const [location, weather, isPending, isDetecting] = useUnit([
     $currentLocation,
     $weatherData,
@@ -49,66 +37,75 @@ export const WeatherPage = (): ReactNode => {
 
   if (!location) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-6">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MapPin className="h-5 w-5" />
-              Select Your Location
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <CitySearch />
-            <Separator />
-            <div className="text-center">
-              <p className="text-sm text-muted-foreground mb-3">Or detect automatically</p>
-              <Button onClick={() => detectLocationByIP()} disabled={isDetecting} className="w-full">
-                {isDetecting ? (
-                  <>
-                    <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                    Detecting...
-                  </>
-                ) : (
-                  <>
-                    <MapPin className="mr-2 h-4 w-4" />
-                    Detect My Location
-                  </>
-                )}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <Card className="w-full max-w-4xl mx-auto">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-xl">
+            <HugeiconsIcon icon={Map} />
+            {t('page.weather.not_location_title')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <CitySearch />
+
+          <p className="text-muted-foreground text-center">{t('page.weather.not_location_or')}</p>
+
+          <Button
+            onClick={() => detectLocationByIP()}
+            disabled={isDetecting}
+            className="w-full cursor-pointer h-10"
+            variant="outline"
+            size="lg"
+          >
+            {isDetecting ? (
+              <>
+                <Spinner />
+                {t('page.weather.not_location_detecting')}
+              </>
+            ) : (
+              <>
+                <HugeiconsIcon icon={MapPinPlus} />
+                {t('page.weather.not_location_detect')}
+              </>
+            )}
+          </Button>
+        </CardContent>
+      </Card>
     )
   }
 
   if (isPending && !weather) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-6">
-        <Card className="w-full max-w-2xl">
-          <CardContent className="p-12">
-            <div className="flex flex-col items-center justify-center">
-              <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-              <p className="mt-4 text-lg text-muted-foreground">Loading weather data...</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Spinner />
+          </EmptyMedia>
+          <EmptyTitle>{t('page.weather.fetch_title')}</EmptyTitle>
+          <EmptyDescription>
+            <EmptyContent>{t('page.weather.fetch_description')}</EmptyContent>
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
     )
   }
 
   if (!weather?.current) {
     return (
-      <div className="flex min-h-screen items-center justify-center p-6">
-        <Card className="w-full max-w-2xl">
-          <CardContent className="p-12 text-center">
-            <p className="text-lg text-muted-foreground">Unable to load weather data</p>
-            <Button onClick={() => refreshWeather()} className="mt-4">
-              Retry
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <HugeiconsIcon icon={FirewallIcon} />
+          </EmptyMedia>
+          <EmptyTitle> {t('page.weather.fetch_retry_title')}</EmptyTitle>
+          <EmptyDescription className="text-pretty">{t('page.weather.fetch_retry_description')}</EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button variant="outline" onClick={() => refreshWeather()}>
+            <HugeiconsIcon icon={Refresh01Icon} />
+            {t('page.weather.fetch_retry')}
+          </Button>
+        </EmptyContent>
+      </Empty>
     )
   }
 
@@ -117,7 +114,7 @@ export const WeatherPage = (): ReactNode => {
   const isDay = current.is_day === 1
 
   return (
-    <div className="min-h-screen p-6">
+    <div className="p-6">
       <div className="mx-auto max-w-4xl space-y-6">
         {/* Search Bar */}
         <Card>

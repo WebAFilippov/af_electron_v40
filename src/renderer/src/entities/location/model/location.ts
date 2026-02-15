@@ -3,25 +3,11 @@ import { createStore, createEvent, sample } from 'effector'
 import { persist } from 'effector-storage/local'
 import { toast } from 'sonner'
 import type { GeocodingResponse, Location } from '@/shared_app/api/open-meteo/types'
+import { LanguageApp } from '@/shared_app/types'
 
-// Supported languages: be (Belarusian), en (English), kk (Kazakh), ru (Russian), uk (Ukrainian)
-// Open-Meteo supported: en, de, fr, it, es, ru, uk (be and kk fall back to ru)
-type SupportedLanguage = 'be' | 'en' | 'kk' | 'ru' | 'uk'
+const LANGUAGE_PRIORITY: { pattern: RegExp; lang: LanguageApp }[] = [{ pattern: /[а-яА-ЯёЁыЫъЪьЬ]/, lang: 'ru' }]
 
-// Language detection mapping - priority based on specific characters
-const LANGUAGE_PRIORITY: { pattern: RegExp; lang: SupportedLanguage }[] = [
-  // Kazakh specific letters (Ң, Ә, Ө, Ұ, Һ)
-  { pattern: /[ҢӘӨҰҺңәөұһ]/, lang: 'kk' },
-  // Ukrainian specific letters (Ї, Ї, Ґ, Є)
-  { pattern: /[ЇїҐґЄє]/, lang: 'uk' },
-  // Belarusian specific letter (Ў, І without Ы)
-  { pattern: /[Ўў]/, lang: 'be' },
-  // Russian (general Cyrillic with Ё, Ы, Ъ, Ь)
-  { pattern: /[а-яА-ЯёЁыЫъЪьЬ]/, lang: 'ru' }
-]
-
-// Detect language from query string
-const detectLanguage = (query: string): SupportedLanguage => {
+const detectLanguage = (query: string): LanguageApp => {
   for (const { pattern, lang } of LANGUAGE_PRIORITY) {
     if (pattern.test(query)) {
       return lang
@@ -30,23 +16,18 @@ const detectLanguage = (query: string): SupportedLanguage => {
   return 'en'
 }
 
-// Map to Open-Meteo supported language with fallback
-const mapToAPILanguage = (lang: SupportedLanguage): string => {
-  // Open-Meteo geocoding API supports: en, de, fr, it, es, ru, uk
-  // Belarusian (be) and Kazakh (kk) are not directly supported, fallback to Russian
-  const supportedLanguages = ['en', 'de', 'fr', 'it', 'es', 'ru', 'uk']
+const mapToAPILanguage = (lang: LanguageApp): string => {
+  const supportedLanguages = ['en', 'ru']
   if (supportedLanguages.includes(lang)) {
     return lang
   }
   return 'ru'
 }
 
-// Events
 export const selectLocation = createEvent<Location>()
 export const clearLocation = createEvent()
 export const locationRestored = createEvent<Location>()
 
-// Store for current location
 export const $currentLocation = createStore<Location | null>(null)
 
 // Persist location to localStorage
