@@ -24,7 +24,7 @@ export {
   SidebarTrigger,
   useSidebar
 } from './sidebar'
-export { Button, buttonVariants } from './button'
+export { Button } from './button'
 export { Input } from './input'
 export { Separator } from './separator'
 export {
@@ -44,20 +44,20 @@ export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './tool
 export { Collapsible, CollapsibleTrigger, CollapsibleContent } from './collapsible'
 export {
   DropdownMenu,
+  DropdownMenuPortal,
   DropdownMenuTrigger,
   DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
   DropdownMenuItem,
   DropdownMenuCheckboxItem,
+  DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuGroup,
-  DropdownMenuPortal,
   DropdownMenuSub,
-  DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuRadioGroup
+  DropdownMenuSubContent
 } from './dropdown-menu'
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './card'
 export { ToggleGroup, ToggleGroupItem } from './toggle-group'
@@ -90,6 +90,58 @@ export {
 } from './breadcrumb'
 export { Progress } from './progress'
 export { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyContent, EmptyMedia } from './empty'
-export { Avatar, AvatarImage, AvatarFallback } from './avatar'
+export { Avatar, AvatarImage, AvatarFallback, AvatarBadge, AvatarGroup, AvatarGroupCount } from './avatar'
 export { Badge, badgeVariants } from './badge'
 export { ScrollArea } from './scroll-area'
+export { Spinner } from './spinner'
+export {
+  Item,
+  ItemMedia,
+  ItemContent,
+  ItemActions,
+  ItemGroup,
+  ItemSeparator,
+  ItemTitle,
+  ItemDescription,
+  ItemHeader,
+  ItemFooter
+} from './item'
+export {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupText,
+  InputGroupInput,
+  InputGroupTextarea
+} from './input-group'
+export { Textarea } from './textarea'
+export {
+  Combobox,
+  ComboboxInput,
+  ComboboxContent,
+  ComboboxList,
+  ComboboxItem,
+  ComboboxGroup,
+  ComboboxLabel,
+  ComboboxCollection,
+  ComboboxEmpty,
+  ComboboxSeparator,
+  ComboboxChips,
+  ComboboxChip,
+  ComboboxChipsInput,
+  ComboboxTrigger,
+  ComboboxValue
+} from './combobox'
+export { useComboboxAnchor } from './combobox'
+export {
+  Command,
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandShortcut,
+  CommandSeparator
+} from './command'
+export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor } from './popover'
