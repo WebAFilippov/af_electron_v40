@@ -3,7 +3,7 @@ import { $currentLocation } from '@/entities/location'
 import { $weatherData, $weatherPending, refreshWeather } from '@/entities/weather'
 import { CitySearch } from '@/features/search-location/ui/CitySearch'
 import { detectLocationByIP, $ipDetectionPending } from '@/features/detect-location/model/detect-location'
-import { getWeatherDescription, getWeatherIcon } from '@/shared_app/api/open-meteo/types'
+import { getWeatherDescription } from '@/shared_app/api/open-meteo/types'
 import {
   Card,
   CardContent,
@@ -25,6 +25,7 @@ import { formatTime } from '../utils/formatTime'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { FirewallIcon, Map, MapPinPlus, Refresh01Icon } from '@hugeicons/core-free-icons'
 import { $t } from '@/entities/i18next'
+import { HourlyTemperatureChart } from './HourlyTemperatureChart'
 
 export const WeatherPage = (): ReactNode => {
   const t = useUnit($t)
@@ -217,37 +218,8 @@ export const WeatherPage = (): ReactNode => {
           </CardContent>
         </Card>
 
-        {/* Daily Forecast */}
-        {daily && (
-          <Card>
-            <CardHeader>
-              <CardTitle>7-Day Forecast</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {daily.time.slice(0, 7).map((time, index) => (
-                  <div key={time} className="flex items-center justify-between py-2">
-                    <div className="flex items-center gap-3 w-24">
-                      <span className="text-sm font-medium">
-                        {index === 0 ? 'Today' : new Date(time).toLocaleDateString('en-US', { weekday: 'short' })}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 flex-1">
-                      <span className="text-2xl">{getWeatherIcon(daily.weather_code[index])}</span>
-                      <span className="text-sm text-muted-foreground">
-                        {getWeatherDescription(daily.weather_code[index])}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm">
-                      <span className="font-medium">{Math.round(daily.temperature_2m_max[index])}°</span>
-                      <span className="text-muted-foreground">{Math.round(daily.temperature_2m_min[index])}°</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {/* Hourly Temperature Chart */}
+        {weather.hourly && <HourlyTemperatureChart hourly={weather.hourly} />}
 
         {/* Sun Times */}
         {daily && (

@@ -83,8 +83,6 @@ export const weatherQuery = createQuery({
       throw new Error(`Weather API error: ${response.status}`)
     }
 
-
-
     return response.json() as Promise<WeatherResponse>
   }
 })
