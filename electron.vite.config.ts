@@ -3,9 +3,6 @@ import { defineConfig, swcPlugin } from 'electron-vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-// "@/shared_app/*": [
-//         "./src/shared/*"
-//       ],
 
 export default defineConfig({
   main: {

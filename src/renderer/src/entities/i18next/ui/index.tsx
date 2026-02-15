@@ -32,15 +32,6 @@ export const LanguageSwitcher = (): ReactNode => {
             <SelectItem value="en" disabled={language === 'en'}>
               English
             </SelectItem>
-            <SelectItem value="be" disabled={language === 'be'}>
-              Беларускі
-            </SelectItem>
-            <SelectItem value="uk" disabled={language === 'uk'}>
-              Український
-            </SelectItem>
-            <SelectItem value="kk" disabled={language === 'kk'}>
-              Қазақша
-            </SelectItem>
           </SelectGroup>
           <SelectScrollDownButton />
         </SelectContent>

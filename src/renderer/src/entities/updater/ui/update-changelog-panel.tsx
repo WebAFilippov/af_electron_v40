@@ -59,7 +59,7 @@ export const UpdateChangelogPanel = () => {
   const parsedNotes = parseReleaseNotes(releaseNotes)
 
   return (
-    <ScrollArea className="h-[300px] pr-4">
+    <ScrollArea className="h-75 pr-4">
       <div className="space-y-6">
         {/* New Update Info */}
         {(version || parsedNotes.length > 0) && (
@@ -119,7 +119,7 @@ export const UpdateChangelogPanel = () => {
           <div className="text-center py-8 text-muted-foreground">
             <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
             <p>История изменений будет доступна после проверки обновлений</p>
-            <p className="text-sm mt-1">Нажмите "Проверить обновления" чтобы увидеть список изменений</p>
+            <p className="text-sm mt-1">Нажмите &quot;Проверить обновления&quot; чтобы увидеть список изменений</p>
           </div>
         )}
 

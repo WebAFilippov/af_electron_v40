@@ -41,11 +41,7 @@ export const UpdatePanel = () => {
     >
       <div className="flex gap-4 justify-end items-center">
         {!isDownloaded && (
-          <Button
-            size="sm"
-            disabled={updateData.status !== 'idle'}
-            onClick={() => handleCheckForUpdate()}
-          >
+          <Button size="sm" disabled={updateData.status !== 'idle'} onClick={() => handleCheckForUpdate()}>
             Проверить обновление
           </Button>
         )}
@@ -61,12 +57,7 @@ export const UpdatePanel = () => {
           <div className="text-center font-medium text-destructive">
             {updateData.data?.message || updateData.data?.error?.message || 'Неизвестная ошибка'}
           </div>
-          <Button
-            size="sm"
-            variant="outline"
-            className="mx-10"
-            onClick={() => handleRetryDownload()}
-          >
+          <Button size="sm" variant="outline" className="mx-10" onClick={() => handleRetryDownload()}>
             Повторить
           </Button>
         </Card>
@@ -74,9 +65,7 @@ export const UpdatePanel = () => {
 
       {updateData.status === 'update-available' && (
         <Card className="p-4 flex flex-col gap-2">
-          <div className="font-medium text-center">
-            Доступно обновление: {updateData.data.version}
-          </div>
+          <div className="font-medium text-center">Доступно обновление: {updateData.data.version}</div>
           <Button size="sm" className="mx-10" variant="outline" onClick={() => handleDownload()}>
             Скачать обновление
           </Button>
@@ -104,20 +93,10 @@ export const UpdatePanel = () => {
             успешно загружено
           </div>
           <div className="flex w-full items-center justify-center gap-2 ">
-            <Button
-              size="sm"
-              variant="outline"
-              className="w-1/2"
-              onClick={() => handleInstallNow()}
-            >
+            <Button size="sm" variant="outline" className="w-1/2" onClick={() => handleInstallNow()}>
               Установить сейчас
             </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              className="w-1/2"
-              onClick={() => handleInstallOnQuit()}
-            >
+            <Button size="sm" variant="outline" className="w-1/2" onClick={() => handleInstallOnQuit()}>
               Установить позже
             </Button>
           </div>

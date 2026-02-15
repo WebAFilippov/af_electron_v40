@@ -39,11 +39,38 @@
       "label": "Проверять обновления при запуске"
     }
   },
+  "widgets": {
+    "weather_widget": {
+      "not_location_title": "Не указана локация",
+      "not_location_description": "Местоположение не определено"
+    }
+  },
   "page": {
     "404": {
       "title": "Страница не найдена",
       "description": "Извините, запрошенная страница не существует.",
       "button_go_back": "Вернуться назад"
+    },
+    "home": {
+      "weather": "Погода",
+      "weather_description": "Актуальная информация о погоде в вашем городе",
+      "update_title": "Обновления",
+      "update_description": "Управляйте обновлениями",
+      "update_content": "Проверяйте доступные обновления.",
+      "settings_title": "Настройки",
+      "settings_description": "Настройте приложение",
+      "settings_content": "Измените язык, тему оформления и другие параметры приложения."
+    },
+    "weather": {
+      "not_location_title": "Местоположение",
+      "not_location_or": "ИЛИ",
+      "not_location_detect": "Определить мое местоположение",
+      "not_location_detecting": "Поиск...",
+      "fetch_title": "Загружаем данные о погоде...",
+      "fetch_description": "Пожалуйста, подождите, пока мы загрузим последние данные о погоде.",
+      "fetch_retry": "Повторить",
+      "fetch_retry_title": "Не удаётся загрузить данные о погоде",
+      "fetch_retry_description": "Проверьте подключение к интернету и попробуйте снова."
     }
   }
 }

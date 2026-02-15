@@ -17,11 +17,17 @@ import type { Location } from '@/shared_app/api/open-meteo/types'
 
 export function CitySearch() {
   const [open, setOpen] = useState(false)
-  const [query, results, isPending] = useUnit([$searchQuery, $searchResults, $searchPending])
+  const [query, results, isPending, onChangeSearchQuery, setLocation] = useUnit([
+    $searchQuery,
+    $searchResults,
+    $searchPending,
+    changeSearchQuery,
+    selectLocation
+  ])
 
   const handleSelect = (location: Location) => {
-    selectLocation(location)
-    changeSearchQuery('')
+    setLocation(location)
+    onChangeSearchQuery('')
     setOpen(false)
   }
 
@@ -33,9 +39,13 @@ export function CitySearch() {
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="p-0 w-full min-w-[300px]" align="start">
+      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="center">
         <Command>
-          <CommandInput placeholder="Введите название города..." value={query} onValueChange={changeSearchQuery} />
+          <CommandInput
+            placeholder="Введите название города..."
+            value={query}
+            onValueChange={(e) => onChangeSearchQuery(e)}
+          />
           <CommandList>
             {isPending ? (
               <div className="py-6 text-center text-sm text-muted-foreground">Поиск...</div>

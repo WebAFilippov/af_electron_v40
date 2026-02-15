@@ -14,8 +14,15 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-  Button,
-  Separator
+  Separator,
+  Card,
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuItem,
+  DropdownMenuSeparator
 } from '@/shared/ui'
 
 import { cn } from '@/shared/lib'
@@ -25,7 +32,7 @@ import { NAVIGATION_LIST } from '../model/navigation-list'
 import { useUnit } from 'effector-react'
 import { SidebarBreadcrumbs } from './sidebar-bredcrumb'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Notification, AiCloud01Icon, UserIcon } from '@hugeicons/core-free-icons'
+import { Notification, AiCloud01Icon, Trash } from '@hugeicons/core-free-icons'
 import { $t } from '@/entities/i18next'
 import { $isFullscreen } from '@/widgets/window-control-panel/model'
 
@@ -80,34 +87,51 @@ export function SidebarWidget(): ReactNode {
 
           <Separator className="mx-4 w-[calc(100%-32px)]" />
 
-          {/* Footer with Profile */}
           <SidebarFooter className="p-4">
-            <div className="flex items-center gap-3 rounded-lg bg-sidebar-accent/50 p-3">
-              <Avatar className="h-10 w-10 border-2 border-sidebar-border">
-                <AvatarImage src={undefined} alt="User" />
-                <AvatarFallback className="bg-primary/10 text-primary">
-                  <HugeiconsIcon icon={UserIcon} size={20} />
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex flex-1 flex-col overflow-hidden">
-                <span className="truncate text-sm font-medium">Пользователь</span>
-                <span className="truncate text-xs text-muted-foreground">user@example.com</span>
-              </div>
-              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
-                <HugeiconsIcon icon={Notification} size={18} />
-              </Button>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <Card className="px-2 py-3 flex items-center gap-3 select-none cursor-pointer hover:bg-muted transition-all">
+                  <Avatar size="lg" className=" rounded-md">
+                    <AvatarImage src="avatar.jpg" alt="UserAvatar" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-1 flex-col overflow-hidden">
+                    <span className="truncate text-sm font-medium">Пользователь</span>
+                    <span className="truncate text-xs text-muted-foreground">user@example.com</span>
+                  </div>
+                </Card>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuItem>Option</DropdownMenuItem>
+                  <DropdownMenuItem>Option</DropdownMenuItem>
+                  <DropdownMenuItem>Option</DropdownMenuItem>
+                  <DropdownMenuItem>Option</DropdownMenuItem>
+                  <DropdownMenuItem>Option</DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem variant="destructive">
+                    <HugeiconsIcon icon={Trash} />
+                    Выйти
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </SidebarFooter>
         </Sidebar>
 
         <SidebarInset
           className={cn(
             isFullscreen && 'h-[calc(100svh-15px)]!',
-            'h-[calc(100svh-36px)] md:peer-data-[variant=inset]:h-[calc(100svh-53px)]'
+            'h-[calc(100svh-36px)] md:peer-data-[variant=inset]:h-[calc(100svh-53px)] relative'
           )}
         >
           <header
-            className={cn('flex h-16 shrink-0 bg-background items-center justify-between gap-2 border-b px-4 sticky')}
+            className={cn(
+              'flex sticky top-0 h-16 shrink-0 bg-background items-center justify-between gap-2 border-b px-4 z-30'
+            )}
           >
             <div className="flex gap-5 items-center justify-between w-full">
               <div className="flex items-center gap-5">
@@ -120,8 +144,10 @@ export function SidebarWidget(): ReactNode {
               </div>
             </div>
           </header>
-          <div className="overflow-x-hidden overflow-y-auto h-full px-8 py-4 no-scrollbar">
+          <div className="overflow-x-hidden overflow-y-auto h-full no-scrollbar scroll-smooth relative px-8">
+            <div className=" sticky top-0 h-8 bg-linear-to-b from-background from-45% to-transparent z-10" />
             <Outlet />
+            <div className=" sticky bottom-0 h-8 bg-linear-to-t from-background from-45% to-transparent z-10" />
           </div>
         </SidebarInset>
       </div>

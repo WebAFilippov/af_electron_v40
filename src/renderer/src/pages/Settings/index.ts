@@ -1,1 +1,1 @@
-export { SettingsPage } from './ui/settings'
+export { SettingsPage } from './ui/SettingsPage'

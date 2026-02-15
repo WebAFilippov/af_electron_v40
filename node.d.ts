@@ -28,7 +28,6 @@ declare module '*.json?commonjs-external&asset' {
 
 // native node module
 declare module '*.node' {
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const node: any
   export default node
 }
@@ -101,20 +100,11 @@ interface ImportGlobFunction {
    *
    * https://vitejs.dev/guide/features.html#glob-import
    */
-  <
-    Eager extends boolean,
-    As extends string,
-    T = As extends keyof KnownAsTypeMap ? KnownAsTypeMap[As] : unknown
-  >(
+  <Eager extends boolean, As extends string, T = As extends keyof KnownAsTypeMap ? KnownAsTypeMap[As] : unknown>(
     glob: string | string[],
     options?: ImportGlobOptions<Eager, As>
-  ): (Eager extends true ? true : false) extends true
-    ? Record<string, T>
-    : Record<string, () => Promise<T>>
-  <M>(
-    glob: string | string[],
-    options?: ImportGlobOptions<false, string>
-  ): Record<string, () => Promise<M>>
+  ): (Eager extends true ? true : false) extends true ? Record<string, T> : Record<string, () => Promise<T>>
+  <M>(glob: string | string[], options?: ImportGlobOptions<false, string>): Record<string, () => Promise<M>>
   <M>(glob: string | string[], options: ImportGlobOptions<true, string>): Record<string, M>
 }
 

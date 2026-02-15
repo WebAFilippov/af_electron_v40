@@ -24,17 +24,13 @@ export const WindowControlPanel = (): ReactNode => {
     >
       <div className="drag-off flex items-center justify-center ">
         <Button tabIndex={-1} variant="ghost" size="icon" className="rounded-xs" onClick={handleMinimize}>
-          <HugeiconsIcon icon={Remove01Icon} className="size-4" />
+          <HugeiconsIcon icon={Remove01Icon} />
         </Button>
         <Button tabIndex={-1} variant="ghost" size="icon" className="rounded-xs" onClick={handleMaximize}>
-          {!isMaximized ? (
-            <HugeiconsIcon icon={SquareIcon} className="size-4" />
-          ) : (
-            <HugeiconsIcon icon={ChangeScreenModeIcon} className="size-4" />
-          )}
+          {!isMaximized ? <HugeiconsIcon icon={SquareIcon} /> : <HugeiconsIcon icon={ChangeScreenModeIcon} />}
         </Button>
-        <Button tabIndex={-1} variant="ghost_destructive" size="icon" className="rounded-xs" onClick={handleClose}>
-          <HugeiconsIcon icon={Cancel01Icon} className="size-5" />
+        <Button tabIndex={-1} variant="ghost" size="icon" className="rounded-xs " onClick={handleClose}>
+          <HugeiconsIcon icon={Cancel01Icon} />
         </Button>
       </div>
     </header>

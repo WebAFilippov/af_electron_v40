@@ -83,6 +83,8 @@ export const weatherQuery = createQuery({
       throw new Error(`Weather API error: ${response.status}`)
     }
 
+
+
     return response.json() as Promise<WeatherResponse>
   }
 })
@@ -97,15 +99,16 @@ sample({
       duration: 5000
     })
     return error
-  }
+  },
+  target: []
 })
 
 // Auto-refresh every hour using interval
 const { tick: hourlyTick } = interval({
-  timeout: 60 * 60 * 1000, // 1 hour in milliseconds
+  timeout: 15 * 60 * 1000, // 1 hour in milliseconds
   start: sample({
     clock: $currentLocation,
-    filter: (location): location is Location => location !== null
+    filter: (location): location is Location => Boolean(location)
   }),
   stop: sample({
     clock: $currentLocation,
@@ -117,7 +120,7 @@ const { tick: hourlyTick } = interval({
 sample({
   clock: hourlyTick,
   source: $currentLocation,
-  filter: (location): location is Location => location !== null,
+  filter: (location): location is Location => Boolean(location),
   target: weatherQuery.start
 })
 
@@ -140,3 +143,5 @@ sample({
 export const $weatherData = weatherQuery.$data
 export const $weatherPending = weatherQuery.$pending
 export const $weatherError = weatherQuery.$error
+
+$weatherData.watch(console.log)

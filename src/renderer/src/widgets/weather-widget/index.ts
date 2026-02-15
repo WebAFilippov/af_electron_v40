@@ -1,1 +1,1 @@
-export { WeatherWidget } from './WeatherWidget'
+export { WeatherWidget } from './ui/WeatherWidget'

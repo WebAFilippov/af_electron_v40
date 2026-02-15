@@ -5,7 +5,7 @@ export const channels = {
   settings_set_autolaunch: 'settings:setAutoLaunch',
   settings_set_startMinimaze: 'settings:setStartMinimized',
   settings_set_language: 'settings:set_language',
-  settings_set_checkForUpdatesOnStartup: 'settings:set_checkForUpdatesOnStartup',  
+  settings_set_checkForUpdatesOnStartup: 'settings:set_checkForUpdatesOnStartup',
 
   theme_get_theme: 'settings:get_theme',
   theme_set_theme: 'settings:set_theme',
@@ -36,8 +36,8 @@ export interface SettingsProps {
   checkForUpdatesOnStartup: boolean
 }
 
-export const SUPPORTED_LANGUAGES: LanguageApp[] = ['ru', 'en', 'be', 'uk', 'kk']
-export type LanguageApp = 'ru' | 'en' | 'be' | 'uk' | 'kk'
+export const SUPPORTED_LANGUAGES: LanguageApp[] = ['ru', 'en']
+export type LanguageApp = 'ru' | 'en'
 export interface LanguageProps {
   language: LanguageApp
 }

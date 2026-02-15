@@ -54,10 +54,10 @@ export const createWindow = (): BrowserWindow => {
 
   mainWindow.flashFrame(false)
   mainWindow.setOverlayIcon(nativeImage.createFromPath(appIcon), 'Effectory')
-  mainWindow.setMenu(null)
-  mainWindow.setMenuBarVisibility(false)
-  mainWindow.setSkipTaskbar(false)
-  Menu.setApplicationMenu(null)
+  // mainWindow.setMenu(null)
+  // mainWindow.setMenuBarVisibility(false)
+  // mainWindow.setSkipTaskbar(false)
+  // Menu.setApplicationMenu(null)
 
   mainWindow.on('ready-to-show', () =>
     triggerStart ? mainWindow?.hide() : startMinimized ? mainWindow?.hide() : mainWindow?.show()
