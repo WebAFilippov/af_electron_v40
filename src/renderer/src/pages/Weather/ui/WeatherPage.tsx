@@ -2,8 +2,7 @@ import { useUnit } from 'effector-react'
 import { $currentLocation } from '@/entities/location'
 import { $weatherData, $weatherPending, refreshWeather } from '@/entities/weather'
 import { CitySearch } from '@/features/search-location/ui/CitySearch'
-import { detectLocationByIP, $ipDetectionPending } from '@/features/detect-location/model/detect-location'
-import { getWeatherDescription } from '@/shared_app/api/open-meteo/types'
+
 import {
   Card,
   CardContent,
@@ -18,23 +17,20 @@ import {
   EmptyDescription,
   EmptyContent
 } from '@/shared/ui'
-import { RefreshCw, MapPin, Wind, Droplets, Eye, Gauge, CloudRain, Sunrise, Sunset } from 'lucide-react'
+import { RefreshCw, Wind, Droplets, Eye, Gauge, CloudRain, Sunrise, Sunset } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { getWindDirection } from '../utils/getWindDirection'
 import { formatTime } from '../utils/formatTime'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { FirewallIcon, Map, MapPinPlus, Refresh01Icon } from '@hugeicons/core-free-icons'
+import { FirewallIcon, Map, Refresh01Icon } from '@hugeicons/core-free-icons'
 import { $t } from '@/entities/i18next'
 import { HourlyTemperatureChart } from './HourlyTemperatureChart'
+import { DetectLocation } from '@/features/detect-location/ui/DetectCity'
+import { getWeatherDescription } from '@/entities/weather/utils'
 
 export const WeatherPage = (): ReactNode => {
   const t = useUnit($t)
-  const [location, weather, isPending, isDetecting] = useUnit([
-    $currentLocation,
-    $weatherData,
-    $weatherPending,
-    $ipDetectionPending
-  ])
+  const [location, weather, isPending] = useUnit([$currentLocation, $weatherData, $weatherPending])
 
   if (!location) {
     return (
@@ -50,25 +46,7 @@ export const WeatherPage = (): ReactNode => {
 
           <p className="text-muted-foreground text-center">{t('page.weather.not_location_or')}</p>
 
-          <Button
-            onClick={() => detectLocationByIP()}
-            disabled={isDetecting}
-            className="w-full cursor-pointer h-10"
-            variant="outline"
-            size="lg"
-          >
-            {isDetecting ? (
-              <>
-                <Spinner />
-                {t('page.weather.not_location_detecting')}
-              </>
-            ) : (
-              <>
-                <HugeiconsIcon icon={MapPinPlus} />
-                {t('page.weather.not_location_detect')}
-              </>
-            )}
-          </Button>
+          <DetectLocation className="w-full" />
         </CardContent>
       </Card>
     )
@@ -124,10 +102,7 @@ export const WeatherPage = (): ReactNode => {
               <div className="flex-1">
                 <CitySearch />
               </div>
-              <Button variant="outline" onClick={() => detectLocationByIP()} disabled={isDetecting}>
-                <MapPin className="mr-2 h-4 w-4" />
-                Detect
-              </Button>
+              <DetectLocation />
             </div>
           </CardContent>
         </Card>
@@ -137,13 +112,13 @@ export const WeatherPage = (): ReactNode => {
           <CardHeader className="pb-2">
             <div className="flex items-start justify-between">
               <div>
-                <CardTitle className="text-2xl">{location.name}</CardTitle>
+                <CardTitle className="text-2xl">{location.city}</CardTitle>
                 <p className="text-muted-foreground">
-                  {location.admin1 ? `${location.admin1}, ` : ''}
+                  {location.region ? `${location.region}, ` : ''}
                   {location.country}
                 </p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Updated: {new Date(current.time).toLocaleTimeString()}
+                  {t('page.weather.updated')} {new Date(current.time).toLocaleTimeString()}
                 </p>
               </div>
               <Button variant="ghost" size="icon" onClick={() => refreshWeather()} disabled={isPending}>
@@ -157,10 +132,16 @@ export const WeatherPage = (): ReactNode => {
                 <div className="text-6xl font-bold">{Math.round(current.temperature_2m)}°</div>
                 <div>
                   <p className="text-xl font-medium">{getWeatherDescription(current.weather_code)}</p>
-                  <p className="text-muted-foreground">Feels like {Math.round(current.apparent_temperature)}°</p>
+                  <p className="text-muted-foreground">
+                    {t('page.weather.feels_like')} {Math.round(current.apparent_temperature)}°
+                  </p>
                   <div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground">
-                    <span>H: {daily ? Math.round(daily.temperature_2m_max[0]) : '--'}°</span>
-                    <span>L: {daily ? Math.round(daily.temperature_2m_min[0]) : '--'}°</span>
+                    <span>
+                      {t('page.weather.high')}: {daily ? Math.round(daily.temperature_2m_max[0]) : '--'}°
+                    </span>
+                    <span>
+                      {t('page.weather.low')}: {daily ? Math.round(daily.temperature_2m_min[0]) : '--'}°
+                    </span>
                   </div>
                 </div>
               </div>
@@ -172,31 +153,38 @@ export const WeatherPage = (): ReactNode => {
               <div className="flex items-center gap-3 rounded-lg bg-muted p-3">
                 <Wind className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Wind</p>
+                  <p className="text-sm text-muted-foreground">{t('page.weather.wind')}</p>
                   <p className="font-medium">
-                    {Math.round(current.wind_speed_10m)} km/h {getWindDirection(current.wind_direction_10m)}
+                    {t('page.weather.values.wind', {
+                      value: Math.round(current.wind_speed_10m),
+                      direction: getWindDirection(current.wind_direction_10m)
+                    })}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-3 rounded-lg bg-muted p-3">
                 <Droplets className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Humidity</p>
-                  <p className="font-medium">{current.relative_humidity_2m}%</p>
+                  <p className="text-sm text-muted-foreground">{t('page.weather.humidity')}</p>
+                  <p className="font-medium">
+                    {t('page.weather.values.humidity', { value: current.relative_humidity_2m })}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-3 rounded-lg bg-muted p-3">
                 <Eye className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Cloud Cover</p>
-                  <p className="font-medium">{current.cloud_cover}%</p>
+                  <p className="text-sm text-muted-foreground">{t('page.weather.cloud_cover')}</p>
+                  <p className="font-medium">{t('page.weather.values.cloud_cover', { value: current.cloud_cover })}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 rounded-lg bg-muted p-3">
                 <Gauge className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Pressure</p>
-                  <p className="font-medium">{Math.round(current.pressure_msl)} hPa</p>
+                  <p className="text-sm text-muted-foreground">{t('page.weather.pressure')}</p>
+                  <p className="font-medium">
+                    {t('page.weather.values.pressure', { value: Math.round(current.pressure_msl) })}
+                  </p>
                 </div>
               </div>
             </div>
@@ -206,11 +194,12 @@ export const WeatherPage = (): ReactNode => {
               <div className="mt-4 flex items-center gap-3 rounded-lg bg-blue-50 p-3 dark:bg-blue-950">
                 <CloudRain className="h-5 w-5 text-blue-600" />
                 <div>
-                  <p className="text-sm text-blue-600 dark:text-blue-400">Precipitation</p>
+                  <p className="text-sm text-blue-600 dark:text-blue-400">{t('page.weather.precipitation')}</p>
                   <p className="font-medium">
-                    {current.precipitation > 0 && `${current.precipitation}mm `}
-                    {current.rain > 0 && `rain `}
-                    {current.snowfall > 0 && `${current.snowfall}cm snow`}
+                    {current.precipitation > 0 &&
+                      t('page.weather.values.precipitation', { value: current.precipitation }) + ' '}
+                    {current.rain > 0 && t('page.weather.rain') + ' '}
+                    {current.snowfall > 0 && t('page.weather.snow')}
                   </p>
                 </div>
               </div>
@@ -225,21 +214,21 @@ export const WeatherPage = (): ReactNode => {
         {daily && (
           <Card>
             <CardHeader>
-              <CardTitle>Sun & Moon</CardTitle>
+              <CardTitle>{t('page.weather.sun_moon')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center gap-3">
                   <Sunrise className="h-6 w-6 text-yellow-500" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Sunrise</p>
+                    <p className="text-sm text-muted-foreground">{t('page.weather.sunrise')}</p>
                     <p className="font-medium">{formatTime(daily.sunrise[0])}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Sunset className="h-6 w-6 text-orange-500" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Sunset</p>
+                    <p className="text-sm text-muted-foreground">{t('page.weather.sunset')}</p>
                     <p className="font-medium">{formatTime(daily.sunset[0])}</p>
                   </div>
                 </div>

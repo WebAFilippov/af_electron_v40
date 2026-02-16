@@ -1,16 +1,19 @@
 import { useMemo } from 'react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui'
-import type { HourlyWeather } from '@/shared_app/api/open-meteo/types'
+import type { HourlyWeather } from '@/entities/weather/model/types'
 import { format } from 'date-fns'
-import { ru } from 'date-fns/locale'
 import { Thermometer } from 'lucide-react'
+import { useUnit } from 'effector-react'
+import { $t } from '@/entities/i18next'
 
 interface HourlyTemperatureChartProps {
   hourly: HourlyWeather
 }
 
 export function HourlyTemperatureChart({ hourly }: HourlyTemperatureChartProps) {
+  const t = useUnit($t)
+
   const data = useMemo(() => {
     const now = new Date()
 
@@ -28,7 +31,7 @@ export function HourlyTemperatureChart({ hourly }: HourlyTemperatureChartProps) 
 
     return hourly.time.slice(actualStartIndex, endIndex).map((time, index) => ({
       time,
-      hour: format(new Date(time), 'HH:mm', { locale: ru }),
+      hour: format(new Date(time), 'HH:mm'),
       temperature: Math.round(hourly.temperature_2m[actualStartIndex + index]),
       feelsLike: Math.round(hourly.apparent_temperature[actualStartIndex + index]),
       precipitation: hourly.precipitation[actualStartIndex + index],
@@ -44,7 +47,7 @@ export function HourlyTemperatureChart({ hourly }: HourlyTemperatureChartProps) 
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-lg">
           <Thermometer className="w-5 h-5 text-primary" />
-          Температура на 24 часа
+          {t('page.weather.hourly_chart.title')}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -97,8 +100,12 @@ export function HourlyTemperatureChart({ hourly }: HourlyTemperatureChartProps) 
                       <div className="bg-popover border rounded-lg shadow-lg p-3">
                         <p className="font-semibold mb-2">{label}</p>
                         <div className="space-y-1 text-sm">
-                          <p className="text-blue-500">Температура: {payload[0].value}°</p>
-                          <p className="text-orange-500">Ощущается: {payload[1].value}°</p>
+                          <p className="text-blue-500">
+                            {t('page.weather.hourly_chart.temperature')}: {payload[0].value}°
+                          </p>
+                          <p className="text-orange-500">
+                            {t('page.weather.hourly_chart.feels_like')}: {payload[1].value}°
+                          </p>
                         </div>
                       </div>
                     )
@@ -113,7 +120,7 @@ export function HourlyTemperatureChart({ hourly }: HourlyTemperatureChartProps) 
                 stroke="#3b82f6"
                 strokeWidth={3}
                 fill="url(#temperatureGradient)"
-                name="Температура"
+                name={t('page.weather.hourly_chart.temperature')}
                 dot={false}
                 activeDot={{ r: 6, fill: '#3b82f6', stroke: '#fff', strokeWidth: 2 }}
               />
@@ -125,7 +132,7 @@ export function HourlyTemperatureChart({ hourly }: HourlyTemperatureChartProps) 
                 strokeWidth={2}
                 strokeDasharray="5 5"
                 fill="url(#feelsLikeGradient)"
-                name="Ощущается"
+                name={t('page.weather.hourly_chart.feels_like')}
                 dot={false}
                 activeDot={{ r: 4, fill: '#f97316', stroke: '#fff', strokeWidth: 2 }}
               />
@@ -138,21 +145,21 @@ export function HourlyTemperatureChart({ hourly }: HourlyTemperatureChartProps) 
           <div className="flex items-center gap-4 text-sm">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-blue-500" />
-              <span className="text-muted-foreground">Температура</span>
+              <span className="text-muted-foreground">{t('page.weather.hourly_chart.temperature')}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-orange-500" />
-              <span className="text-muted-foreground">Ощущается</span>
+              <span className="text-muted-foreground">{t('page.weather.hourly_chart.feels_like')}</span>
             </div>
           </div>
 
           <div className="flex items-center gap-4 text-sm">
             <div className="text-right">
-              <span className="text-muted-foreground">Макс: </span>
+              <span className="text-muted-foreground">{t('page.weather.high')}: </span>
               <span className="font-semibold text-blue-500">{maxTemp}°</span>
             </div>
             <div className="text-right">
-              <span className="text-muted-foreground">Мин: </span>
+              <span className="text-muted-foreground">{t('page.weather.low')}: </span>
               <span className="font-semibold text-blue-500">{minTemp}°</span>
             </div>
           </div>

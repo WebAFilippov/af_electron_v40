@@ -1,0 +1,14 @@
+{
+  "window": {
+    "title": "AFDevice Умный стол"
+  },
+  "tray": {
+    "tooltip": "AFDevice приложение для\nуправления умным столом",
+    "title": "AFDevice Умный стол",
+    "control_window": {
+      "show": "Открыть AFDevice",
+      "hide": "Свернуть"
+    },
+    "exit": "Выход"
+  }
+}

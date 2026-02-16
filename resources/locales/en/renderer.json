@@ -2,17 +2,17 @@
   "nav": {
     "sidebar": {
       "home": "Home",
-      "update": "Updates",
       "weather": "Weather",
+      "update": "Updates",
       "settings": "Settings"
     }
   },
   "breadcrumb": {
     "home": "Home",
-    "update": "Updates",
     "weather": "Weather",
+    "update": "Updates",
     "settings": "Settings",
-    "404": "Page not found"
+    "404": "Page Not Found"
   },
   "entities": {
     "i18next": {
@@ -21,14 +21,118 @@
     "autoLaunch": {
       "label": "Auto‑launch"
     },
-    "autoStartMinimized": {
-      "label": "Start minimized"
+    "startMinimized": {
+      "label": "Start Minimized"
+    },
+    "checkForUpdatesOnStartup": {
+      "label": "Check for updates on startup"
     },
     "theme": {
-      "label": "App theme",
+      "label": "App Theme",
       "light": "Light",
       "dark": "Dark",
       "system": "System"
     }
+  },
+  "features": {
+    "checkUpdateOnStart": {
+      "label": "Check for updates on startup"
+    },
+    "search-location": {
+      "btn-search-cities": "Search cities...",
+      "command-input-placeholder": "Enter city name...",
+      "command-not-found": "No cities found"
+    }
+  },
+  "widgets": {
+    "weather_widget": {
+      "not_location_title": "Location Not Specified",
+      "not_location_description": "Location is not defined"
+    }
+  },
+  "page": {
+    "404": {
+      "title": "Page Not Found",
+      "description": "Sorry, the requested page does not exist.",
+      "button_go_back": "Go Back"
+    },
+    "home": {
+      "weather": "Weather",
+      "weather_description": "Current weather information for your city",
+      "update_title": "Updates",
+      "update_description": "Manage updates",
+      "update_content": "Check for available updates.",
+      "settings_title": "Settings",
+      "settings_description": "Customize the app",
+      "settings_content": "Change language, theme, and other app settings."
+    },
+    "weather": {
+      "not_location_title": "Location",
+      "not_location_or": "OR",
+      "not_location_detect": "Detect my location",
+      "not_location_detecting": "Searching...",
+      "fetch_title": "Loading weather data...",
+      "fetch_description": "Please wait while we load the latest weather data.",
+      "fetch_retry": "Retry",
+      "fetch_retry_title": "Unable to load weather data",
+      "fetch_retry_description": "Check your internet connection and try again.",
+      "updated": "Updated:",
+      "feels_like": "Feels like",
+      "high": "High",
+      "low": "Low",
+      "wind": "Wind",
+      "humidity": "Humidity",
+      "cloud_cover": "Cloud Cover",
+      "pressure": "Pressure",
+      "precipitation": "Precipitation",
+      "rain": "rain",
+      "snow": "snow",
+      "sun_moon": "Sun & Moon",
+      "sunrise": "Sunrise",
+      "sunset": "Sunset",
+      "values": {
+        "wind": "{{value}} km/h {{direction}}",
+        "humidity": "{{value}}%",
+        "cloud_cover": "{{value}}%",
+        "pressure": "{{value}} hPa",
+        "precipitation": "{{value}} mm",
+        "temperature": "{{value}}°"
+      },
+      "hourly_chart": {
+        "title": "Temperature for 24 hours",
+        "temperature": "Temperature",
+        "feels_like": "Feels like"
+      }
+    }
+  },
+  "weather_codes": {
+    "0": "Clear sky",
+    "1": "Mainly clear",
+    "2": "Partly cloudy",
+    "3": "Overcast",
+    "45": "Fog",
+    "48": "Depositing rime fog",
+    "51": "Light drizzle",
+    "53": "Moderate drizzle",
+    "55": "Dense drizzle",
+    "56": "Light freezing drizzle",
+    "57": "Dense freezing drizzle",
+    "61": "Slight rain",
+    "63": "Moderate rain",
+    "65": "Heavy rain",
+    "66": "Light freezing rain",
+    "67": "Heavy freezing rain",
+    "71": "Slight snow fall",
+    "73": "Moderate snow fall",
+    "75": "Heavy snow fall",
+    "77": "Snow grains",
+    "80": "Slight rain showers",
+    "81": "Moderate rain showers",
+    "82": "Violent rain showers",
+    "85": "Slight snow showers",
+    "86": "Heavy snow showers",
+    "95": "Thunderstorm",
+    "96": "Thunderstorm with slight hail",
+    "99": "Thunderstorm with heavy hail"
   }
 }

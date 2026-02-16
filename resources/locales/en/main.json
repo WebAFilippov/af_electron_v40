@@ -1,0 +1,14 @@
+{
+  "window": {
+    "title": "AFDevice Smart Desk"
+  },
+  "tray": {
+    "tooltip": "AFDevice app for smart desk control",
+    "title": "AFDevice Smart Desk",
+    "control_window": {
+      "show": "Open AFDevice",
+      "hide": "Minimize"
+    },
+    "exit": "Exit"
+  }
+}
