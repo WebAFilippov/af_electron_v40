@@ -21,8 +21,7 @@ export {
   SidebarProvider,
   SidebarRail,
   SidebarSeparator,
-  SidebarTrigger,
-  useSidebar
+  SidebarTrigger
 } from './sidebar'
 export { Button } from './button'
 export { Input } from './input'

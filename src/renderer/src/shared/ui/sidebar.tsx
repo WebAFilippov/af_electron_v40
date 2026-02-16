@@ -153,10 +153,7 @@ function Sidebar({
     return (
       <div
         data-slot="sidebar"
-        className={cn(
-          'bg-sidebar text-sidebar-foreground flex h-full w-(--sidebar-width) flex-col',
-          className
-        )}
+        className={cn('bg-sidebar text-sidebar-foreground flex h-full w-(--sidebar-width) flex-col', className)}
         {...props}
       >
         {children}
@@ -237,11 +234,7 @@ function Sidebar({
   )
 }
 
-function SidebarTrigger({
-  className,
-  onClick,
-  ...props
-}: React.ComponentProps<typeof Button>): React.ReactNode {
+function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<typeof Button>): React.ReactNode {
   const { toggleSidebar } = useSidebar()
 
   return (
@@ -249,7 +242,7 @@ function SidebarTrigger({
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
       variant="ghost"
-      size="icon-sm"
+      size="icon"
       className={cn(className)}
       onClick={(event) => {
         onClick?.(event)
@@ -301,10 +294,7 @@ function SidebarInset({ className, ...props }: React.ComponentProps<'main'>): Re
   )
 }
 
-function SidebarInput({
-  className,
-  ...props
-}: React.ComponentProps<typeof Input>): React.ReactNode {
+function SidebarInput({ className, ...props }: React.ComponentProps<typeof Input>): React.ReactNode {
   return (
     <Input
       data-slot="sidebar-input"
@@ -337,10 +327,7 @@ function SidebarFooter({ className, ...props }: React.ComponentProps<'div'>): Re
   )
 }
 
-function SidebarSeparator({
-  className,
-  ...props
-}: React.ComponentProps<typeof Separator>): React.ReactNode {
+function SidebarSeparator({ className, ...props }: React.ComponentProps<typeof Separator>): React.ReactNode {
   return (
     <Separator
       data-slot="sidebar-separator"
@@ -416,10 +403,7 @@ function SidebarGroupAction({
   )
 }
 
-function SidebarGroupContent({
-  className,
-  ...props
-}: React.ComponentProps<'div'>): React.ReactNode {
+function SidebarGroupContent({ className, ...props }: React.ComponentProps<'div'>): React.ReactNode {
   return (
     <div
       data-slot="sidebar-group-content"
@@ -457,8 +441,7 @@ const sidebarMenuButtonVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          'not-data-active:hover:bg-sidebar-border not-data-active:hover:text-sidebar-foreground',
+        default: 'not-data-active:hover:bg-sidebar-border not-data-active:hover:text-sidebar-foreground',
         outline:
           'bg-background hover:bg-sidebar-accent hover:text-sidebar-accent-foreground shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]'
       },
@@ -515,12 +498,7 @@ function SidebarMenuButton({
   return (
     <Tooltip>
       <TooltipTrigger asChild>{button}</TooltipTrigger>
-      <TooltipContent
-        side="right"
-        align="center"
-        hidden={state !== 'collapsed' || isMobile}
-        {...tooltip}
-      />
+      <TooltipContent side="right" align="center" hidden={state !== 'collapsed' || isMobile} {...tooltip} />
     </Tooltip>
   )
 }
@@ -675,6 +653,5 @@ export {
   SidebarProvider,
   SidebarRail,
   SidebarSeparator,
-  SidebarTrigger,
-  useSidebar
+  SidebarTrigger
 }

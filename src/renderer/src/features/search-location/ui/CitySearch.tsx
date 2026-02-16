@@ -6,65 +6,67 @@ import { Button } from '@/shared/ui/button'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/shared/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover'
 
-import {
-  $searchPending,
-  $searchQuery,
-  $searchResults,
-  changeSearchQuery,
-  selectLocation
-} from '../model/search-location'
-import type { Location } from '@/shared_app/api/open-meteo/types'
+import { $searchPending, $searchQuery, $searchResults, changeSearchQuery } from '../model/search-location'
+import { $currentLocation, selectLocation } from '@/entities/location'
+import { $t } from '@/entities/i18next'
+import { Spinner } from '@/shared/ui'
 
-export function CitySearch() {
+export const CitySearch = () => {
   const [open, setOpen] = useState(false)
-  const [query, results, isPending, onChangeSearchQuery, setLocation] = useUnit([
+  const t = useUnit($t)
+  const [query, results, isPending, setSearchQuery] = useUnit([
     $searchQuery,
     $searchResults,
     $searchPending,
-    changeSearchQuery,
-    selectLocation
+    changeSearchQuery
   ])
-
-  const handleSelect = (location: Location) => {
-    setLocation(location)
-    onChangeSearchQuery('')
-    setOpen(false)
-  }
+  const [setLocation, location] = useUnit([selectLocation, $currentLocation])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild className="w-full">
-        <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between relative">
-          <span className="truncate">{query || 'Поиск города...'}</span>
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between items-center relative"
+        >
+          <span className="truncate">{location?.city || t('features.search-location.btn-search-cities')}</span>
+          <ChevronsUpDown />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="center">
-        <Command>
+        <Command loop>
           <CommandInput
-            placeholder="Введите название города..."
+            placeholder={t('features.search-location.command-input-placeholder')}
             value={query}
-            onValueChange={(e) => onChangeSearchQuery(e)}
+            onValueChange={(e) => setSearchQuery(e)}
           />
           <CommandList>
             {isPending ? (
-              <div className="py-6 text-center text-sm text-muted-foreground">Поиск...</div>
+              <div className="py-6 text-sm flex justify-center items-center gap-2">
+                <Spinner />
+                {t('features.search-location.command-pending')}
+              </div>
             ) : (
               <>
-                <CommandEmpty>Города не найдены</CommandEmpty>
+                <CommandEmpty>{t('features.search-location.command-not-found')}</CommandEmpty>
                 <CommandGroup>
                   {results.map((location) => (
                     <CommandItem
                       key={location.id}
-                      value={`${location.name}-${location.id}`}
-                      onSelect={() => handleSelect(location)}
-                      className="cursor-pointer"
+                      value={`${location.city}-${location.id}`}
+                      onSelect={() => {
+                        setLocation(location)
+                        setOpen(false)
+                      }}
+                      className="cursor-pointer flex justify-start items-center"
                     >
-                      <MapPin className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
+                      <MapPin className="h-4 w-4 shrink-0 text-muted-foreground" />
                       <div className="flex flex-col">
-                        <span className="font-medium">{location.name}</span>
+                        <span className="font-medium">{location.city}</span>
                         <span className="text-xs text-muted-foreground">
-                          {location.admin1 ? `${location.admin1}, ` : ''}
+                          {location.region && `${location.region}, `}
                           {location.country}
                         </span>
                       </div>

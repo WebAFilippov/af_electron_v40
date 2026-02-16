@@ -36,6 +36,23 @@ export interface SettingsProps {
   checkForUpdatesOnStartup: boolean
 }
 
+export interface LocationProps {
+  version: string
+  autoLaunch: boolean
+  startMinimized: boolean
+  checkForUpdatesOnStartup: boolean
+}
+
+export type Location = {
+  id: string | number
+  latitude: number
+  longitude: number
+  timezone: string
+  city: string
+  region?: string
+  country: string
+}
+
 export const SUPPORTED_LANGUAGES: LanguageApp[] = ['ru', 'en']
 export type LanguageApp = 'ru' | 'en'
 export interface LanguageProps {

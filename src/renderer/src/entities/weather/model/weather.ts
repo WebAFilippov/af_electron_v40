@@ -2,22 +2,24 @@ import { createQuery } from '@farfetched/core'
 import { createEvent, sample } from 'effector'
 import { toast } from 'sonner'
 import { interval } from 'patronum'
-import type { WeatherResponse, Location } from '@/shared_app/api/open-meteo/types'
+
 import { $currentLocation } from '@/entities/location'
+import { Location } from '@/shared_app/types'
+import { WeatherResponse } from './types'
 
 // Event to trigger weather refresh
 export const refreshWeather = createEvent()
 
 // Weather Query - Get current weather and forecast
-export const weatherQuery = createQuery({
-  handler: async (location: Location) => {
+export const weatherQuery = createQuery<Location[], WeatherResponse>({
+  handler: async (location) => {
     const url = new URL('https://api.open-meteo.com/v1/forecast')
 
     // Location params
     url.searchParams.append('latitude', location.latitude.toString())
     url.searchParams.append('longitude', location.longitude.toString())
 
-    // Current weather
+    // Current weatherF
     url.searchParams.append(
       'current',
       [
@@ -83,7 +85,9 @@ export const weatherQuery = createQuery({
       throw new Error(`Weather API error: ${response.status}`)
     }
 
-    return response.json() as Promise<WeatherResponse>
+    // console.log(await response.json());
+
+    return response.json()
   }
 })
 
@@ -125,7 +129,7 @@ sample({
 // Fetch weather when location changes
 sample({
   clock: $currentLocation,
-  filter: (location): location is Location => location !== null,
+  filter: (location): location is Location => Boolean(location),
   target: weatherQuery.start
 })
 
@@ -133,7 +137,7 @@ sample({
 sample({
   clock: refreshWeather,
   source: $currentLocation,
-  filter: (location): location is Location => location !== null,
+  filter: (location): location is Location => Boolean(location),
   target: weatherQuery.start
 })
 
@@ -141,5 +145,3 @@ sample({
 export const $weatherData = weatherQuery.$data
 export const $weatherPending = weatherQuery.$pending
 export const $weatherError = weatherQuery.$error
-
-$weatherData.watch(console.log)

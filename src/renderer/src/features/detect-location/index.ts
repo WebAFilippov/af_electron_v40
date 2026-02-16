@@ -1,1 +1,2 @@
-export { $ipDetectionPending, $ipDetectionError, detectLocationByIP, ipGeolocationQuery } from './model/detect-location'
+export { $isPending, detectLocationByIP } from './model/detect-location'
+export { DetectLocation } from './ui/DetectCity'

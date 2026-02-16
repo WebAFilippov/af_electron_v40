@@ -1,7 +1,7 @@
 appId: com.AFilippov.effectory
 productName: effectory
 copyright: Copyright © 2025 WebAFilippov
-buildVersion: 0.0.1
+buildVersion: 5.0.0
 
 directories:
   buildResources: build

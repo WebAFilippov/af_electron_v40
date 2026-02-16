@@ -1,7 +1,7 @@
 import { useUnit } from 'effector-react'
 import { $currentLocation } from '@/entities/location'
 import { $weatherData, $weatherPending, refreshWeather } from '@/entities/weather'
-import { getWeatherDescription } from '@/shared_app/api/open-meteo/types'
+
 import {
   Card,
   CardContent,
@@ -18,6 +18,7 @@ import type { ReactNode } from 'react'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { Droplet, Eye, GarbageTruckFreeIcons, Map, RefreshCcw, Wind } from '@hugeicons/core-free-icons'
 import { $t } from '@/entities/i18next'
+import { getWeatherDescription } from '@/entities/weather/utils'
 
 export const WeatherWidget = (): ReactNode => {
   const t = useUnit($t)
@@ -69,9 +70,9 @@ export const WeatherWidget = (): ReactNode => {
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-lg">{location.name}</CardTitle>
+            <CardTitle className="text-lg">{location.city}</CardTitle>
             <p className="text-sm text-muted-foreground">
-              {location.admin1 ? `${location.admin1}, ` : ''}
+              {location.region ? `${location.region}, ` : ''}
               {location.country}
             </p>
           </div>
