@@ -56,6 +56,13 @@
       "description": "Sorry, the requested page does not exist.",
       "button_go_back": "Go Back"
     },
+    "error": {
+      "default_message": "Something went wrong",
+      "404_message": "Page not found",
+      "500_message": "Internal server error",
+      "reload": "Reload page",
+      "go_home": "Go home"
+    },
     "home": {
       "weather": "Weather",
       "weather_description": "Current weather information for your city",

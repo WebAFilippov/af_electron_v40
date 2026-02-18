@@ -3,6 +3,7 @@ import type { RouteObject } from 'react-router'
 import { createHashRouter, Outlet } from 'react-router'
 import { BaseLayout } from '../layouts/base-layout'
 import { Spinner } from '@/shared/ui'
+import { ErrorPage } from '@/pages/Error'
 
 // Lazy-loaded pages
 const HomePage = lazy(() => import('@/pages/Home').then((m) => ({ default: m.HomePage })))
@@ -37,7 +38,7 @@ const routes: AppRouteObject[] = [
   {
     path: '/',
     element: <BaseLayout />,
-    errorElement: <div>error page</div>,
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
