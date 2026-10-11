@@ -16,7 +16,7 @@
   },
   "entities": {
     "i18next": {
-      "label": "Язык"
+      "label": "Интерфейс"
     },
     "autoLaunch": {
       "label": "Автозапуск"

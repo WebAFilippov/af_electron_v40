@@ -50,7 +50,7 @@ export const WeatherSkeleton = (): ReactNode => {
           <div className="h-6 w-48 bg-muted rounded animate-pulse" />
         </CardHeader>
         <CardContent>
-          <div className="h-[300px] w-full bg-muted/30 rounded animate-pulse" />
+          <div className="h-75 w-full bg-muted/30 rounded animate-pulse" />
         </CardContent>
       </Card>
 

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/shared/ui'
 import type { HourlyWeather } from '@/entities/weather/model/types'
 import { format } from 'date-fns'
 import { Thermometer } from 'lucide-react'
@@ -44,7 +44,7 @@ export function HourlyTemperatureChart({ hourly }: HourlyTemperatureChartProps) 
 
   return (
     <Card className="w-full">
-      <CardHeader className="pb-2">
+      <CardHeader className="mb-2 pb-2 ">
         <CardTitle className="flex items-center gap-2 text-lg">
           <Thermometer className="w-5 h-5 text-primary" />
           {t('page.weather.hourly_chart.title')}
@@ -139,9 +139,10 @@ export function HourlyTemperatureChart({ hourly }: HourlyTemperatureChartProps) 
             </AreaChart>
           </ResponsiveContainer>
         </div>
-
+      </CardContent>
+      <CardFooter>
         {/* Легенда и статистика */}
-        <div className="flex items-center justify-between mt-4 pt-4 border-t">
+        <div className="flex items-center justify-between w-full mt-2 pt-4 border-t">
           <div className="flex items-center gap-4 text-sm">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-blue-500" />
@@ -164,7 +165,7 @@ export function HourlyTemperatureChart({ hourly }: HourlyTemperatureChartProps) 
             </div>
           </div>
         </div>
-      </CardContent>
+      </CardFooter>
     </Card>
   )
 }

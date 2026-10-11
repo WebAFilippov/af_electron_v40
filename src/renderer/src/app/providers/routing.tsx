@@ -1,36 +1,27 @@
-import { lazy, Suspense } from 'react'
+import { ComponentType, lazy, Suspense } from 'react'
 import type { RouteObject } from 'react-router'
 import { createHashRouter, Outlet } from 'react-router'
 import { BaseLayout } from '../layouts/base-layout'
-import { Spinner } from '@/shared/ui'
 import { ErrorPage } from '@/pages/Error'
+import { FallbackPageLoader } from '@/shared/ui'
 
-// Lazy-loaded pages
 const HomePage = lazy(() => import('@/pages/Home').then((m) => ({ default: m.HomePage })))
 const SettingsPage = lazy(() => import('@/pages/Settings').then((m) => ({ default: m.SettingsPage })))
 const UpdatePage = lazy(() => import('@/pages/Updates').then((m) => ({ default: m.UpdatePage })))
 const WeatherPage = lazy(() => import('@/pages/Weather').then((m) => ({ default: m.WeatherPage })))
 const NotFound404Page = lazy(() => import('@/pages/NotFound404').then((m) => ({ default: m.NotFound404Page })))
 
-// Loading fallback component
-const PageLoader = () => (
-  <div className="flex items-center justify-center min-h-[50vh]">
-    <Spinner className="w-8 h-8" />
-  </div>
-)
-
-// Wrapper with Suspense
-const withSuspense = (Component: React.ComponentType) => (
-  <Suspense fallback={<PageLoader />}>
+const withSuspense = (Component: ComponentType) => (
+  <Suspense fallback={<FallbackPageLoader />}>
     <Component />
   </Suspense>
 )
 
-export type RouteHandle = {
+type RouteHandle = {
   breadcrumb?: () => string
 }
 
-export type AppRouteObject = RouteObject & {
+type AppRouteObject = RouteObject & {
   handle?: RouteHandle
 }
 

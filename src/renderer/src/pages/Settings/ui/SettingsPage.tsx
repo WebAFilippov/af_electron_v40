@@ -5,10 +5,11 @@ import { StartMinimized } from '@/entities/start-minimized'
 import { LanguageSwitcher } from '@/entities/i18next'
 import { ThemeSwitcher } from '@/entities/theme'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui'
+// import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui'
 import { Globe, Rocket } from 'lucide-react'
 import { useGate } from 'effector-react'
 import { GateSettingsPage } from '../model'
+import { Card, Col, Container, Row } from '@gravity-ui/uikit'
 
 export const SettingsPage = (): ReactNode => {
   useGate(GateSettingsPage)
@@ -21,28 +22,33 @@ export const SettingsPage = (): ReactNode => {
           <p className="text-muted-foreground mt-2">Настройте приложение под свои предпочтения</p>
         </div>
 
-        <Card>
-          <CardHeader>
+        <Card size="l" theme="normal" view="filled">
+          <Container spaceRow={10} gutters={10} maxWidth="l">
+            <Col size={12}>
+              <LanguageSwitcher />
+
+              <ThemeSwitcher />
+            </Col>
+          </Container>
+
+          {/* <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl">
               <Globe className="h-5 w-5 " />
               Общие настройки
             </CardTitle>
             <CardDescription>Язык интерфейса и внешний вид приложения</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-2">
-                <LanguageSwitcher />
-              </div>
-              <div className="space-y-2">
-                <ThemeSwitcher />
-              </div>
-            </div>
-          </CardContent>
+          </CardHeader> */}
+          {/* <CardContent className="space-y-6"> */}
+          {/* <div className="flex flex-col gap-4"> */}
+          {/* <LanguageSwitcher /> */}
+
+          {/* <ThemeSwitcher /> */}
+          {/* </div> */}
+          {/* </CardContent> */}
         </Card>
 
         {/* Startup Settings */}
-        <Card>
+        {/* <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl">
               <Rocket className="h-5 w-5" />
@@ -56,7 +62,7 @@ export const SettingsPage = (): ReactNode => {
               <StartMinimized />
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
     </div>
   )

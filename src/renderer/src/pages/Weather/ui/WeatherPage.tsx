@@ -43,17 +43,6 @@ export const WeatherPage = (): ReactNode => {
       <div className="p-6">
         <div className="mx-auto max-w-4xl">
           <SearchCard />
-          <Card className="w-full max-w-4xl mx-auto mt-6">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-xl">
-                <HugeiconsIcon icon={Map} />
-                {t('page.weather.not_location_title')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <p className="text-muted-foreground text-center">{t('page.weather.not_location_or')}</p>
-            </CardContent>
-          </Card>
         </div>
       </div>
     )
@@ -113,7 +102,6 @@ export const WeatherPage = (): ReactNode => {
   return (
     <div className="p-6">
       <div className="mx-auto max-w-4xl space-y-6">
-        {/* Search Card - всегда наверху */}
         <SearchCard />
 
         {/* Lazy-loaded content with Suspense */}
@@ -121,8 +109,8 @@ export const WeatherPage = (): ReactNode => {
           <CurrentWeather location={location} current={current} daily={daily} />
           <WeatherDetails current={current} />
           <PrecipitationCard current={current} />
-          {weather.hourly && <HourlyTemperatureChart hourly={weather.hourly} />}
           {daily && <SunTimesCard daily={daily} />}
+          {weather.hourly && <HourlyTemperatureChart hourly={weather.hourly} />}
         </Suspense>
       </div>
     </div>

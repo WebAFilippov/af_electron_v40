@@ -9,6 +9,11 @@ export default defineConfig({
     plugins: [swcPlugin()],
     resolve: {
       alias: {
+        // The `electron` package's CJS entry exports a string path, not the
+        // Electron API, so a bare `electron` import fails under real ESM with
+        // "does not provide an export named ...". Electron only provides the
+        // API surface through the `electron/main` subpath. Map it explicitly.
+        electron: 'electron/main',
         '@/app': resolve('src/main/app'),
         '@/ipc': resolve('src/main/ipc'),
         '@/modules': resolve('src/main/modules'),
@@ -38,6 +43,10 @@ export default defineConfig({
     base: './',
     resolve: {
       alias: {
+        // Same issue as the main process: a bare `electron` import resolves to
+        // the package's CJS path-string entry under ESM. The renderer-process
+        // API surface lives in the `electron/renderer` subpath.
+        electron: 'electron/renderer',
         '@/shared_app': resolve('src/shared/')
       }
     },

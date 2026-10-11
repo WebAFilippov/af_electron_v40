@@ -14,10 +14,10 @@ export const PrecipitationCard = ({ current }: PrecipitationCardProps): ReactNod
 
   const hasPrecipitation = current.precipitation > 0 || current.rain > 0 || current.snowfall > 0
 
-  if (!hasPrecipitation) return null
+  // if (!hasPrecipitation) return null
 
   return (
-    <Card className="border-blue-200 bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20">
+    <Card className="border-blue-200 bg-linear-to-r from-blue-50 to-cyan-500 from-blue-900 to-cyan-950/20">
       <CardContent className="p-6">
         <div className="flex items-center gap-4">
           <div className="w-14 h-14 rounded-2xl bg-blue-500 flex items-center justify-center">

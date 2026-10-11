@@ -1,4 +1,4 @@
-import { LanguageApp } from "../../shared/types"
+import { LanguageApp } from '../../shared/types'
 
 export interface II18next {
   changeLanguage: (language: LanguageApp) => Promise<LanguageApp>

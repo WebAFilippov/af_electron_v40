@@ -1,10 +1,13 @@
-import '@/shared/styles/globals.css'
+import './styles/globals.css'
+import '@gravity-ui/uikit/styles/fonts.css'
+import '@gravity-ui/uikit/styles/styles.css'
 
 import ReactDOM from 'react-dom/client'
 import { createEvent, sample } from 'effector'
 import { RouterProvider } from 'react-router/dom'
 
-import { router } from './routing'
+
+import { router } from './providers/routing'
 
 import { initWindowControlsFx } from '@/widgets/window-control-panel'
 import { initI18Next } from '@/entities/i18next'
@@ -19,7 +22,6 @@ sample({
   clock: appStarted,
   target: [initThemeFx, initWindowControlsFx, initI18Next]
 })
-
 
 appStarted()
 

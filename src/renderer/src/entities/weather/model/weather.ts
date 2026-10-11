@@ -77,15 +77,12 @@ export const weatherQuery = createQuery<Location[], WeatherResponse>({
     // Timezone
     url.searchParams.append('timezone', location.timezone)
     url.searchParams.append('forecast_days', '7')
-    url.searchParams.append('past_days', '1')
 
     const response = await fetch(url.toString())
 
     if (!response.ok) {
       throw new Error(`Weather API error: ${response.status}`)
     }
-
-    // console.log(await response.json());
 
     return response.json()
   }
@@ -145,3 +142,5 @@ sample({
 export const $weatherData = weatherQuery.$data
 export const $weatherPending = weatherQuery.$pending
 export const $weatherError = weatherQuery.$error
+
+$weatherData.watch(console.log)

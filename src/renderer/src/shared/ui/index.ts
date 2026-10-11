@@ -144,3 +144,4 @@ export {
   CommandSeparator
 } from './command'
 export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor } from './popover'
+export { FallbackPageLoader } from './fallback-page-loader'

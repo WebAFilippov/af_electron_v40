@@ -1,4 +1,4 @@
-import type { RouteHandle } from '@/app/routing'
+import type { RouteHandle } from '@/app/providers/routing'
 import { $t } from '@/entities/i18next'
 import {
   Breadcrumb,

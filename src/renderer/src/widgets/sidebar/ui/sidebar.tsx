@@ -26,7 +26,7 @@ import {
 } from '@/shared/ui'
 
 import { cn } from '@/shared/lib'
-import type { ReactNode } from 'react'
+import { useRef, type ReactNode } from 'react'
 import { NavLink, Outlet } from 'react-router'
 import { NAVIGATION_LIST } from '../model/navigation-list'
 import { useUnit } from 'effector-react'
@@ -35,10 +35,13 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { Notification, AiCloud01Icon, Trash } from '@hugeicons/core-free-icons'
 import { $t } from '@/entities/i18next'
 import { $isFullscreen } from '@/widgets/window-control-panel/model'
+import { useScrollRestoration } from '@/shared/hooks'
 
 export function SidebarWidget(): ReactNode {
   const t = useUnit($t)
   const [isFullscreen] = useUnit([$isFullscreen])
+  const refInset = useRef<HTMLDivElement>(null)
+  useScrollRestoration(refInset)
 
   return (
     <SidebarProvider className="flex flex-1 flex-col w-screen h-screen">
@@ -144,7 +147,10 @@ export function SidebarWidget(): ReactNode {
               </div>
             </div>
           </header>
-          <div className="overflow-x-hidden overflow-y-auto h-full no-scrollbar scroll-smooth relative px-8">
+          <div
+            ref={refInset}
+            className="overflow-x-hidden overflow-y-auto h-full no-scrollbar scroll-smooth relative px-8"
+          >
             <div className=" sticky top-0 h-8 bg-linear-to-b from-background from-45% to-transparent z-10" />
             <Outlet />
             <div className=" sticky bottom-0 h-8 bg-linear-to-t from-background from-45% to-transparent z-10" />
