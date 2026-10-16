@@ -3,18 +3,18 @@
     "sidebar": {
       "home": "Главная",
       "weather": "Погода",
-      "monitor": "Мониторинг",
       "update": "Обновления",
-      "settings": "Настройки"
+      "settings": "Настройки",
+      "monitor": "Мониторинг"
     }
   },
   "breadcrumb": {
+    "404": "Страница не найдена",
     "home": "Главная",
     "weather": "Погода",
-    "monitor": "Мониторинг",
     "update": "Обновления",
     "settings": "Настройки",
-    "404": "Страница не найдена"
+    "monitor": "Мониторинг"
   },
   "entities": {
     "i18next": {
@@ -49,6 +49,30 @@
     "detect-location": {
       "pending_detect": "Определяем",
       "detect": "Определить"
+    },
+    "onboarding": {
+      "skip": "Пропустить",
+      "back": "Назад",
+      "next": "Далее",
+      "finish": "Начать работу",
+      "step_of": "Шаг {{current}} из {{total}}",
+      "welcome_title": "Добро пожаловать в Effectory",
+      "welcome_description": "Приложение для контроля состояния вашего компьютера и погоды.",
+      "welcome_point_monitor": "Мониторинг процессора, памяти, дисков и сети в реальном времени",
+      "welcome_point_weather": "Прогноз погоды для выбранного города",
+      "welcome_point_tray": "Сворачивается в трей и продолжает работать в фоне",
+      "sensors_title": "Датчики и температуры",
+      "sensors_optional": "необязательно",
+      "sensors_description": "Windows не показывает температуру процессора и видеокарты обычным программам. Чтобы видеть её, приложение может установить и запустить LibreHardwareMonitor — бесплатную утилиту с открытым кодом.",
+      "sensors_uac_hint": "При установке Windows один раз запросит права администратора: утилита обращается к драйверу. Само приложение остаётся без повышенных прав.",
+      "sensors_install": "Установить и запустить",
+      "sensors_launch": "Запустить",
+      "sensors_pending": "Устанавливаем... Это может занять до минуты. Подтвердите запрос Windows.",
+      "sensors_active_title": "Датчики уже работают",
+      "sensors_active_description": "Температуры, обороты вентиляторов и загрузка видеокарты доступны на странице мониторинга.",
+      "ready_title": "Всё готово",
+      "ready_description": "Приложение настроено и готово к работе.",
+      "ready_hint": "Открыть мониторинг можно в любой момент через боковое меню. Настройки — в разделе «Настройки»."
     }
   },
   "widgets": {
@@ -80,13 +104,55 @@
       "settings_description": "Настройте приложение",
       "settings_content": "Измените язык, тему оформления и другие параметры приложения."
     },
+    "weather": {
+      "not_location_title": "Местоположение",
+      "not_location_or": "ИЛИ",
+      "not_location_detect": "Определить мое местоположение",
+      "not_location_detecting": "Поиск...",
+      "fetch_title": "Загружаем данные о погоде...",
+      "fetch_description": "Пожалуйста, подождите, пока мы загрузим последние данные о погоде.",
+      "fetch_retry": "Повторить",
+      "fetch_retry_title": "Не удаётся загрузить данные о погоде",
+      "fetch_retry_description": "Проверьте подключение к интернету и попробуйте снова.",
+      "updated": "Обновлено:",
+      "feels_like": "Ощущается как",
+      "high": "Макс",
+      "low": "Мин",
+      "wind": "Ветер",
+      "humidity": "Влажность",
+      "cloud_cover": "Облачность",
+      "pressure": "Давление",
+      "precipitation": "Осадки",
+      "rain": "дождь",
+      "snow": "снег",
+      "sun_moon": "Солнце и Луна",
+      "sunrise": "Восход",
+      "sunset": "Закат",
+      "values": {
+        "wind": "{{value}} км/ч {{direction}}",
+        "humidity": "{{value}}%",
+        "cloud_cover": "{{value}}%",
+        "pressure": "{{value}} гПа",
+        "precipitation": "{{value}} мм",
+        "temperature": "{{value}}°"
+      },
+      "hourly_chart": {
+        "title": "Температура на 24 часа",
+        "temperature": "Температура",
+        "feels_like": "Ощущается"
+      }
+    },
     "settings": {
       "title": "Настройки",
       "description": "Настройте приложение под свои предпочтения",
       "appearance_title": "Внешний вид",
       "appearance_description": "Язык интерфейса и тема оформления приложения",
       "startup_title": "Запуск",
-      "startup_description": "Настройки автоматического запуска приложения"
+      "startup_description": "Настройки автоматического запуска приложения",
+      "help_title": "Справка",
+      "help_description": "Повторный показ ознакомительных материалов",
+      "help_wizard": "Мастер первого запуска",
+      "help_wizard_action": "Открыть заново"
     },
     "updates": {
       "title": "Обновления",
@@ -149,6 +215,8 @@
       "cpu_frequency": "Текущая частота",
       "cpu_max_frequency": "Максимум",
       "cpu_temperature": "Температура",
+      "cpu_power": "Потребление",
+      "cpu_fan": "Вентилятор CPU",
       "cpu_per_core": "Загрузка по ядрам",
       "memory_title": "Оперативная память",
       "memory_used": "Использовано",
@@ -176,7 +244,12 @@
       "gpu_vram": "Видеопамять",
       "gpu_shared": "Общая память",
       "gpu_device_id": "ID устройства",
-      "gpu_temperatures": "Температуры GPU",
+      "gpu_live": "Датчики GPU",
+      "gpu_load": "Загрузка",
+      "gpu_temperature": "Температура",
+      "gpu_memory_used": "Память",
+      "gpu_power": "Потребление",
+      "gpu_fan": "Вентилятор",
       "sensors_hint": "Температуры и загрузка GPU доступны при запущенном LibreHardwareMonitor (бесплатная утилита с открытым кодом). Драйверы при этом не требуются.",
       "sensors_title": "Температуры и датчики",
       "sensors_description": "Windows не отдаёт температуру процессора и видеокарты обычным приложениям: эти данные доступны только через драйвер. Приложение может установить и запустить LibreHardwareMonitor — бесплатную утилиту с открытым кодом, которая читает датчики и публикует их для нашего приложения.",
@@ -197,44 +270,6 @@
       "system_admin": "Администратор",
       "system_user": "Пользователь",
       "system_admin_hint": "Часть данных недоступна без прав администратора."
-    },
-    "weather": {
-      "not_location_title": "Местоположение",
-      "not_location_or": "ИЛИ",
-      "not_location_detect": "Определить мое местоположение",
-      "not_location_detecting": "Поиск...",
-      "fetch_title": "Загружаем данные о погоде...",
-      "fetch_description": "Пожалуйста, подождите, пока мы загрузим последние данные о погоде.",
-      "fetch_retry": "Повторить",
-      "fetch_retry_title": "Не удаётся загрузить данные о погоде",
-      "fetch_retry_description": "Проверьте подключение к интернету и попробуйте снова.",
-      "updated": "Обновлено:",
-      "feels_like": "Ощущается как",
-      "high": "Макс",
-      "low": "Мин",
-      "wind": "Ветер",
-      "humidity": "Влажность",
-      "cloud_cover": "Облачность",
-      "pressure": "Давление",
-      "precipitation": "Осадки",
-      "rain": "дождь",
-      "snow": "снег",
-      "sun_moon": "Солнце и Луна",
-      "sunrise": "Восход",
-      "sunset": "Закат",
-      "values": {
-        "wind": "{{value}} км/ч {{direction}}",
-        "humidity": "{{value}}%",
-        "cloud_cover": "{{value}}%",
-        "pressure": "{{value}} гПа",
-        "precipitation": "{{value}} мм",
-        "temperature": "{{value}}°"
-      },
-      "hourly_chart": {
-        "title": "Температура на 24 часа",
-        "temperature": "Температура",
-        "feels_like": "Ощущается"
-      }
     }
   },
   "weather_codes": {

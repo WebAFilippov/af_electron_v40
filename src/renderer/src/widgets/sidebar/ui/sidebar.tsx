@@ -31,8 +31,7 @@ import { NavLink, Outlet } from 'react-router'
 import { NAVIGATION_LIST } from '../model/navigation-list'
 import { useUnit } from 'effector-react'
 import { SidebarBreadcrumbs } from './sidebar-bredcrumb'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { Notification, AiCloud01Icon, Trash } from '@hugeicons/core-free-icons'
+import { Bell, CloudSun, Trash2 } from 'lucide-react'
 import { $t } from '@/entities/i18next'
 import { $isFullscreen } from '@/widgets/window-control-panel/model'
 import { useScrollRestoration } from '@/shared/hooks'
@@ -51,7 +50,7 @@ export function SidebarWidget(): ReactNode {
           <SidebarHeader className="p-4">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                <HugeiconsIcon icon={AiCloud01Icon} size={24} className="text-primary" />
+                <CloudSun size={24} className="text-primary" />
               </div>
               <div className="flex flex-col">
                 <span className="text-lg font-bold leading-none">Effectory</span>
@@ -116,7 +115,7 @@ export function SidebarWidget(): ReactNode {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem variant="destructive">
-                    <HugeiconsIcon icon={Trash} />
+                    <Trash2 />
                     Выйти
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -143,7 +142,7 @@ export function SidebarWidget(): ReactNode {
               </div>
 
               <div>
-                <HugeiconsIcon icon={Notification} size={22} />
+                <Bell size={22} />
               </div>
             </div>
           </header>

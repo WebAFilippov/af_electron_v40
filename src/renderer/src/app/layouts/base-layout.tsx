@@ -1,4 +1,5 @@
 import { $theme } from '@/entities/theme'
+import { OnboardingWizard } from '@/features/onboarding'
 import { Toaster } from '@/shared/ui'
 import { SidebarWidget } from '@/widgets/sidebar'
 import { WindowControlPanel } from '@/widgets/window-control-panel'
@@ -18,6 +19,9 @@ export const BaseLayout = (): ReactNode => {
           <Toaster theme={theme.mode} position="bottom-right" expand={false} richColors offset={{ bottom: '40px' }} />
           <SidebarWidget />
         </div>
+         {/* Rendered above whichever page is open; it hides itself after the first
+          run is completed. */}
+      <OnboardingWizard />
       </div>
     </ThemeProvider>
   )

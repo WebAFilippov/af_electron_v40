@@ -1,7 +1,7 @@
 appId: com.AFilippov.effectory
 productName: effectory
 copyright: Copyright © 2026 WebAFilippov
-buildVersion: 6.0.0
+buildVersion: 6.1.0
 
 directories:
   buildResources: build
@@ -16,8 +16,6 @@ files:
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
 
 asarUnpack:
-  - node_modules/sqlite3
-  - node_modules/yandex-music-desktop-library/bin/**/*
   - 'resources/**'
 
 win:

@@ -69,9 +69,11 @@ export const createWindow = (): BrowserWindow => {
     mainWindow.loadFile(join(import.meta.dirname, '../renderer/index.html'), { hash: 'home' })
   }
 
-  mainWindow.webContents.once('did-finish-load', () => {
-    mainWindow?.webContents.openDevTools({ mode: 'bottom' })
-  })
+  if (is.dev) {
+    mainWindow.webContents.once('did-finish-load', () => {
+      mainWindow?.webContents.openDevTools({ mode: 'bottom' })
+    })
+  }
 
   return mainWindow
 }

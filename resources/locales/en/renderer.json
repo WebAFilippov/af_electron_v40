@@ -37,6 +37,30 @@
     }
   },
   "features": {
+    "onboarding": {
+      "skip": "Skip",
+      "back": "Back",
+      "next": "Next",
+      "finish": "Get started",
+      "step_of": "Step {{current}} of {{total}}",
+      "welcome_title": "Welcome to Effectory",
+      "welcome_description": "An app that keeps an eye on your computer and the weather.",
+      "welcome_point_monitor": "Real-time monitoring of CPU, memory, disks and network",
+      "welcome_point_weather": "Weather forecast for the city you choose",
+      "welcome_point_tray": "Minimises to the tray and keeps running in the background",
+      "sensors_title": "Sensors and temperatures",
+      "sensors_optional": "optional",
+      "sensors_description": "Windows does not expose CPU or GPU temperatures to ordinary applications. To show them, the app can install and launch LibreHardwareMonitor — a free, open-source utility.",
+      "sensors_uac_hint": "Windows will ask for administrator rights once during setup, because the utility talks to a driver. This app itself stays unelevated.",
+      "sensors_install": "Install and launch",
+      "sensors_launch": "Launch",
+      "sensors_pending": "Installing... This can take up to a minute. Please confirm the Windows prompt.",
+      "sensors_active_title": "Sensors are already working",
+      "sensors_active_description": "Temperatures, fan speeds and GPU load are available on the monitor page.",
+      "ready_title": "All set",
+      "ready_description": "The app is configured and ready to use.",
+      "ready_hint": "You can open the monitor any time from the sidebar. Settings live under the Settings section."
+    },
     "checkUpdateOnStart": {
       "label": "Check for updates on startup"
     },
@@ -81,7 +105,11 @@
       "appearance_title": "Appearance",
       "appearance_description": "Interface language and app theme",
       "startup_title": "Startup",
-      "startup_description": "Automatic launch settings"
+      "startup_description": "Automatic launch settings",
+      "help_title": "Help",
+      "help_description": "Show the introductory material again",
+      "help_wizard": "First-run wizard",
+      "help_wizard_action": "Open again"
     },
     "updates": {
       "title": "Updates",
@@ -221,7 +249,7 @@
       "precipitation": "Precipitation",
       "rain": "rain",
       "snow": "snow",
-      "sun_moon": "Sun & Moon",
+      "sun_moon": "Sun \u0026 Moon",
       "sunrise": "Sunrise",
       "sunset": "Sunset",
       "values": {

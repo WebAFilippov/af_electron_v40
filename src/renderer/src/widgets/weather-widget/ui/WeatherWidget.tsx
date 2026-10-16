@@ -15,8 +15,7 @@ import {
   ItemMedia
 } from '@/shared/ui'
 import type { ReactNode } from 'react'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { Droplet, Eye, GarbageTruckFreeIcons, Map, RefreshCcw, Wind } from '@hugeicons/core-free-icons'
+import { Droplet, Eye, Gauge, Map, RefreshCcw, Wind } from 'lucide-react'
 import { $t } from '@/entities/i18next'
 import { getWeatherDescription } from '@/entities/weather/utils'
 
@@ -28,7 +27,7 @@ export const WeatherWidget = (): ReactNode => {
     return (
       <Item variant="muted">
         <ItemMedia variant="icon">
-          <HugeiconsIcon icon={Map} />
+          <Map />
         </ItemMedia>
         <ItemContent>
           <ItemTitle>{t('widgets.weather_widget.not_location_title')}</ItemTitle>
@@ -77,8 +76,7 @@ export const WeatherWidget = (): ReactNode => {
             </p>
           </div>
           <Button variant="ghost" size="icon" onClick={() => refreshWeather()} disabled={isPending} className="h-8 w-8">
-            <HugeiconsIcon icon={RefreshCcw} />
-            {/* <RefreshCw className={`h-4 w-4 ${isPending ? 'animate-spin' : ''}`} /> */}
+            <RefreshCcw />
           </Button>
         </div>
       </CardHeader>
@@ -98,23 +96,19 @@ export const WeatherWidget = (): ReactNode => {
 
         <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
           <div className="flex items-center gap-2">
-            <HugeiconsIcon icon={Wind} />
-            {/* <Wind className="h-4 w-4 text-muted-foreground" /> */}
+            <Wind className="h-4 w-4 text-muted-foreground" />
             <span>{Math.round(current.wind_speed_10m)} km/h</span>
           </div>
           <div className="flex items-center gap-2">
-            <HugeiconsIcon icon={Droplet} />
-            {/* <Droplets className="h-4 w-4 text-muted-foreground" /> */}
+            <Droplet className="h-4 w-4 text-muted-foreground" />
             <span>{current.relative_humidity_2m}%</span>
           </div>
           <div className="flex items-center gap-2">
-            <HugeiconsIcon icon={Eye} />
-            {/* <Eye className="h-4 w-4 text-muted-foreground" /> */}
+            <Eye className="h-4 w-4 text-muted-foreground" />
             <span>{current.cloud_cover}% cloud</span>
           </div>
           <div className="flex items-center gap-2">
-            <HugeiconsIcon icon={GarbageTruckFreeIcons} />
-            {/* <Gauge className="h-4 w-4 text-muted-foreground" /> */}
+            <Gauge className="h-4 w-4 text-muted-foreground" />
             <span>{Math.round(current.pressure_msl)} hPa</span>
           </div>
         </div>

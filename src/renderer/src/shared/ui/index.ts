@@ -42,6 +42,18 @@ export { Skeleton } from './skeleton'
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from './tooltip'
 export { Collapsible, CollapsibleTrigger, CollapsibleContent } from './collapsible'
 export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+  DialogTrigger
+} from './dialog'
+export {
   DropdownMenu,
   DropdownMenuPortal,
   DropdownMenuTrigger,

@@ -1,8 +1,7 @@
 import type { ReactNode } from 'react'
 import { useUnit } from 'effector-react'
 import { cn } from '@/shared/lib'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { Cancel01Icon, ChangeScreenModeIcon, Remove01Icon, SquareIcon } from '@hugeicons/core-free-icons'
+import { Minus, Square, Minimize, X } from 'lucide-react'
 import { Button } from '@/shared/ui'
 import { $isFullscreen, $isMaximized, closeWindowFx, maximizeWindowFx, minimizeWindowFx } from '../model'
 
@@ -24,13 +23,13 @@ export const WindowControlPanel = (): ReactNode => {
     >
       <div className="drag-off flex items-center justify-center ">
         <Button tabIndex={-1} variant="ghost" size="icon" className="rounded-xs" onClick={handleMinimize}>
-          <HugeiconsIcon icon={Remove01Icon} />
+          <Minus />
         </Button>
         <Button tabIndex={-1} variant="ghost" size="icon" className="rounded-xs" onClick={handleMaximize}>
-          {!isMaximized ? <HugeiconsIcon icon={SquareIcon} /> : <HugeiconsIcon icon={ChangeScreenModeIcon} />}
+          {!isMaximized ? <Square /> : <Minimize />}
         </Button>
         <Button tabIndex={-1} variant="ghost" size="icon" className="rounded-xs " onClick={handleClose}>
-          <HugeiconsIcon icon={Cancel01Icon} />
+          <X />
         </Button>
       </div>
     </header>

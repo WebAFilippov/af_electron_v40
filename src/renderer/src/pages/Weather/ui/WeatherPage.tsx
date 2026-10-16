@@ -3,10 +3,7 @@ import { useUnit } from 'effector-react'
 import { $currentLocation } from '@/entities/location'
 import { $weatherData, $weatherPending } from '@/entities/weather'
 import {
-  
-  
-  
-  
+
   Button,
   Spinner,
   Empty,
@@ -16,8 +13,7 @@ import {
   EmptyDescription,
   EmptyContent
 } from '@/shared/ui'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { FirewallIcon,  Refresh01Icon } from '@hugeicons/core-free-icons'
+import { RefreshCw, ShieldOff } from 'lucide-react'
 import { $t } from '@/entities/i18next'
 import { SearchCard } from './SearchCard'
 import { WeatherSkeleton } from './WeatherSkeleton'
@@ -79,14 +75,14 @@ export const WeatherPage = (): ReactNode => {
           <Empty>
             <EmptyHeader>
               <EmptyMedia variant="icon">
-                <HugeiconsIcon icon={FirewallIcon} />
+                <ShieldOff />
               </EmptyMedia>
               <EmptyTitle>{t('page.weather.fetch_retry_title')}</EmptyTitle>
               <EmptyDescription className="text-pretty">{t('page.weather.fetch_retry_description')}</EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
               <Button variant="outline" onClick={() => refreshWeather()}>
-                <HugeiconsIcon icon={Refresh01Icon} />
+                <RefreshCw />
                 {t('page.weather.fetch_retry')}
               </Button>
             </EmptyContent>

@@ -26,7 +26,7 @@ export default defineConfig({
       minify: 'esbuild',
       sourcemap: false,
       rollupOptions: {
-        external: ['sqlite3'],
+        external: [/\.node$/],
         treeshake: {
           preset: 'recommended',
           moduleSideEffects: false
