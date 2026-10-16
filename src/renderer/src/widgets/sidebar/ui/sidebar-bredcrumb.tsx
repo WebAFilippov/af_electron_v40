@@ -8,8 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/shared/ui'
-import { Home05Icon } from '@hugeicons/core-free-icons'
-import { HugeiconsIcon } from '@hugeicons/react'
+import { House } from 'lucide-react'
 import { useUnit } from 'effector-react'
 import type { ReactNode } from 'react'
 import { Fragment } from 'react'
@@ -29,7 +28,7 @@ export const SidebarBreadcrumbs = (): ReactNode => {
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
             <NavLink to="/">
-              <HugeiconsIcon icon={Home05Icon} size={20} />
+              <House size={20} />
             </NavLink>
           </BreadcrumbLink>
         </BreadcrumbItem>

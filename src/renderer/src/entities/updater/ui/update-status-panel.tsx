@@ -1,4 +1,11 @@
-import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Progress, Badge } from '@/shared/ui'
+import type { ReactNode } from 'react'
+import { useUnit } from 'effector-react'
+import { AlertCircle, CheckCircle2, Clock, Download, Loader2, Package, RefreshCw, Rocket } from 'lucide-react'
+
+import { $t } from '@/entities/i18next'
+import { Badge, Button, Card, CardContent, CardHeader, Progress } from '@/shared/ui'
+import { cn } from '@/shared/lib'
+import type { UpdateStatusDto } from '../../updater/types'
 import {
   $updateData,
   $versionApp,
@@ -9,81 +16,49 @@ import {
   retryDownloadFx
 } from '../model/model-updater'
 import { formatBytes } from '../utils'
-import { useUnit } from 'effector-react'
-import { cn } from '@/shared/lib'
-import { CheckCircle2, Download, AlertCircle, Loader2, RefreshCw, Rocket, Clock, Package } from 'lucide-react'
 
-const getStatusConfig = (status: string) => {
-  switch (status) {
-    case 'idle':
-      return {
-        icon: RefreshCw,
-        title: 'Проверьте наличие обновлений',
-        description: 'Нажмите кнопку ниже, чтобы проверить доступные обновления',
-        variant: 'default' as const,
-        badge: 'Готово к проверке'
-      }
-    case 'checking-for-update':
-      return {
-        icon: Loader2,
-        title: 'Проверка обновлений...',
-        description: 'Ищем доступные обновления на сервере',
-        variant: 'checking' as const,
-        badge: 'Проверка',
-        animate: true
-      }
-    case 'update-not-available':
-      return {
-        icon: CheckCircle2,
-        title: 'У вас последняя версия',
-        description: 'Обновлений не найдено. Вы используете актуальную версию приложения.',
-        variant: 'success' as const,
-        badge: 'Актуально'
-      }
-    case 'update-available':
-      return {
-        icon: Rocket,
-        title: 'Доступно новое обновление',
-        description: 'Новая версия готова к загрузке',
-        variant: 'info' as const,
-        badge: 'Доступно обновление'
-      }
-    case 'download-progress':
-      return {
-        icon: Download,
-        title: 'Загрузка обновления...',
-        description: 'Пожалуйста, не закрывайте приложение',
-        variant: 'progress' as const,
-        badge: 'Загрузка'
-      }
-    case 'update-downloaded':
-      return {
-        icon: Package,
-        title: 'Обновление готово к установке',
-        description: 'Вы можете установить его сейчас или позже',
-        variant: 'ready' as const,
-        badge: 'Готово к установке'
-      }
-    case 'error':
-      return {
-        icon: AlertCircle,
-        title: 'Ошибка обновления',
-        description: 'Произошла ошибка при обработке обновления',
-        variant: 'error' as const,
-        badge: 'Ошибка'
-      }
-    default:
-      return {
-        icon: RefreshCw,
-        title: 'Неизвестный статус',
-        description: '',
-        variant: 'default' as const,
-        badge: 'Неизвестно'
-      }
-  }
+type StatusVariant = 'neutral' | 'checking' | 'success' | 'info' | 'ready' | 'error'
+
+const STATUS_ICONS: Record<UpdateStatusDto, typeof RefreshCw> = {
+  idle: RefreshCw,
+  'checking-for-update': Loader2,
+  'update-not-available': CheckCircle2,
+  'update-available': Rocket,
+  'download-progress': Download,
+  'update-downloaded': Package,
+  error: AlertCircle
 }
 
-export const UpdateStatusPanel = () => {
+const STATUS_VARIANTS: Record<UpdateStatusDto, StatusVariant> = {
+  idle: 'neutral',
+  'checking-for-update': 'checking',
+  'update-not-available': 'success',
+  'update-available': 'info',
+  'download-progress': 'checking',
+  'update-downloaded': 'ready',
+  error: 'error'
+}
+
+const VARIANT_ICON_STYLES: Record<StatusVariant, string> = {
+  neutral: 'bg-muted text-muted-foreground',
+  checking: 'bg-primary/10 text-primary',
+  success: 'bg-green-500/10 text-green-600 dark:text-green-500',
+  info: 'bg-primary/10 text-primary',
+  ready: 'bg-primary/10 text-primary',
+  error: 'bg-destructive/10 text-destructive'
+}
+
+const VARIANT_BADGE: Record<StatusVariant, 'default' | 'secondary' | 'destructive'> = {
+  neutral: 'secondary',
+  checking: 'secondary',
+  success: 'default',
+  info: 'secondary',
+  ready: 'default',
+  error: 'destructive'
+}
+
+export const UpdateStatusPanel = (): ReactNode => {
+  const t = useUnit($t)
   const [
     updateData,
     versionApp,
@@ -102,150 +77,127 @@ export const UpdateStatusPanel = () => {
     InstallOnQuitUpdateFx
   ])
 
-  const config = getStatusConfig(updateData.status)
-  const Icon = config.icon
+  const status = updateData.status
+  const variant = STATUS_VARIANTS[status]
+  const Icon = STATUS_ICONS[status]
+  const isChecking = status === 'checking-for-update'
+  const isError = status === 'error'
+
+  const availableVersion =
+    status === 'update-available' || status === 'update-downloaded' ? updateData.data.version : null
+  const releaseName =
+    status === 'update-available' || status === 'update-downloaded' ? updateData.data.releaseName : null
 
   return (
     <Card
       className={cn(
-        'overflow-hidden transition-all duration-300',
-        config.variant === 'success' && 'border-green-500/50',
-        config.variant === 'error' && 'border-destructive/50',
-        config.variant === 'ready' && 'border-primary/50'
+        'overflow-hidden transition-colors',
+        variant === 'success' && 'border-green-500/50',
+        variant === 'error' && 'border-destructive/50',
+        variant === 'ready' && 'border-primary/50'
       )}
     >
       <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div
-              className={cn(
-                'flex h-12 w-12 items-center justify-center rounded-full',
-                config.variant === 'default' && 'bg-muted',
-                config.variant === 'checking' && 'bg-blue-500/10',
-                config.variant === 'success' && 'bg-green-500/10',
-                config.variant === 'info' && 'bg-blue-500/10',
-                config.variant === 'progress' && 'bg-primary/10',
-                config.variant === 'ready' && 'bg-primary/10',
-                config.variant === 'error' && 'bg-destructive/10'
-              )}
-            >
-              <Icon
-                className={cn(
-                  'h-6 w-6',
-                  config.animate && 'animate-spin',
-                  config.variant === 'default' && 'text-muted-foreground',
-                  config.variant === 'checking' && 'text-blue-500',
-                  config.variant === 'success' && 'text-green-500',
-                  config.variant === 'info' && 'text-blue-500',
-                  config.variant === 'progress' && 'text-primary',
-                  config.variant === 'ready' && 'text-primary',
-                  config.variant === 'error' && 'text-destructive'
-                )}
-              />
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className={cn('flex h-12 w-12 shrink-0 items-center justify-center rounded-full', VARIANT_ICON_STYLES[variant])}>
+              <Icon className={cn('h-6 w-6', isChecking && 'animate-spin')} />
             </div>
-            <div>
-              <CardTitle className="text-xl">{config.title}</CardTitle>
-              <CardDescription>{config.description}</CardDescription>
+            <div className="space-y-1">
+              <h2 className="text-xl font-semibold leading-none tracking-tight">
+                {t(`page.updates.status_${status.replace(/-/g, '_')}_title`)}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {t(`page.updates.status_${status.replace(/-/g, '_')}_description`)}
+              </p>
             </div>
           </div>
-          <Badge
-            variant={
-              config.variant === 'success' || config.variant === 'ready'
-                ? 'default'
-                : config.variant === 'error'
-                  ? 'destructive'
-                  : 'secondary'
-            }
-          >
-            {config.badge}
-          </Badge>
+          <Badge variant={VARIANT_BADGE[variant]}>{t(`page.updates.status_${status.replace(/-/g, '_')}_badge`)}</Badge>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {/* Version Info */}
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
+        {/* Version info */}
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+          <div className="flex items-center gap-2 text-muted-foreground">
             <Package className="h-4 w-4" />
-            <span>
-              Текущая версия: <strong className="text-foreground">{versionApp || '0.0.1'}</strong>
-            </span>
+            <span>{t('page.updates.current_version')}</span>
+            <strong className="text-foreground">{versionApp || '—'}</strong>
           </div>
-          {updateData.status === 'update-available' && (
-            <div className="flex items-center gap-2">
+          {availableVersion && (
+            <div className="flex items-center gap-2 text-muted-foreground">
               <Rocket className="h-4 w-4" />
-              <span>
-                Новая версия: <strong className="text-primary">{updateData.data.version}</strong>
-              </span>
+              <span>{t('page.updates.available_version')}</span>
+              <strong className="text-primary">{availableVersion}</strong>
             </div>
           )}
+          {releaseName && <span className="text-muted-foreground">{releaseName}</span>}
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-wrap gap-3">
-          {/* Check Button - shown for idle, update-not-available, or checking */}
-          {(updateData.status === 'idle' ||
-            updateData.status === 'update-not-available' ||
-            updateData.status === 'checking-for-update') && (
-            <Button
-              onClick={() => handleCheckForUpdate()}
-              disabled={updateData.status === 'checking-for-update'}
-              className="gap-2"
-            >
-              {updateData.status === 'checking-for-update' ? (
+        {/* Error message */}
+        {isError && (
+          <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
+            {updateData.data?.message || updateData.data?.error?.message || t('page.updates.error_unknown')}
+          </div>
+        )}
+
+        {/* Download progress */}
+        {status === 'download-progress' && (
+          <div className="space-y-2">
+            <Progress value={updateData.data.percent} className="w-full" />
+            <div className="flex justify-between text-sm text-muted-foreground">
+              <span>
+                {formatBytes(updateData.data.transferred)} / {formatBytes(updateData.data.total)}
+              </span>
+              <span>
+                {formatBytes(updateData.data.bytesPerSecond, true)} · {updateData.data.percent.toFixed(1)}%
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="flex flex-wrap gap-3 pt-1">
+          {(status === 'idle' || status === 'update-not-available' || isChecking) && (
+            <Button onClick={() => handleCheckForUpdate()} disabled={isChecking} className="gap-2">
+              {isChecking ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Проверка...
+                  {t('page.updates.action_checking')}
                 </>
               ) : (
                 <>
                   <RefreshCw className="h-4 w-4" />
-                  Проверить обновления
+                  {t('page.updates.action_check')}
                 </>
               )}
             </Button>
           )}
 
-          {/* Update Available - Download Button */}
-          {updateData.status === 'update-available' && (
+          {status === 'update-available' && (
             <Button onClick={() => handleDownload()} className="gap-2">
               <Download className="h-4 w-4" />
-              Скачать обновление
+              {t('page.updates.action_download')}
             </Button>
           )}
 
-          {/* Download Progress */}
-          {updateData.status === 'download-progress' && (
-            <div className="w-full space-y-2">
-              <Progress value={updateData.data.percent} className="w-full" />
-              <div className="flex justify-between text-sm text-muted-foreground">
-                <span>
-                  {formatBytes(updateData.data.transferred)} / {formatBytes(updateData.data.total)}
-                </span>
-                <span>{formatBytes(updateData.data.bytesPerSecond, true)}/сек</span>
-              </div>
-            </div>
-          )}
-
-          {/* Update Downloaded - Install Buttons */}
-          {updateData.status === 'update-downloaded' && (
+          {status === 'update-downloaded' && (
             <div className="flex w-full flex-col gap-3 sm:flex-row">
               <Button onClick={() => handleInstallNow()} className="flex-1 gap-2">
                 <Rocket className="h-4 w-4" />
-                Установить сейчас
+                {t('page.updates.action_install_now')}
               </Button>
               <Button variant="outline" onClick={() => handleInstallOnQuit()} className="flex-1 gap-2">
                 <Clock className="h-4 w-4" />
-                Установить при выходе
+                {t('page.updates.action_install_on_quit')}
               </Button>
             </div>
           )}
 
-          {/* Error - Retry Button */}
-          {updateData.status === 'error' && (
+          {isError && (
             <Button variant="outline" onClick={() => handleRetryDownload()} className="gap-2">
               <RefreshCw className="h-4 w-4" />
-              Повторить попытку
+              {t('page.updates.action_retry')}
             </Button>
           )}
         </div>

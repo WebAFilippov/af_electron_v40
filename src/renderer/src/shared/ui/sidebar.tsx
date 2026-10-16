@@ -7,8 +7,7 @@ import { useIsMobile } from '../hooks'
 import { cn } from '../lib'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from './sheet'
 import { Button } from './button'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { SidebarLeftIcon } from '@hugeicons/core-free-icons'
+import { PanelLeft } from 'lucide-react'
 import { Input } from './input'
 import { Separator } from './separator'
 import { TooltipContent, TooltipTrigger, Tooltip } from './tooltip'
@@ -250,7 +249,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
       }}
       {...props}
     >
-      <HugeiconsIcon icon={SidebarLeftIcon} strokeWidth={2} />
+      <PanelLeft strokeWidth={2} />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )

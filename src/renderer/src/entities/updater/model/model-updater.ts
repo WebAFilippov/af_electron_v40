@@ -4,10 +4,10 @@ import { UpdateCheckResult } from 'electron-updater'
 import { toast } from 'sonner'
 import { persist } from 'effector-storage/local'
 
+import { ReleaseProps } from '@/shared_app/types'
+
 const DEFAULT_UPDATE_DATA = { status: 'idle' } as const
 const ID_TOKEN_LOADING = 'token_toast_check_for_update' as const
-
-export type AutoUpdateMode = 'check-only' | 'check-and-download' | 'full-auto'
 
 // Update status
 window.updater_app.onUpdateData((data) => {
@@ -58,6 +58,9 @@ const InstallOnQuitUpdateFx = createEffect(() => {
   setIsDownloaded(true)
 })
 
+// Release history effect
+const loadReleasesFx = createEffect<void, ReleaseProps[]>(() => window.updater_app.getReleases())
+
 const setVersionApp = createEvent<string>()
 const setUpdatedApp = createEvent<boolean>()
 const setIsDownloaded = createEvent<boolean>()
@@ -67,6 +70,9 @@ const $versionApp = restore(setVersionApp, '')
 const $updatedApp = restore(setUpdatedApp, false)
 const $isDowloaded = restore(setIsDownloaded, false)
 const $updateData = restore<UpdateDataDto>(setUpdateData, DEFAULT_UPDATE_DATA)
+
+const $releases = createStore<ReleaseProps[]>([]).on(loadReleasesFx.doneData, (_, releases) => releases)
+const $releasesPending = loadReleasesFx.pending
 
 // Successful sample
 sample({
@@ -104,22 +110,10 @@ sample({
   target: toastUpdateNotAvailableFx
 })
 
-// Auto Update Settings
-const setAutoUpdateMode = createEvent<AutoUpdateMode>()
-const toggleCheckForUpdatesOnStartup = createEvent()
-
-const $autoUpdateMode = createStore<AutoUpdateMode>('check-only')
-const $checkForUpdatesOnStartup = createStore<boolean>(true)
-
-// Persist settings to localStorage
+// Persist the app version so the history can mark the running release.
 persist({
-  store: $autoUpdateMode,
-  key: 'auto-update-mode'
-})
-
-persist({
-  store: $checkForUpdatesOnStartup,
-  key: 'check-updates-on-startup'
+  store: $versionApp,
+  key: 'app-version'
 })
 
 export {
@@ -127,15 +121,14 @@ export {
   $updatedApp,
   $updateData,
   $isDowloaded,
-  $autoUpdateMode,
-  $checkForUpdatesOnStartup,
+  $releases,
+  $releasesPending,
   successfulFx,
   checkForUpdateFx,
   retryDownloadFx,
   downloadUpdateFx,
   installNowUpdateFx,
   InstallOnQuitUpdateFx,
-  setIsDownloaded,
-  setAutoUpdateMode,
-  toggleCheckForUpdatesOnStartup
+  loadReleasesFx,
+  setIsDownloaded
 }

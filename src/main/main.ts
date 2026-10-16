@@ -6,6 +6,7 @@ import { ipcRegister } from './ipc'
 import { createWindow } from './app/create-window'
 import { i18nextInit } from './modules/i18next/service'
 import { autoUpdater } from './modules/auto-updater/service'
+import { initializeMonitor, shutdownMonitor } from './modules/system-monitor'
 import { logger, loggerInit } from './shared/utils/logger'
 
 const gotTheLock = app.requestSingleInstanceLock()
@@ -35,6 +36,11 @@ if (!gotTheLock) {
       await i18nextInit()
       logger.info('i18next initialized')
 
+      // Warm up the PDH counters and probe for a hardware-monitor provider before
+      // the renderer asks for its first sample.
+      const monitor = initializeMonitor()
+      logger.info({ cpu: monitor.cpu, sensors: monitor.sensors }, 'System monitor initialized')
+
       const window = createWindow()
       const tray = createTray()
       const updater = autoUpdater()
@@ -48,5 +54,9 @@ if (!gotTheLock) {
       logger.fatal({ error: errorMessage }, 'Failed to initialize application')
       throw new Error(`Ошибка при инициализации приложения: ${error}`)
     }
+  })
+
+  app.on('will-quit', () => {
+    shutdownMonitor()
   })
 }

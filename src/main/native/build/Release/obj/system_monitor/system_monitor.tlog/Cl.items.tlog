@@ -1,0 +1,11 @@
+C:\Users\webdev\Desktop\electron_new\src\main\native\src\addon.cc;C:\Users\webdev\Desktop\electron_new\src\main\native\build\Release\obj\system_monitor\src\addon.obj
+C:\Users\webdev\Desktop\electron_new\src\main\native\src\cpu.cc;C:\Users\webdev\Desktop\electron_new\src\main\native\build\Release\obj\system_monitor\src\cpu.obj
+C:\Users\webdev\Desktop\electron_new\src\main\native\src\memory.cc;C:\Users\webdev\Desktop\electron_new\src\main\native\build\Release\obj\system_monitor\src\memory.obj
+C:\Users\webdev\Desktop\electron_new\src\main\native\src\disk.cc;C:\Users\webdev\Desktop\electron_new\src\main\native\build\Release\obj\system_monitor\src\disk.obj
+C:\Users\webdev\Desktop\electron_new\src\main\native\src\network.cc;C:\Users\webdev\Desktop\electron_new\src\main\native\build\Release\obj\system_monitor\src\network.obj
+C:\Users\webdev\Desktop\electron_new\src\main\native\src\gpu.cc;C:\Users\webdev\Desktop\electron_new\src\main\native\build\Release\obj\system_monitor\src\gpu.obj
+C:\Users\webdev\Desktop\electron_new\src\main\native\src\sensors.cc;C:\Users\webdev\Desktop\electron_new\src\main\native\build\Release\obj\system_monitor\src\sensors.obj
+C:\Users\webdev\Desktop\electron_new\src\main\native\src\system.cc;C:\Users\webdev\Desktop\electron_new\src\main\native\build\Release\obj\system_monitor\src\system.obj
+C:\Users\webdev\Desktop\electron_new\src\main\native\src\processes.cc;C:\Users\webdev\Desktop\electron_new\src\main\native\build\Release\obj\system_monitor\src\processes.obj
+C:\Users\webdev\Desktop\electron_new\src\main\native\src\connections.cc;C:\Users\webdev\Desktop\electron_new\src\main\native\build\Release\obj\system_monitor\src\connections.obj
+C:\Users\webdev\Desktop\electron_new\node_modules\node-gyp\src\win_delay_load_hook.cc;C:\Users\webdev\Desktop\electron_new\src\main\native\build\Release\obj\system_monitor\win_delay_load_hook.obj

@@ -14,7 +14,7 @@ export const PrecipitationCard = ({ current }: PrecipitationCardProps): ReactNod
 
   const hasPrecipitation = current.precipitation > 0 || current.rain > 0 || current.snowfall > 0
 
-  // if (!hasPrecipitation) return null
+  if (!hasPrecipitation) return null
 
   return (
     <Card className="border-blue-200 bg-linear-to-r from-blue-50 to-cyan-500 from-blue-900 to-cyan-950/20">

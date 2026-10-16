@@ -13,6 +13,8 @@ import { updater_app } from './updater'
 import { IUpdaterApp } from './updater/types'
 import { log_app } from './log'
 import { ILogApp } from './log/types'
+import { monitor_app } from './monitor'
+import { IMonitorApp } from './monitor/types'
 
 if (process.contextIsolated) {
   contextBridge.exposeInMainWorld('electron', electronAPI)
@@ -22,6 +24,7 @@ if (process.contextIsolated) {
   contextBridge.exposeInMainWorld('theme_app', theme_app)
   contextBridge.exposeInMainWorld('updater_app', updater_app)
   contextBridge.exposeInMainWorld('log_app', log_app)
+  contextBridge.exposeInMainWorld('monitor_app', monitor_app)
 } else {
   // @ts-ignore (define in dts)
   window.electron = electronAPI
@@ -37,6 +40,8 @@ if (process.contextIsolated) {
   window.updater_app = updater_app
   // @ts-ignore (define in dts)
   window.log_app = log_app
+  // @ts-ignore (define in dts)
+  window.monitor_app = monitor_app
 }
 
 declare global {
@@ -48,5 +53,6 @@ declare global {
     theme_app: IThemeApp
     updater_app: IUpdaterApp
     log_app: ILogApp
+    monitor_app: IMonitorApp
   }
 }

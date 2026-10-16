@@ -3,8 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/sha
 
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { InstallingUpdates02Icon, Settings02Icon, WirelessCloudAccessIcon } from '@hugeicons/core-free-icons'
+import { CloudSun, PackageCheck, Settings } from 'lucide-react'
 import { useUnit } from 'effector-react'
 import { $t } from '@/entities/i18next'
 
@@ -16,7 +15,7 @@ export const HomePage = (): ReactNode => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-xl">
-            <HugeiconsIcon icon={WirelessCloudAccessIcon} />
+            <CloudSun />
             {t('page.home.weather')}
           </CardTitle>
           <CardDescription>{t('page.home.weather_description')}</CardDescription>
@@ -35,7 +34,7 @@ export const HomePage = (): ReactNode => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                    <HugeiconsIcon icon={InstallingUpdates02Icon} strokeWidth={2} size={20} />
+                    <PackageCheck strokeWidth={2} size={20} />
                   </div>
                   <div>
                     <CardTitle className="text-lg">{t('page.home.update_title')}</CardTitle>
@@ -56,7 +55,7 @@ export const HomePage = (): ReactNode => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                    <HugeiconsIcon icon={Settings02Icon} strokeWidth={2} size={20} />
+                    <Settings strokeWidth={2} size={20} />
                   </div>
                   <div>
                     <CardTitle className="text-lg">{t('page.home.settings_title')}</CardTitle>

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, Button } from '@/shared/ui'
-import { Moon, RefreshCw, Sun } from 'lucide-react'
+import { CloudMoon, RefreshCw, Sun } from 'lucide-react'
 import { useUnit } from 'effector-react'
 import { $t } from '@/entities/i18next'
 import { $weatherPending, refreshWeather } from '@/entities/weather'
@@ -7,8 +7,6 @@ import { getWeatherDescription } from '@/entities/weather/utils'
 import type { CurrentWeather as CurrentWeatherType, DailyWeather } from '@/entities/weather/model/types'
 import type { Location } from '@/shared_app/types'
 import type { ReactNode } from 'react'
-import { HugeiconsIcon } from '@hugeicons/react'
-import { Moon01Icon, Moon02FreeIcons, MoonAngledRainZapFreeIcons, MoonCloudIcon } from '@hugeicons/core-free-icons'
 
 interface CurrentWeatherProps {
   location: Location
@@ -59,7 +57,7 @@ export const CurrentWeather = ({ location, current, daily }: CurrentWeatherProps
               </div>
             </div>
           </div>
-          <div>{isDay ? <Sun size={80} /> : <HugeiconsIcon icon={MoonCloudIcon} size={80} />}</div>
+          <div>{isDay ? <Sun size={80} /> : <CloudMoon size={80} />}</div>
         </div>
       </CardContent>
     </Card>

@@ -7,6 +7,7 @@ import { ipcWindow } from '@/modules/window'
 import { ipcUpdater } from '@/modules/auto-updater/controller'
 import { ipcSettings } from '@/modules/settings/controller'
 import { ipcLog } from '@/modules/log/controller'
+import { ipcSystemMonitor } from '@/modules/system-monitor'
 
 export const ipcRegister = (window: BrowserWindow, tray: Tray, updater: AppUpdater): void => {
   ipcLog()
@@ -15,4 +16,5 @@ export const ipcRegister = (window: BrowserWindow, tray: Tray, updater: AppUpdat
   ipcI18next(window, tray)
   ipcSettings(window, updater)
   ipcUpdater(window, updater)
+  ipcSystemMonitor()
 }

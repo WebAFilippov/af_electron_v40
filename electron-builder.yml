@@ -10,14 +10,17 @@ directories:
 files:
   - '!**/.vscode/*'
   - '!src/**'
+  - '!scripts/**'
   - '!electron.vite.config.{js,ts,mjs,cjs}'
   - '!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
 
+# Native modules must live outside the asar archive: a .node binary is loaded by
+# the OS loader, which cannot read inside an archive. The system monitor addon is
+# copied into out/main/native by the electron-vite plugin.
 asarUnpack:
-  - node_modules/sqlite3
-  - node_modules/yandex-music-desktop-library/bin/**/*
+  - out/main/native/**/*
   - 'resources/**'
 
 win:
@@ -60,7 +63,6 @@ publish:
     owner: WebAFilippov
     repo: af_electron_v40
     releaseType: release
-
 
 releaseInfo:
   releaseDate: '2025-01-28'
