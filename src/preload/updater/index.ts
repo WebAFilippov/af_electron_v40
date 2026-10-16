@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron/renderer'
 import { IUpdaterApp } from './types'
-import { UpdateDataDto } from '@/shared_app/types'
+import { channels, UpdateDataDto } from '@/shared_app/types'
 
 export const updater_app = {
   onUpdateData: (callback) => {
@@ -11,5 +11,6 @@ export const updater_app = {
   retryDownload: () => ipcRenderer.send('retry_checking_for_update'),
   startDownload: () => ipcRenderer.send('start_download'),
   installNow: () => ipcRenderer.send('install_now'),
-  installOnQuit: () => ipcRenderer.send('install_on_quit')
+  installOnQuit: () => ipcRenderer.send('install_on_quit'),
+  getReleases: () => ipcRenderer.invoke(channels.updater_get_releases)
 } satisfies IUpdaterApp

@@ -1,6 +1,4 @@
 import './styles/globals.css'
-import '@gravity-ui/uikit/styles/fonts.css'
-import '@gravity-ui/uikit/styles/styles.css'
 
 import ReactDOM from 'react-dom/client'
 import { createEvent, sample } from 'effector'

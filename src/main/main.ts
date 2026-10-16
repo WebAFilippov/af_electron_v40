@@ -7,6 +7,7 @@ import { createWindow } from './app/create-window'
 import { i18nextInit } from './modules/i18next/service'
 import { autoUpdater } from './modules/auto-updater/service'
 import { logger, loggerInit } from './shared/utils/logger'
+import {  initMonitor } from './modules/system-monitor'
 
 const gotTheLock = app.requestSingleInstanceLock()
 
@@ -38,15 +39,20 @@ if (!gotTheLock) {
       const window = createWindow()
       const tray = createTray()
       const updater = autoUpdater()
-
+      initMonitor()
+      
       ipcRegister(window, tray, updater)
-      logger.info('IPC handlers registered')
 
+      logger.info('IPC handlers registered')
       logger.info('Application initialized successfully')
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error)
       logger.fatal({ error: errorMessage }, 'Failed to initialize application')
       throw new Error(`Ошибка при инициализации приложения: ${error}`)
     }
+  })
+
+  app.on('will-quit', () => {
+    // shutdownMonitor()
   })
 }

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, Button } from '@/shared/ui'
-import { Moon, RefreshCw, Sun } from 'lucide-react'
+import { RefreshCw, Sun } from 'lucide-react'
 import { useUnit } from 'effector-react'
 import { $t } from '@/entities/i18next'
 import { $weatherPending, refreshWeather } from '@/entities/weather'
@@ -8,7 +8,7 @@ import type { CurrentWeather as CurrentWeatherType, DailyWeather } from '@/entit
 import type { Location } from '@/shared_app/types'
 import type { ReactNode } from 'react'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { Moon01Icon, Moon02FreeIcons, MoonAngledRainZapFreeIcons, MoonCloudIcon } from '@hugeicons/core-free-icons'
+import {   MoonCloudIcon } from '@hugeicons/core-free-icons'
 
 interface CurrentWeatherProps {
   location: Location

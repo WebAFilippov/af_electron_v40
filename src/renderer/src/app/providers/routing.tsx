@@ -9,6 +9,7 @@ const HomePage = lazy(() => import('@/pages/Home').then((m) => ({ default: m.Hom
 const SettingsPage = lazy(() => import('@/pages/Settings').then((m) => ({ default: m.SettingsPage })))
 const UpdatePage = lazy(() => import('@/pages/Updates').then((m) => ({ default: m.UpdatePage })))
 const WeatherPage = lazy(() => import('@/pages/Weather').then((m) => ({ default: m.WeatherPage })))
+const MonitorPage = lazy(() => import('@/pages/Monitor').then((m) => ({ default: m.MonitorPage })))
 const NotFound404Page = lazy(() => import('@/pages/NotFound404').then((m) => ({ default: m.NotFound404Page })))
 
 const withSuspense = (Component: ComponentType) => (
@@ -17,7 +18,7 @@ const withSuspense = (Component: ComponentType) => (
   </Suspense>
 )
 
-type RouteHandle = {
+export type RouteHandle = {
   breadcrumb?: () => string
 }
 
@@ -56,6 +57,11 @@ const routes: AppRouteObject[] = [
         path: 'weather',
         element: withSuspense(WeatherPage),
         handle: { breadcrumb: () => 'breadcrumb.weather' }
+      },
+      {
+        path: 'monitor',
+        element: withSuspense(MonitorPage),
+        handle: { breadcrumb: () => 'breadcrumb.monitor' }
       },
       {
         path: '*',

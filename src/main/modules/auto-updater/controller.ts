@@ -1,6 +1,8 @@
 import { app, BrowserWindow, ipcMain } from 'electron/main'
 import type { AppUpdater } from 'electron-updater'
 import { settingsStore } from '../settings'
+import { getReleases } from './releases'
+import { channels } from '@/shared_app/types'
 
 export const ipcUpdater = (window: BrowserWindow, autoUpdater: AppUpdater) => {
   window.on('ready-to-show', () => {
@@ -28,6 +30,11 @@ export const ipcUpdater = (window: BrowserWindow, autoUpdater: AppUpdater) => {
       return error
     }
   })
+
+    ipcMain.handle(channels.updater_get_releases, async () => {
+    return await getReleases()
+  })
+
 
   ipcMain.on('retry_checking_for_update', async () => {
     return await autoUpdater.checkForUpdates()

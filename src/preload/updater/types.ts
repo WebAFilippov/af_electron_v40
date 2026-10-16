@@ -1,4 +1,4 @@
-import { UpdateDataDto } from '@/shared_app/types'
+import { ReleaseProps, UpdateDataDto } from '@/shared_app/types'
 import { UpdateCheckResult } from 'electron-updater'
 
 export interface IUpdaterApp {
@@ -9,4 +9,5 @@ export interface IUpdaterApp {
   startDownload: () => void
   installNow: () => void
   installOnQuit: () => void
+  getReleases: () => Promise<ReleaseProps[]>
 }

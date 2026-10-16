@@ -1,108 +1,47 @@
-import { RadioGroup, RadioGroupItem, Label, Switch, Separator, Badge } from '@/shared/ui'
-import {
-  $autoUpdateMode,
-  $checkForUpdatesOnStartup,
-  setAutoUpdateMode,
-  toggleCheckForUpdatesOnStartup,
-  type AutoUpdateMode
-} from '../model/model-updater'
+import type { ReactNode } from 'react'
 import { useUnit } from 'effector-react'
-import { cn } from '@/shared/lib'
-import { Search, Download, Zap, Bell, Info } from 'lucide-react'
-
-const AUTO_UPDATE_MODES: { value: AutoUpdateMode; label: string; description: string; icon: typeof Search }[] = [
-  {
-    value: 'check-only',
-    label: 'Только проверка',
-    description: 'Приложение будет только проверять наличие обновлений и уведомлять вас',
-    icon: Search
-  },
-  {
-    value: 'check-and-download',
-    label: 'Проверка и скачивание',
-    description: 'Автоматически скачивать обновления, но спрашивать перед установкой',
-    icon: Download
-  },
-  {
-    value: 'full-auto',
-    label: 'Полностью автоматически',
-    description: 'Автоматически проверять, скачивать и устанавливать обновления',
-    icon: Zap
-  }
-]
-
-export const UpdateSettingsPanel = () => {
-  const [checkOnStartup, toggleCheckOnStartup, autoMode, setMode] = useUnit([
+import { Bell } from 'lucide-react'
+import { $t } from '@/entities/i18next'
+import { $checkForUpdatesOnStartup, toggleCheckForUpdatesOnStartup } from '@/entities/check-for-updates-on-startup'
+import { Label, Switch } from '@/shared/ui'
+import { formatBytes } from '../utils'
+import { $updateData } from '../model/model-updater'
+/**
+ * Update-related preferences. Only settings that actually reach the main
+ * process live here — the former "auto update mode" radio group was renderer
+ * localStorage that never affected `autoUpdater`, so it was removed.
+ */
+export const UpdateSettingsPanel = (): ReactNode => {
+  const t = useUnit($t)
+  const [checkOnStartup, toggleCheckOnStartup, updateData] = useUnit([
     $checkForUpdatesOnStartup,
     toggleCheckForUpdatesOnStartup,
-    $autoUpdateMode,
-    setAutoUpdateMode
+    $updateData
   ])
-
   return (
-    <div className="space-y-6">
-      {/* Check on Startup Toggle */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
             <Bell className="h-5 w-5 text-primary" />
           </div>
           <div className="space-y-0.5">
-            <Label htmlFor="check-on-startup" className="text-base font-medium cursor-pointer">
-              Проверять при запуске
+            <Label htmlFor="check-on-startup" className="cursor-pointer text-base font-medium">
+              {t('page.updates.settings_check_on_startup')}
             </Label>
-            <p className="text-sm text-muted-foreground">Автоматически проверять обновления при старте приложения</p>
+            <p className="text-sm text-muted-foreground">{t('page.updates.settings_check_on_startup_hint')}</p>
           </div>
         </div>
         <Switch id="check-on-startup" checked={checkOnStartup} onCheckedChange={toggleCheckOnStartup} />
       </div>
-
-      <Separator />
-
-      {/* Auto Update Mode Selection */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2">
-          <Info className="h-4 w-4 text-muted-foreground" />
-          <p className="text-sm font-medium">Режим автоматического обновления</p>
+      {updateData.status === 'update-downloaded' && (
+        <div className="flex items-center justify-between gap-4 border-t pt-4 text-sm">
+          <span className="text-muted-foreground">{t('page.updates.settings_package_size')}</span>
+          <span className="font-medium">
+            {updateData.data.files?.[0]?.size ? formatBytes(updateData.data.files[0].size) : '—'}
+          </span>
         </div>
-
-        <RadioGroup value={autoMode} onValueChange={(value) => setMode(value as AutoUpdateMode)} className="space-y-3">
-          {AUTO_UPDATE_MODES.map((mode) => {
-            const Icon = mode.icon
-            const isSelected = autoMode === mode.value
-
-            return (
-              <div
-                key={mode.value}
-                className={cn(
-                  'flex items-start gap-3 rounded-lg border p-4 transition-all cursor-pointer',
-                  isSelected ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
-                )}
-                onClick={() => setMode(mode.value)}
-              >
-                <RadioGroupItem value={mode.value} id={mode.value} className="mt-1" />
-                <div className="flex-1 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <Icon className={cn('h-4 w-4', isSelected ? 'text-primary' : 'text-muted-foreground')} />
-                    <Label
-                      htmlFor={mode.value}
-                      className={cn('font-medium cursor-pointer', isSelected ? 'text-primary' : 'text-foreground')}
-                    >
-                      {mode.label}
-                    </Label>
-                    {mode.value === 'full-auto' && (
-                      <Badge variant="default" className="text-xs">
-                        Рекомендуется
-                      </Badge>
-                    )}
-                  </div>
-                  <p className="text-sm text-muted-foreground pl-6">{mode.description}</p>
-                </div>
-              </div>
-            )
-          })}
-        </RadioGroup>
-      </div>
+      )}
     </div>
   )
 }

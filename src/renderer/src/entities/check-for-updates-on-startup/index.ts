@@ -1,2 +1,6 @@
 export { CheckForUpdatesOnStartup } from './ui'
-export { fetchCheckForUpdatesOnStartupFx } from './model'
+export {
+  $checkForUpdatesOnStartup,
+  toggleCheckForUpdatesOnStartup,
+  fetchCheckForUpdatesOnStartupFx
+} from './model'

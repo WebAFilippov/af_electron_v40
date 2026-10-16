@@ -3,10 +3,10 @@ import { useUnit } from 'effector-react'
 import { $currentLocation } from '@/entities/location'
 import { $weatherData, $weatherPending } from '@/entities/weather'
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
+  
+  
+  
+  
   Button,
   Spinner,
   Empty,
@@ -17,7 +17,7 @@ import {
   EmptyContent
 } from '@/shared/ui'
 import { HugeiconsIcon } from '@hugeicons/react'
-import { FirewallIcon, Map, Refresh01Icon } from '@hugeicons/core-free-icons'
+import { FirewallIcon,  Refresh01Icon } from '@hugeicons/core-free-icons'
 import { $t } from '@/entities/i18next'
 import { SearchCard } from './SearchCard'
 import { WeatherSkeleton } from './WeatherSkeleton'
