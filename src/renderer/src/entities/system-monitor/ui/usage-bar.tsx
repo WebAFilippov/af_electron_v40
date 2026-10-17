@@ -33,10 +33,7 @@ export const UsageBar = ({ value, secondaryValue, className, tone = 'default' }:
   return (
     <div className={cn('relative h-2 w-full overflow-hidden rounded-full bg-muted', className)}>
       {secondary > 0 && (
-        <div
-          className="absolute inset-y-0 left-0 rounded-full bg-muted-foreground/25"
-          style={{ width: `${secondary}%` }}
-        />
+        <div className="absolute inset-y-0 left-0 rounded-full bg-muted-foreground/25" style={{ width: `${secondary}%` }} />
       )}
       <div
         className={cn('absolute inset-y-0 left-0 rounded-full transition-[width] duration-500', TONE_CLASSES[tone])}

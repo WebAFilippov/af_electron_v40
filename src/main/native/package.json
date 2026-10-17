@@ -1,0 +1,8 @@
+{
+  "name": "system-monitor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Native Windows system monitoring addon for Effectory",
+  "main": "index.js",
+  "gypfile": true
+}

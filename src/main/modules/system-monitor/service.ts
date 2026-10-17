@@ -1,4 +1,4 @@
-import type { MonitorSample, MonitorSnapshot } from '@/shared_app/types'
+import type { MonitorSample, MonitorSnapshot, TerminateProcessResult } from '@/shared_app/types'
 import { loadNativeMonitor } from './native-loader'
 
 /**
@@ -12,7 +12,7 @@ const CACHE_TTL_MS = 500
 let cachedSnapshot: MonitorSnapshot | null = null
 let cachedAt = 0
 
-export const initMonitor = (): { cpu: boolean; sensors: boolean } => {
+export const initializeMonitor = (): { cpu: boolean; sensors: boolean } => {
   const monitor = loadNativeMonitor()
   if (monitor === null) {
     return { cpu: false, sensors: false }
@@ -40,24 +40,11 @@ export const shutdownMonitor = (): void => {
 
 export const isMonitorAvailable = (): boolean => loadNativeMonitor() !== null
 
-export const areSensorsAvailable = (): boolean => {
-  const monitor = loadNativeMonitor()
-  if (monitor === null) {
-    return false
-  }
-
-  try {
-    return monitor.sensorsAvailable()
-  } catch {
-    return false
-  }
-}
-
 /**
  * Returns a system snapshot, reusing the cached one while it is still fresh.
  * Resolves to `null` when the native addon is unavailable.
  */
-export const getSnapshot = (force = false): MonitorSample | null => {
+export const getSnapshot = async (force = false): Promise<MonitorSample | null> => {
   const monitor = loadNativeMonitor()
   if (monitor === null) {
     return null
@@ -81,5 +68,51 @@ export const getSnapshot = (force = false): MonitorSample | null => {
       return { snapshot: cachedSnapshot, ageMs: now - cachedAt }
     }
     return null
+  }
+}
+
+/**
+ * Terminates a process.
+ *
+ * The protection list is enforced inside the native addon, so this wrapper does
+ * not need to duplicate it — and deliberately does not, so there is a single
+ * place where the safety rule lives.
+ *
+ * The cached snapshot is invalidated afterwards: the process table changed, and
+ * serving a stale list would show a process the user just killed.
+ */
+export const terminateProcess = (pid: number): TerminateProcessResult => {
+  const monitor = loadNativeMonitor()
+
+  if (monitor === null) {
+    return { ok: false, status: 'failed', errorCode: 0 }
+  }
+
+  try {
+    const result = monitor.terminateProcess(pid)
+    cachedSnapshot = null
+    return result
+  } catch {
+    return { ok: false, status: 'failed', errorCode: 0 }
+  }
+}
+
+/**
+ * Drops the CPU deltas held by the native layer.
+ *
+ * Called when monitoring stops, so a later session does not compute process CPU
+ * percentages against a sample taken minutes ago — that would report a spike
+ * proportional to however long the page was closed.
+ */
+export const resetProcessHistory = (): void => {
+  const monitor = loadNativeMonitor()
+  if (monitor === null) {
+    return
+  }
+
+  try {
+    monitor.resetProcesses()
+  } catch {
+    // Nothing to recover from.
   }
 }

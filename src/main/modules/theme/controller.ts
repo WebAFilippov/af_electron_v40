@@ -4,7 +4,6 @@ import { getTheme, setTheme, updateSystemTheme } from './service'
 import { channels, ThemeProps } from '@/shared_app/types'
 import { BACKGROUND_COLOR } from './store'
 
-
 export const applyThemeToWindow = (window: BrowserWindow, theme: ThemeProps): void => {
   nativeTheme.themeSource = theme.mode
 

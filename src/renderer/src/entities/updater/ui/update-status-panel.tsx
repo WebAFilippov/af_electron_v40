@@ -1,6 +1,7 @@
-
+import type { ReactNode } from 'react'
 import { useUnit } from 'effector-react'
 import { AlertCircle, CheckCircle2, Clock, Download, Loader2, Package, RefreshCw, Rocket } from 'lucide-react'
+
 import { $t } from '@/entities/i18next'
 import { Badge, Button, Card, CardContent, CardHeader, Progress } from '@/shared/ui'
 import { cn } from '@/shared/lib'
@@ -37,6 +38,7 @@ const STATUS_VARIANTS: Record<UpdateStatusDto, StatusVariant> = {
   'update-downloaded': 'ready',
   error: 'error'
 }
+
 const VARIANT_ICON_STYLES: Record<StatusVariant, string> = {
   neutral: 'bg-muted text-muted-foreground',
   checking: 'bg-primary/10 text-primary',
@@ -45,6 +47,7 @@ const VARIANT_ICON_STYLES: Record<StatusVariant, string> = {
   ready: 'bg-primary/10 text-primary',
   error: 'bg-destructive/10 text-destructive'
 }
+
 const VARIANT_BADGE: Record<StatusVariant, 'default' | 'secondary' | 'destructive'> = {
   neutral: 'secondary',
   checking: 'secondary',
@@ -54,38 +57,38 @@ const VARIANT_BADGE: Record<StatusVariant, 'default' | 'secondary' | 'destructiv
   error: 'destructive'
 }
 
-export const UpdateStatusPanel = () => {
+export const UpdateStatusPanel = (): ReactNode => {
   const t = useUnit($t)
   const [
     updateData,
     versionApp,
-    handleRetryDownload,
     handleCheckForUpdate,
+    handleRetryDownload,
     handleDownload,
     handleInstallNow,
     handleInstallOnQuit
   ] = useUnit([
     $updateData,
     $versionApp,
-    retryDownloadFx,
     checkForUpdateFx,
+    retryDownloadFx,
     downloadUpdateFx,
     installNowUpdateFx,
     InstallOnQuitUpdateFx
   ])
 
-    const status = updateData.status
+  const status = updateData.status
   const variant = STATUS_VARIANTS[status]
   const Icon = STATUS_ICONS[status]
   const isChecking = status === 'checking-for-update'
   const isError = status === 'error'
+
   const availableVersion =
     status === 'update-available' || status === 'update-downloaded' ? updateData.data.version : null
   const releaseName =
     status === 'update-available' || status === 'update-downloaded' ? updateData.data.releaseName : null
 
-
-   return (
+  return (
     <Card
       className={cn(
         'overflow-hidden transition-colors',
@@ -112,6 +115,7 @@ export const UpdateStatusPanel = () => {
           <Badge variant={VARIANT_BADGE[variant]}>{t(`page.updates.status_${status.replace(/-/g, '_')}_badge`)}</Badge>
         </div>
       </CardHeader>
+
       <CardContent className="space-y-4">
         {/* Version info */}
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
@@ -129,12 +133,14 @@ export const UpdateStatusPanel = () => {
           )}
           {releaseName && <span className="text-muted-foreground">{releaseName}</span>}
         </div>
+
         {/* Error message */}
         {isError && (
           <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
             {updateData.data?.message || updateData.data?.error?.message || t('page.updates.error_unknown')}
           </div>
         )}
+
         {/* Download progress */}
         {status === 'download-progress' && (
           <div className="space-y-2">
@@ -149,6 +155,7 @@ export const UpdateStatusPanel = () => {
             </div>
           </div>
         )}
+
         {/* Actions */}
         <div className="flex flex-wrap gap-3 pt-1">
           {(status === 'idle' || status === 'update-not-available' || isChecking) && (
@@ -166,12 +173,14 @@ export const UpdateStatusPanel = () => {
               )}
             </Button>
           )}
+
           {status === 'update-available' && (
             <Button onClick={() => handleDownload()} className="gap-2">
               <Download className="h-4 w-4" />
               {t('page.updates.action_download')}
             </Button>
           )}
+
           {status === 'update-downloaded' && (
             <div className="flex w-full flex-col gap-3 sm:flex-row">
               <Button onClick={() => handleInstallNow()} className="flex-1 gap-2">
@@ -184,6 +193,7 @@ export const UpdateStatusPanel = () => {
               </Button>
             </div>
           )}
+
           {isError && (
             <Button variant="outline" onClick={() => handleRetryDownload()} className="gap-2">
               <RefreshCw className="h-4 w-4" />

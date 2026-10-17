@@ -1,40 +1,56 @@
 import type { ReactNode } from 'react'
 import { useGate, useUnit } from 'effector-react'
-import { Activity, RefreshCw } from 'lucide-react'
+import { Activity, Cpu, Gauge, Network, RefreshCw, Settings2 } from 'lucide-react'
 
 import { $t } from '@/entities/i18next'
 import {
   $isAvailable,
-  $isPending,
   $pollInterval,
   $snapshot,
+  ConnectionsCard,
   CpuCard,
   DisksCard,
   GpuCard,
   MemoryCard,
   NetworkCard,
+  OverviewTab,
   POLL_INTERVALS,
-  SensorsProviderCard,
+  ProcessesCard,
   SystemCard,
-  fetchSnapshotFx,
   setPollInterval,
   type PollInterval
 } from '@/entities/system-monitor'
-import { Button, Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/shared/ui'
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from '@/shared/ui'
 import { cn } from '@/shared/lib'
 import { GateMonitorPage } from '../model'
 
-export const MonitorPage = (): ReactNode => { 
+/** Counts shown as tab badges, so a glance reveals where activity is. */
+interface TabDefinition {
+  value: string
+  label: string
+  icon: ReactNode
+  badge?: number
+}
+
+export const MonitorPage = (): ReactNode => {
   useGate(GateMonitorPage)
 
   const t = useUnit($t)
-  const [snapshot, isAvailable, isPending, pollInterval, handleSetInterval, handleRefresh] = useUnit([
+  const [snapshot, isAvailable, pollInterval, handleSetInterval] = useUnit([
     $snapshot,
     $isAvailable,
-    $isPending,
     $pollInterval,
-    setPollInterval,
-    fetchSnapshotFx
+    setPollInterval
   ])
 
   // The native addon is Windows-only and optional; explain the situation instead
@@ -55,39 +71,50 @@ export const MonitorPage = (): ReactNode => {
     )
   }
 
+  const tabs: TabDefinition[] = [
+    { value: 'overview', label: t('page.monitor.tab_overview'), icon: <Gauge /> },
+    { value: 'cpu', label: t('page.monitor.tab_cpu'), icon: <Cpu /> },
+    {
+      value: 'processes',
+      label: t('page.monitor.tab_processes'),
+      icon: <Settings2 />,
+      badge: snapshot?.processes.length
+    },
+    {
+      value: 'network',
+      label: t('page.monitor.tab_network'),
+      icon: <Network />,
+      badge: snapshot?.connections.length
+    },
+    { value: 'system', label: t('page.monitor.tab_system'), icon: <Activity /> }
+  ]
+
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <div className="mx-auto max-w-5xl space-y-6 pb-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t('page.monitor.title')}</h1>
           <p className="text-muted-foreground mt-2">{t('page.monitor.description')}</p>
         </div>
 
-        <div className="flex items-center gap-3">
-          {/* Polling cadence. Lower values give smoother charts at a small CPU
-              cost, so the tradeoff is left to the user. */}
-          <div className="flex items-center gap-1 rounded-md border p-0.5">
-            {POLL_INTERVALS.map((interval) => (
-              <button
-                key={interval}
-                type="button"
-                onClick={() => handleSetInterval(interval as PollInterval)}
-                className={cn(
-                  'rounded px-2.5 py-1 text-xs font-medium tabular-nums transition-colors',
-                  pollInterval === interval
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                )}
-              >
-                {interval / 1000}s
-              </button>
-            ))}
-          </div>
-
-          <Button variant="outline" size="sm" className="gap-2" onClick={() => handleRefresh()} disabled={isPending}>
-            <RefreshCw className={cn('h-4 w-4', isPending && 'animate-spin')} />
-            {t('page.monitor.refresh')}
-          </Button>
+        {/* Polling cadence. Lower values give smoother charts at a small CPU cost,
+            so the tradeoff is left to the user. */}
+        <div className="flex items-center gap-1 rounded-md border p-0.5">
+          {POLL_INTERVALS.map((interval) => (
+            <button
+              key={interval}
+              type="button"
+              onClick={() => handleSetInterval(interval as PollInterval)}
+              className={cn(
+                'rounded px-2.5 py-1 text-xs font-medium tabular-nums transition-colors',
+                pollInterval === interval
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+              )}
+            >
+              {interval / 1000}s
+            </button>
+          ))}
         </div>
       </div>
 
@@ -97,21 +124,49 @@ export const MonitorPage = (): ReactNode => {
           {t('page.monitor.loading')}
         </div>
       ) : (
-        <div className="space-y-6 pb-8">
-          {/* Explains how to unlock temperatures; hides itself once they work. */}
-          <SensorsProviderCard />
+        <>
+          <Tabs defaultValue="overview">
+            <TabsList className="flex-wrap">
+              {tabs.map((tab) => (
+                <TabsTrigger key={tab.value} value={tab.value}>
+                  {tab.icon}
+                  {tab.label}
+                  {tab.badge !== undefined && tab.badge > 0 && (
+                    <span className="ml-0.5 rounded bg-muted-foreground/15 px-1 text-[10px] tabular-nums">
+                      {tab.badge}
+                    </span>
+                  )}
+                </TabsTrigger>
+              ))}
+            </TabsList>
 
-          <CpuCard />
-          <MemoryCard />
+            <TabsContent value="overview">
+              <OverviewTab />
+            </TabsContent>
 
-          <div className="grid gap-6 lg:grid-cols-2">
-            <DisksCard />
-            <GpuCard />
-          </div>
+            <TabsContent value="cpu" className="space-y-6">
+              <CpuCard />
+              <MemoryCard />
+            </TabsContent>
 
-          <NetworkCard />
-          <SystemCard />
-        </div>
+            <TabsContent value="processes">
+              <ProcessesCard />
+            </TabsContent>
+
+            <TabsContent value="network" className="space-y-6">
+              <NetworkCard />
+              <ConnectionsCard />
+            </TabsContent>
+
+            <TabsContent value="system" className="space-y-6">
+              <SystemCard />
+              <div className="grid gap-6 lg:grid-cols-2">
+                <DisksCard />
+                <GpuCard />
+              </div>
+            </TabsContent>
+          </Tabs>
+        </>
       )}
     </div>
   )

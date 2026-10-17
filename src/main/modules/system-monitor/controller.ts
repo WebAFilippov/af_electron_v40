@@ -1,41 +1,23 @@
 import { ipcMain } from 'electron/main'
 
 import { channels } from '@/shared_app/types'
-import { areSensorsAvailable, getSnapshot, isMonitorAvailable } from './service'
-import {
-  getSensorStatus,
-  installSensorProvider,
-  launchSensorProvider,
-  openSensorProviderWebsite
-} from './sensors-provider'
+import { getSnapshot, isMonitorAvailable, terminateProcess } from './service'
 
 export const ipcSystemMonitor = (): void => {
-  ipcMain.handle(channels.monitor_get_snapshot, (_event, force?: boolean) => {
-    const sample = getSnapshot(force === true)
-    return sample
-  })
+  ipcMain.handle(channels.monitor_get_snapshot, (_event, force?: boolean) => getSnapshot(force === true))
 
   ipcMain.handle(channels.monitor_get_capabilities, () => ({
-    available: isMonitorAvailable(),
-    sensors: areSensorsAvailable()
+    available: isMonitorAvailable()
   }))
 
-  ipcMain.handle(channels.monitor_get_sensor_status, () => getSensorStatus())
+  // The protection list lives in the native addon, so this handler only validates
+  // the shape of the request and forwards it — duplicating the rule here would
+  // create a second place for it to drift.
+  ipcMain.handle(channels.monitor_terminate_process, (_event, pid: unknown) => {
+    if (typeof pid !== 'number' || !Number.isInteger(pid) || pid <= 0) {
+      return { ok: false, status: 'failed', errorCode: 0 }
+    }
 
-  ipcMain.handle(channels.monitor_install_sensors, async () => {
-    const result = await installSensorProvider()
-    // Re-probe immediately so the UI can show whether the provider came up
-    // without waiting for the next poll.
-    return { ...result, status: await getSensorStatus() }
-  })
-
-  ipcMain.handle(channels.monitor_launch_sensors, async () => {
-    const result = await launchSensorProvider()
-    return { ...result, status: await getSensorStatus() }
-  })
-
-  ipcMain.handle(channels.monitor_open_sensors_site, async () => {
-    await openSensorProviderWebsite()
-    return { ok: true, message: 'opened' }
+    return terminateProcess(pid)
   })
 }

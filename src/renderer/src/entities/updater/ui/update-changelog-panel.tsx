@@ -3,17 +3,21 @@ import { useUnit } from 'effector-react'
 import { format, isValid, parseISO } from 'date-fns'
 import { enUS, ru } from 'date-fns/locale'
 import { Calendar, ExternalLink, GitCommitHorizontal, Loader2 } from 'lucide-react'
+
 import { $language, $t } from '@/entities/i18next'
 import { ReleaseProps } from '@/shared_app/types'
 import { Badge, Button, Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle, ScrollArea, Separator } from '@/shared/ui'
 import { cn } from '@/shared/lib'
 import { $releases, $releasesPending, $versionApp, loadReleasesFx } from '../model/model-updater'
+
 const DATE_LOCALES = { ru, en: enUS } as const
+
 const formatReleaseDate = (publishedAt: string, locale: keyof typeof DATE_LOCALES): string => {
   const date = parseISO(publishedAt)
   if (!isValid(date)) return publishedAt
   return format(date, 'd MMMM yyyy', { locale: DATE_LOCALES[locale] })
 }
+
 /** Splits GitHub release markdown into readable bullet lines. */
 const toBulletLines = (notes: string): string[] =>
   notes
@@ -22,6 +26,7 @@ const toBulletLines = (notes: string): string[] =>
     .filter((line) => line.length > 0 && !/^-{3,}$/.test(line))
     .map((line) => line.replace(/^[-*]\s+/, '').replace(/^#{1,6}\s+/, ''))
     .filter(Boolean)
+
 export const UpdateChangelogPanel = (): ReactNode => {
   const t = useUnit($t)
   const language = useUnit($language)
@@ -31,7 +36,9 @@ export const UpdateChangelogPanel = (): ReactNode => {
     $versionApp,
     loadReleasesFx
   ])
+
   const locale = language === 'en' ? 'en' : 'ru'
+
   if (isPending && releases.length === 0) {
     return (
       <div className="flex items-center justify-center gap-2 py-10 text-sm text-muted-foreground">
@@ -40,6 +47,7 @@ export const UpdateChangelogPanel = (): ReactNode => {
       </div>
     )
   }
+
   if (releases.length === 0) {
     return (
       <Empty>
@@ -56,12 +64,14 @@ export const UpdateChangelogPanel = (): ReactNode => {
       </Empty>
     )
   }
+
   return (
     <ScrollArea className="h-100 pr-4">
       <ol className="relative space-y-4">
         {releases.map((release: ReleaseProps, index) => {
           const isCurrent = Boolean(currentVersion) && release.version === currentVersion
           const lines = release.notes ? toBulletLines(release.notes) : []
+
           return (
             <li key={release.id}>
               <div
@@ -92,6 +102,7 @@ export const UpdateChangelogPanel = (): ReactNode => {
                     {formatReleaseDate(release.publishedAt, locale)}
                   </div>
                 </div>
+
                 {lines.length > 0 && (
                   <>
                     <Separator className="my-3" />
@@ -105,6 +116,7 @@ export const UpdateChangelogPanel = (): ReactNode => {
                     </ul>
                   </>
                 )}
+
                 <div className="mt-3 flex justify-end">
                   <Button asChild variant="ghost" size="sm" className="h-7 gap-1.5 text-xs">
                     <a href={release.htmlUrl} target="_blank" rel="noreferrer">
@@ -114,6 +126,7 @@ export const UpdateChangelogPanel = (): ReactNode => {
                   </Button>
                 </div>
               </div>
+
               {index < releases.length - 1 && <div className="h-4" />}
             </li>
           )

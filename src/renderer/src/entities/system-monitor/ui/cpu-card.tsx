@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { useUnit } from 'effector-react'
-import { Cpu, Thermometer } from 'lucide-react'
+import { Cpu } from 'lucide-react'
 
 import { $t } from '@/entities/i18next'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui'
@@ -27,18 +27,6 @@ export const CpuCard = (): ReactNode => {
 
   const { cpu } = snapshot
   const cpuHistory = history.map((point) => point.cpu)
-
-  // The sensor list carries hardware names, so the interesting readings are
-  // picked by name instead of by position.
-  const packageTemperature = snapshot.sensors.readings.find(
-    (reading) => reading.category === 'temperature' && /Tctl|Tdie|Package|^CPU$/i.test(reading.name)
-  )
-  const cpuFan = snapshot.sensors.readings.find(
-    (reading) => reading.category === 'fan' && /cpu/i.test(reading.name)
-  )
-  const packagePower = snapshot.sensors.readings.find(
-    (reading) => reading.category === 'power' && /package/i.test(reading.name)
-  )
 
   return (
     <Card>
@@ -80,27 +68,6 @@ export const CpuCard = (): ReactNode => {
             <div className="text-muted-foreground">{t('page.monitor.cpu_max_frequency')}</div>
             <div className="font-medium tabular-nums">{formatFrequency(cpu.maxClockMhz)}</div>
           </div>
-          {packageTemperature && (
-            <div>
-              <div className="flex items-center gap-1 text-muted-foreground">
-                <Thermometer className="h-3 w-3" />
-                {t('page.monitor.cpu_temperature')}
-              </div>
-              <div className="font-medium tabular-nums">{packageTemperature.value.toFixed(0)}°C</div>
-            </div>
-          )}
-          {packagePower && (
-            <div>
-              <div className="text-muted-foreground">{t('page.monitor.cpu_power')}</div>
-              <div className="font-medium tabular-nums">{packagePower.value.toFixed(1)} W</div>
-            </div>
-          )}
-          {cpuFan && (
-            <div>
-              <div className="text-muted-foreground">{t('page.monitor.cpu_fan')}</div>
-              <div className="font-medium tabular-nums">{cpuFan.displayValue}</div>
-            </div>
-          )}
         </div>
 
         {/* Per-core strip: each logical processor gets an equal-height bar whose

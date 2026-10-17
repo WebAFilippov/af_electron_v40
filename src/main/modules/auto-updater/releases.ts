@@ -1,7 +1,10 @@
 import { net } from 'electron/main'
+
 import { ReleaseProps } from '@/shared_app/types'
+
 // Repo coordinates mirror the `publish` section of electron-builder.yml.
 const RELEASES_API_URL = 'https://api.github.com/repos/WebAFilippov/af_electron_v40/releases'
+
 interface GithubReleaseDto {
   id: number
   tag_name: string
@@ -12,7 +15,9 @@ interface GithubReleaseDto {
   prerelease: boolean
   html_url: string
 }
+
 const normalizeVersion = (tag: string): string => tag.replace(/^v/i, '')
+
 /**
  * Fetches the published releases of the app repository through the main
  * process. Uses Electron's `net` (Chromium stack) so the request works behind
@@ -30,13 +35,17 @@ export const getReleases = async (): Promise<ReleaseProps[]> => {
         'User-Agent': 'Effectory-App'
       }
     })
+
     if (!response.ok) {
       return []
     }
+
     const releases = (await response.json()) as GithubReleaseDto[]
+
     if (!Array.isArray(releases)) {
       return []
     }
+
     return releases
       .filter((release) => !release.draft && release.tag_name)
       .map((release) => ({

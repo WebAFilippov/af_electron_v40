@@ -1,7 +1,7 @@
 appId: com.AFilippov.effectory
 productName: effectory
-copyright: Copyright © 2026 WebAFilippov
-buildVersion: 6.1.0
+copyright: Copyright © 2025 WebAFilippov
+buildVersion: 5.0.0
 
 directories:
   buildResources: build
@@ -10,13 +10,28 @@ directories:
 files:
   - '!**/.vscode/*'
   - '!src/**'
+  - '!scripts/**'
   - '!electron.vite.config.{js,ts,mjs,cjs}'
   - '!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
 
+# Native artifacts.
+#
+# The C++ addon is loaded by the OS loader, which cannot read inside an asar
+# archive, so it must be a real file on disk. It lives in `resources/native` in
+# development and is copied to `<app>/resources/resources/native` when packaged —
+# the destination mirrors the source path so the main process resolves it with the
+# same expression in both modes (process.resourcesPath + "resources").
+extraResources:
+  - from: resources/native
+    to: resources/native
+    filter:
+      - '**/*'
+
+# Nothing native may be packed into the asar archive.
 asarUnpack:
-  - 'resources/**'
+  - resources/**
 
 win:
   icon: build/icon.ico
@@ -59,10 +74,9 @@ publish:
     repo: af_electron_v40
     releaseType: release
 
-
 releaseInfo:
-  releaseDate: '2026-10-17'
-  releaseName: 'Effectory 6.0.0'
+  releaseDate: '2025-01-28'
+  releaseName: 'Effectory 0.0.3'
   releaseNotes: |
     Initial public release of Effectory.
 

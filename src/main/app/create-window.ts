@@ -69,6 +69,8 @@ export const createWindow = (): BrowserWindow => {
     mainWindow.loadFile(join(import.meta.dirname, '../renderer/index.html'), { hash: 'home' })
   }
 
+  // DevTools are a development aid only: opening them automatically in a
+  // packaged build would show a debugger panel to every end user on launch.
   if (is.dev) {
     mainWindow.webContents.once('did-finish-load', () => {
       mainWindow?.webContents.openDevTools({ mode: 'bottom' })

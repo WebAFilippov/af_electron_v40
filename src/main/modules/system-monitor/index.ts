@@ -1,8 +1,9 @@
 export { ipcSystemMonitor } from './controller'
 export {
-  areSensorsAvailable,
   getSnapshot,
-  initMonitor,
+  initializeMonitor,
   isMonitorAvailable,
-  shutdownMonitor
+  resetProcessHistory,
+  shutdownMonitor,
+  terminateProcess
 } from './service'

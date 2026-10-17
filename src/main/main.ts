@@ -6,8 +6,8 @@ import { ipcRegister } from './ipc'
 import { createWindow } from './app/create-window'
 import { i18nextInit } from './modules/i18next/service'
 import { autoUpdater } from './modules/auto-updater/service'
+import { initializeMonitor, shutdownMonitor } from './modules/system-monitor'
 import { logger, loggerInit } from './shared/utils/logger'
-import {  initMonitor } from './modules/system-monitor'
 
 const gotTheLock = app.requestSingleInstanceLock()
 
@@ -36,14 +36,18 @@ if (!gotTheLock) {
       await i18nextInit()
       logger.info('i18next initialized')
 
+      // Warm up the PDH counters and probe for a hardware-monitor provider before
+      // the renderer asks for its first sample.
+      const monitor = initializeMonitor()
+      logger.info({ cpu: monitor.cpu, sensors: monitor.sensors }, 'System monitor initialized')
+
       const window = createWindow()
       const tray = createTray()
       const updater = autoUpdater()
-      initMonitor()
-      
-      ipcRegister(window, tray, updater)
 
+      ipcRegister(window, tray, updater)
       logger.info('IPC handlers registered')
+
       logger.info('Application initialized successfully')
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error)
@@ -53,6 +57,6 @@ if (!gotTheLock) {
   })
 
   app.on('will-quit', () => {
-    // shutdownMonitor()
+    shutdownMonitor()
   })
 }

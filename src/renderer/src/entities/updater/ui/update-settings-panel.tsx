@@ -1,11 +1,13 @@
 import type { ReactNode } from 'react'
 import { useUnit } from 'effector-react'
 import { Bell } from 'lucide-react'
+
 import { $t } from '@/entities/i18next'
 import { $checkForUpdatesOnStartup, toggleCheckForUpdatesOnStartup } from '@/entities/check-for-updates-on-startup'
 import { Label, Switch } from '@/shared/ui'
 import { formatBytes } from '../utils'
 import { $updateData } from '../model/model-updater'
+
 /**
  * Update-related preferences. Only settings that actually reach the main
  * process live here — the former "auto update mode" radio group was renderer
@@ -18,6 +20,7 @@ export const UpdateSettingsPanel = (): ReactNode => {
     toggleCheckForUpdatesOnStartup,
     $updateData
   ])
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-4">
@@ -34,6 +37,7 @@ export const UpdateSettingsPanel = (): ReactNode => {
         </div>
         <Switch id="check-on-startup" checked={checkOnStartup} onCheckedChange={toggleCheckOnStartup} />
       </div>
+
       {updateData.status === 'update-downloaded' && (
         <div className="flex items-center justify-between gap-4 border-t pt-4 text-sm">
           <span className="text-muted-foreground">{t('page.updates.settings_package_size')}</span>

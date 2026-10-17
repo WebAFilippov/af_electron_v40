@@ -3,6 +3,7 @@ import { createEffect, createEvent, restore, sample, createStore } from 'effecto
 import { UpdateCheckResult } from 'electron-updater'
 import { toast } from 'sonner'
 import { persist } from 'effector-storage/local'
+
 import { ReleaseProps } from '@/shared_app/types'
 
 const DEFAULT_UPDATE_DATA = { status: 'idle' } as const
@@ -60,7 +61,6 @@ const InstallOnQuitUpdateFx = createEffect(() => {
 // Release history effect
 const loadReleasesFx = createEffect<void, ReleaseProps[]>(() => window.updater_app.getReleases())
 
-
 const setVersionApp = createEvent<string>()
 const setUpdatedApp = createEvent<boolean>()
 const setIsDownloaded = createEvent<boolean>()
@@ -110,16 +110,14 @@ sample({
   target: toastUpdateNotAvailableFx
 })
 
-
-// Persist settings to localStorage
-
+// Persist the app version so the history can mark the running release.
 persist({
   store: $versionApp,
   key: 'app-version'
 })
 
 export {
-   $versionApp,
+  $versionApp,
   $updatedApp,
   $updateData,
   $isDowloaded,

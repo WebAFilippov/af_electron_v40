@@ -31,10 +31,9 @@ export const ipcUpdater = (window: BrowserWindow, autoUpdater: AppUpdater) => {
     }
   })
 
-    ipcMain.handle(channels.updater_get_releases, async () => {
+  ipcMain.handle(channels.updater_get_releases, async () => {
     return await getReleases()
   })
-
 
   ipcMain.on('retry_checking_for_update', async () => {
     return await autoUpdater.checkForUpdates()
