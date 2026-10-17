@@ -55,12 +55,6 @@
     <Filter Include="..\src">
       <UniqueIdentifier>{F1003AD6-4B6D-45DF-3F56-5CAC869BF55E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="..">
-      <UniqueIdentifier>{13ED4249-1F9C-5F0F-2651-29A73F3A7059}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="..\src">
-      <UniqueIdentifier>{F1003AD6-4B6D-45DF-3F56-5CAC869BF55E}</UniqueIdentifier>
-    </Filter>
     <Filter Include="C:">
       <UniqueIdentifier>{F87FD356-0FEB-9BC5-D1FA-368C81420008}</UniqueIdentifier>
     </Filter>
@@ -106,9 +100,6 @@
       <Filter>..\src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\gpu.cc">
-      <Filter>..\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\sensors.cc">
       <Filter>..\src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\system.cc">

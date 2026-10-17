@@ -1,15 +1,9 @@
 import type { ReactNode } from 'react'
 import { useUnit } from 'effector-react'
-import { Activity, ArrowLeft, ArrowRight, Check, Download, Loader2, Play, ThermometerSun, X } from 'lucide-react'
+import { Activity, ArrowLeft, ArrowRight, Check, X } from 'lucide-react'
 
 import { $t } from '@/entities/i18next'
-import {
-  $isSensorActionPending,
-  $sensorStatus,
-  installSensorsFx,
-  launchSensorsFx
-} from '@/entities/system-monitor'
-import { Badge, Button, Dialog, DialogContent, Progress } from '@/shared/ui'
+import { Button, Dialog, DialogContent, Progress } from '@/shared/ui'
 import { cn } from '@/shared/lib'
 import {
   $isVisible,
@@ -21,71 +15,7 @@ import {
   previousStep
 } from '../model/onboarding'
 
-/** Step two differs by provider state, so its body is chosen rather than the step. */
-const SensorsStep = (): ReactNode => {
-  const t = useUnit($t)
-  const [status, isPending, handleInstall, handleLaunch] = useUnit([
-    $sensorStatus,
-    $isSensorActionPending,
-    installSensorsFx,
-    launchSensorsFx
-  ])
-
-  if (status.active) {
-    return (
-      <div className="flex items-start gap-3 rounded-lg border border-green-500/40 bg-green-500/5 p-4">
-        <Check className="mt-0.5 h-5 w-5 shrink-0 text-green-600 dark:text-green-500" />
-        <div className="space-y-1">
-          <div className="font-medium">{t('onboarding.sensors_active_title')}</div>
-          <p className="text-sm text-muted-foreground">{t('onboarding.sensors_active_description')}</p>
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-500/10">
-          <ThermometerSun className="h-5 w-5 text-amber-600 dark:text-amber-500" />
-        </div>
-        <div className="space-y-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="font-medium">{t('onboarding.sensors_title')}</span>
-            <Badge variant="outline" className="text-xs">
-              {t('onboarding.sensors_optional')}
-            </Badge>
-          </div>
-          <p className="text-sm text-muted-foreground">{t('onboarding.sensors_description')}</p>
-        </div>
-      </div>
-
-      {/* The UAC prompt is unavoidable for a driver-backed utility, so it is
-          disclosed here rather than appearing as a surprise. */}
-      <div className="rounded-lg border border-dashed p-3 text-xs text-muted-foreground">
-        {t('onboarding.sensors_uac_hint')}
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        {status.installed ? (
-          <Button className="gap-2" disabled={isPending} onClick={() => handleLaunch()}>
-            {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
-            {t('onboarding.sensors_launch')}
-          </Button>
-        ) : (
-          <Button className="gap-2" disabled={isPending || !status.wingetAvailable} onClick={() => handleInstall()}>
-            {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-            {t('onboarding.sensors_install')}
-          </Button>
-        )}
-      </div>
-
-      {isPending && <p className="text-xs text-muted-foreground">{t('onboarding.sensors_pending')}</p>}
-    </div>
-  )
-}
-
-const STEP_ICONS = [Activity, ThermometerSun, Check] as const
+const STEP_ICONS = [Activity, Check] as const
 
 export const OnboardingWizard = (): ReactNode => {
   const t = useUnit($t)
@@ -149,8 +79,6 @@ export const OnboardingWizard = (): ReactNode => {
               ))}
             </ul>
           )}
-
-          {step === 'sensors' && <SensorsStep />}
 
           {step === 'ready' && (
             <div className="space-y-3">

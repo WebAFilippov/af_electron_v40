@@ -1,4 +1,4 @@
-#include <napi.h>
+﻿#include <napi.h>
 
 #include <windows.h>
 
@@ -9,7 +9,6 @@
 #include "memory.h"
 #include "network.h"
 #include "processes.h"
-#include "sensors.h"
 #include "system.h"
 
 namespace {
@@ -179,38 +178,25 @@ Napi::Array BuildGpus(Napi::Env env) {
   return result;
 }
 
+/**
+ * Sensor block placeholder.
+ *
+ * Readings now come from the separate .NET helper, which loads
+ * LibreHardwareMonitorLib directly and therefore has driver access. The addon
+ * keeps this field so the snapshot shape stays stable, but always reports it as
+ * unavailable; the main process overlays the helper's data when it is running.
+ *
+ * The previous implementation scraped LibreHardwareMonitor's HTTP server, which
+ * required installing and configuring that application вЂ” the reason this was
+ * replaced.
+ */
 Napi::Object BuildSensors(Napi::Env env) {
   Napi::Object sensors = Napi::Object::New(env);
 
-  SensorSnapshot snapshot;
-  if (!ReadSensors(snapshot)) {
-    sensors.Set("available", Napi::Boolean::New(env, false));
-    sensors.Set("provider", Napi::String::New(env, "none"));
-    sensors.Set("readings", Napi::Array::New(env, 0));
-    sensors.Set("diagnostics", Napi::String::New(env, GetSensorDiagnostics()));
-    return sensors;
-  }
-
-  sensors.Set("available", Napi::Boolean::New(env, true));
-  sensors.Set("provider", Napi::String::New(env, snapshot.provider));
-  sensors.Set("diagnostics", Napi::String::New(env, GetSensorDiagnostics()));
-
-  Napi::Array readings = Napi::Array::New(env, snapshot.readings.size());
-  for (size_t i = 0; i < snapshot.readings.size(); ++i) {
-    const SensorReading& reading = snapshot.readings[i];
-    Napi::Object item = Napi::Object::New(env);
-
-    item.Set("identifier", Napi::String::New(env, reading.identifier));
-    item.Set("name", Napi::String::New(env, reading.name));
-    item.Set("category", Napi::String::New(env, reading.category));
-    item.Set("hardware", Napi::String::New(env, reading.hardware));
-    item.Set("group", Napi::String::New(env, reading.group));
-    item.Set("value", Napi::Number::New(env, reading.value));
-    item.Set("displayValue", Napi::String::New(env, reading.displayValue));
-
-    readings.Set(static_cast<uint32_t>(i), item);
-  }
-  sensors.Set("readings", readings);
+  sensors.Set("available", Napi::Boolean::New(env, false));
+  sensors.Set("provider", Napi::String::New(env, "none"));
+  sensors.Set("readings", Napi::Array::New(env, 0));
+  sensors.Set("diagnostics", Napi::String::New(env, "provided by sensor helper"));
 
   return sensors;
 }
@@ -330,30 +316,29 @@ Napi::Value GetSnapshot(const Napi::CallbackInfo& info) {
 Napi::Value Initialize(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   const bool cpuReady = InitCpuQuery();
-  const bool sensorsReady = InitSensors();
 
   Napi::Object result = Napi::Object::New(env);
   result.Set("cpu", Napi::Boolean::New(env, cpuReady));
-  result.Set("sensors", Napi::Boolean::New(env, sensorsReady));
+  // Sensors are owned by the .NET helper, so the addon never reports them ready.
+  result.Set("sensors", Napi::Boolean::New(env, false));
   return result;
 }
 
 Napi::Value Shutdown(const Napi::CallbackInfo& info) {
   ShutdownCpuQuery();
-  ShutdownSensors();
   return info.Env().Undefined();
 }
 
-// Reports whether a compatible LibreHardwareMonitor WMI namespace exists, so the
-// UI can explain how to enable temperature readings.
+// Always false: the addon no longer reads sensors. Kept so the preload contract
+// stays stable while the helper owns that data.
 Napi::Value SensorsAvailable(const Napi::CallbackInfo& info) {
-  return Napi::Boolean::New(info.Env(), IsSensorProviderAvailable());
+  return Napi::Boolean::New(info.Env(), false);
 }
 
-// Re-probes the WMI provider; called after LibreHardwareMonitor is installed or
-// started so temperatures appear without an app restart.
+// No-op: the helper is re-read on every snapshot, so there is nothing to refresh
+// here. Kept for contract stability.
 Napi::Value RefreshSensors(const Napi::CallbackInfo& info) {
-  return Napi::Boolean::New(info.Env(), RefreshSensorProvider());
+  return Napi::Boolean::New(info.Env(), false);
 }
 
 /**

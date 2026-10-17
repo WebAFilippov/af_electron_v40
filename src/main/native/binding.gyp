@@ -9,7 +9,6 @@
         "src/disk.cc",
         "src/network.cc",
         "src/gpu.cc",
-        "src/sensors.cc",
         "src/system.cc",
         "src/processes.cc",
         "src/connections.cc"
@@ -28,9 +27,6 @@
       ],
       "libraries": [
         "-lpdh",
-        "-lwbemuuid",
-        "-lole32",
-        "-loleaut32",
         "-ladvapi32",
         "-luser32",
         "-lversion",

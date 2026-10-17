@@ -5,15 +5,19 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 /**
- * Copies the compiled native addon next to the bundled main process.
+ * Copies the compiled native addon into `resources/`.
  *
  * Rollup cannot bundle a `.node` binary, so the addon is marked external and
- * physically copied into `out/main/native`, where the loader looks for it first
- * (see src/main/modules/system-monitor/native-loader.ts).
+ * placed alongside the sensor helper. Keeping every native artifact in one
+ * directory means the loader has a single place to look in both development and
+ * a packaged build, instead of matching the layout of `out/main`.
+ *
+ * In a packaged app `resources/**` is unpacked from the asar archive, so the
+ * binary is a real file on disk and can be loaded by the OS.
  */
 const copyNativeAddon = () => {
   const source = resolve('src/main/native/build/Release/system_monitor.node')
-  const destinationDir = resolve('out/main/native')
+  const destinationDir = resolve('resources/native')
 
   return {
     name: 'copy-native-system-monitor',
@@ -27,6 +31,7 @@ const copyNativeAddon = () => {
 
       mkdirSync(destinationDir, { recursive: true })
       cpSync(source, resolve(destinationDir, 'system_monitor.node'))
+      console.log(`[copy-native-system-monitor] copied to ${destinationDir}`)
     }
   }
 }

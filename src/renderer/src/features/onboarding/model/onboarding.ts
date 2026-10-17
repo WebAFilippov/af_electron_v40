@@ -1,30 +1,27 @@
 import { createEvent, createStore, sample } from 'effector'
 import { persist } from 'effector-storage/local'
 
-import {
-  fetchSensorStatusFx,
-  installSensorsFx,
-  launchSensorsFx,
-  startMonitoring
-} from '@/entities/system-monitor'
+import { startMonitoring } from '@/entities/system-monitor'
 
 /**
  * First-run wizard state.
  *
- * The wizard exists because the two things a new user must know — what the app
- * does and that temperatures need an extra component — are not discoverable from
- * the UI alone. It is shown once and can be dismissed permanently.
+ * The wizard exists because what the app does is not discoverable from a blank
+ * window. It is shown once and can be dismissed permanently.
  */
 
 /** Bumped when the wizard gains a step worth showing again to existing users. */
-const ONBOARDING_VERSION = 1
+const ONBOARDING_VERSION = 2
 
 const completeOnboarding = createEvent()
 const reopenOnboarding = createEvent()
 const nextStep = createEvent()
 const previousStep = createEvent()
 
-export const ONBOARDING_STEPS = ['welcome', 'sensors', 'ready'] as const
+// The `sensors` step was removed together with the elevated sensor helper: there
+// is no longer an optional component to install, so a step explaining one would
+// only describe a limitation.
+export const ONBOARDING_STEPS = ['welcome', 'ready'] as const
 export type OnboardingStep = (typeof ONBOARDING_STEPS)[number]
 
 /**
@@ -60,20 +57,10 @@ sample({
   target: reopenOnboarding
 })
 
-// The sensors step needs the provider status before the button can offer to
-// install rather than merely explain, and monitoring has to be running for the
-// wizard to show live numbers.
+// Monitoring has to be running for the wizard to show live numbers.
 sample({
   clock: reopenOnboarding,
-  target: [fetchSensorStatusFx, startMonitoring]
-})
-
-// Finishing the install step should move the user forward automatically: waiting
-// for a manual click after a successful install reads as a dead end.
-sample({
-  clock: [launchSensorsFx.doneData, installSensorsFx.doneData],
-  filter: (result) => result.ok,
-  target: nextStep
+  target: startMonitoring
 })
 
 export {

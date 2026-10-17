@@ -71,6 +71,7 @@ export {
   DropdownMenuSubContent
 } from './dropdown-menu'
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from './card'
+export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs'
 export { ToggleGroup, ToggleGroupItem } from './toggle-group'
 export { Toggle, toggleVariants } from './toggle'
 export { ToggleGroupCustom, ToggleGroupItemCustom } from './custom-toggle-group'

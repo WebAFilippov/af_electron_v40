@@ -16,12 +16,22 @@ files:
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
 
-# Native modules must live outside the asar archive: a .node binary is loaded by
-# the OS loader, which cannot read inside an archive. The system monitor addon is
-# copied into out/main/native by the electron-vite plugin.
+# Native artifacts.
+#
+# The C++ addon is loaded by the OS loader, which cannot read inside an asar
+# archive, so it must be a real file on disk. It lives in `resources/native` in
+# development and is copied to `<app>/resources/resources/native` when packaged —
+# the destination mirrors the source path so the main process resolves it with the
+# same expression in both modes (process.resourcesPath + "resources").
+extraResources:
+  - from: resources/native
+    to: resources/native
+    filter:
+      - '**/*'
+
+# Nothing native may be packed into the asar archive.
 asarUnpack:
-  - out/main/native/**/*
-  - 'resources/**'
+  - resources/**
 
 win:
   icon: build/icon.ico

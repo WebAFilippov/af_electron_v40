@@ -14,7 +14,7 @@
  */
 
 import { spawnSync } from 'node:child_process'
-import { existsSync } from 'node:fs'
+import { copyFileSync, existsSync, mkdirSync, rmSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -23,6 +23,17 @@ const require = createRequire(import.meta.url)
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const nativeDir = join(rootDir, 'src', 'main', 'native')
 const addonPath = join(nativeDir, 'build', 'Release', 'system_monitor.node')
+
+/**
+ * Where the loader expects the addon.
+ *
+ * All native artifacts live under `resources/`, which electron-builder copies to
+ * `<app>/resources/` through `extraResources`. Copying here as well means a plain
+ * `npm run native:build` leaves the tree in a runnable state, instead of only
+ * working after a full bundling pass.
+ */
+const stagedDir = join(rootDir, 'resources', 'native')
+const stagedPath = join(stagedDir, 'system_monitor.node')
 
 const [, , command = 'build', ...rest] = process.argv
 const isDebug = rest.includes('--debug')
@@ -124,5 +135,18 @@ if (command !== 'configure' && !existsSync(addonPath)) {
 }
 
 if (command !== 'configure') {
+  // Stage the binary where the main process looks for it.
+  mkdirSync(stagedDir, { recursive: true })
+  copyFileSync(addonPath, stagedPath)
+
+  // The previous layout kept the addon inside out/main; leaving a stale copy
+  // there would make a packaged build pick up an outdated binary.
+  const legacyDir = join(rootDir, 'out', 'main', 'native')
+  if (existsSync(legacyDir)) {
+    rmSync(legacyDir, { recursive: true, force: true })
+    console.log(`Removed stale addon directory: ${legacyDir}`)
+  }
+
   console.log(`\nNative addon built: ${addonPath}`)
+  console.log(`Staged for the app:  ${stagedPath}`)
 }

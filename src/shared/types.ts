@@ -19,10 +19,7 @@ export const channels = {
 
   monitor_get_snapshot: 'monitor:get_snapshot',
   monitor_get_capabilities: 'monitor:get_capabilities',
-  monitor_get_sensor_status: 'monitor:get_sensor_status',
-  monitor_install_sensors: 'monitor:install_sensors',
-  monitor_launch_sensors: 'monitor:launch_sensors',
-  monitor_open_sensors_site: 'monitor:open_sensors_site',
+  monitor_terminate_process: 'monitor:terminate_process',
 
   window_on_update: 'window:on_update',
   window_fullscreen: 'window:toggle-fullscreen',
@@ -174,31 +171,6 @@ export interface MonitorGpuInfo {
   refreshRateHz: number
 }
 
-/** Category of a LibreHardwareMonitor reading. */
-export type SensorCategory = 'temperature' | 'load' | 'fan' | 'power' | 'clock' | 'voltage' | 'memory' | 'other'
-
-export interface MonitorSensorReading {
-  identifier: string
-  name: string
-  category: SensorCategory
-  /** Parent hardware, e.g. "AMD Ryzen 5 5600G with Radeon Graphics". */
-  hardware: string
-  /** Group inside the hardware, e.g. "Temperatures" or "Fans". */
-  group: string
-  /** Numeric value; the unit depends on `category` (°C, %, RPM, W, MHz, V, GB). */
-  value: number
-  /** Original formatted string from LibreHardwareMonitor, e.g. "68,0 C". */
-  displayValue: string
-}
-
-export interface MonitorSensorsInfo {
-  available: boolean
-  provider: string
-  readings: MonitorSensorReading[]
-  /** Why the last probe failed; empty once readings are available. */
-  diagnostics: string
-}
-
 export interface MonitorSystemInfo {
   available: boolean
   hostname: string
@@ -223,8 +195,14 @@ export interface MonitorSnapshot {
   physicalDisks: MonitorPhysicalDiskInfo[]
   network: MonitorNetworkInfo[]
   gpus: MonitorGpuInfo[]
-  sensors: MonitorSensorsInfo
   system: MonitorSystemInfo
+  /**
+   * Every running process. CPU percentages require two consecutive samples, so
+   * the first snapshot after start reports zeros.
+   */
+  processes: MonitorProcessInfo[]
+  /** Active TCP and UDP endpoints with their owning process. */
+  connections: MonitorConnectionInfo[]
 }
 
 export interface MonitorSample {
@@ -235,32 +213,66 @@ export interface MonitorSample {
 
 export interface MonitorCapabilities {
   available: boolean
-  sensors: boolean
 }
 
-/** Where the temperature provider stands, as reported by the main process. */
-export type SensorProviderState = 'active' | 'installed' | 'missing' | 'unsupported'
+export interface MonitorProcessInfo {
+  pid: number
+  parentPid: number
+  threadCount: number
 
-export interface SensorStatus {
-  /** The WMI provider answers right now, so temperatures are readable. */
-  active: boolean
-  /** LibreHardwareMonitor exists on disk. */
-  installed: boolean
-  executablePath: string | null
-  /** winget can be used to install the provider. */
-  wingetAvailable: boolean
-  /** PawnIO (or the legacy WinRing0) kernel driver is present. */
-  driverInstalled: boolean
-  state: SensorProviderState
+  name: string
+  /** Full image path; empty for processes owned by another user. */
+  path: string
+  /** Version-resource description, e.g. "Google Chrome". */
+  description: string
+  /** Version-resource company, e.g. "Google LLC". */
+  company: string
+
+  /** Resident working set in bytes. */
+  workingSet: number
+  privateBytes: number
+
+  /** Cumulative CPU time since the process started, in milliseconds. */
+  totalCpuTimeMs: number
+  /** Milliseconds since the Unix epoch; 0 when unknown. */
+  startTimeMs: number
+
+  /**
+   * CPU usage over the interval since the previous sample, in percent.
+   * Zero on the very first sample, because a delta needs two readings.
+   */
+  cpuPercent: number
+
+  isAccessible: boolean
+  /** System-critical process that the native layer refuses to terminate. */
+  isProtected: boolean
+  /** Whether the UI may offer to terminate this process. */
+  canTerminate: boolean
 }
 
-export interface SensorActionResult {
+export interface MonitorConnectionInfo {
+  protocol: 'TCP' | 'UDP'
+  family: 'IPv4' | 'IPv6'
+  localAddress: string
+  localPort: number
+  /** Empty for listening sockets and for connectionless UDP. */
+  remoteAddress: string
+  remotePort: number
+  /** "established", "listening", "time-wait", "unconnected", ... */
+  state: string
+  /** Owning process id; 0 when the socket is not attributable. */
+  pid: number
+}
+
+/** Outcome of a terminate request, surfaced so the UI can explain a refusal. */
+export type TerminateStatus = 'success' | 'protected' | 'self' | 'access-denied' | 'not-found' | 'failed'
+
+export interface TerminateProcessResult {
   ok: boolean
-  message: string
+  status: TerminateStatus
+  /** Raw Win32 error code, 0 on success. */
+  errorCode: number
 }
-
-/** Result of an install/launch action, carrying the refreshed provider status. */
-export type SensorActionResponse = SensorActionResult & { status: SensorStatus }
 
 export type UpdateStatusDto =
   | 'idle'
