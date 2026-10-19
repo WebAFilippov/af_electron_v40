@@ -1,100 +1,51 @@
-import { createQuery } from '@farfetched/core'
-import { createEvent, sample } from 'effector'
+import { createEffect, createEvent, createStore, sample } from 'effector'
 import { toast } from 'sonner'
 import { interval } from 'patronum'
 
-import { $currentLocation } from '@/entities/location'
-import { Location } from '@/shared_app/types'
-import { WeatherResponse } from './types'
+import type { Location, WeatherData, WeatherSnapshot } from '@/shared_app/types'
 
-// Event to trigger weather refresh
-export const refreshWeather = createEvent()
+/**
+ * Weather state.
+ *
+ * The request itself lives in the main process now: it has to keep working while
+ * the window is closed, and the same payload feeds the display device. The renderer
+ * only mirrors the result, so there is one cache instead of two that drift apart.
+ */
 
-// Weather Query - Get current weather and forecast
-export const weatherQuery = createQuery<Location[], WeatherResponse>({
-  handler: async (location) => {
-    const url = new URL('https://api.open-meteo.com/v1/forecast')
+const fetchWeatherFx = createEffect<void, WeatherSnapshot>(() => window.weather_app.get())
+const refreshWeatherFx = createEffect<void, { data: WeatherData | null }>(() => window.weather_app.refresh())
+const setWeatherLocationFx = createEffect<Location | null, WeatherSnapshot>((location) =>
+  window.weather_app.setLocation(location)
+)
 
-    // Location params
-    url.searchParams.append('latitude', location.latitude.toString())
-    url.searchParams.append('longitude', location.longitude.toString())
+/** Triggers a forced refresh, bypassing the 15-minute cache in the main process. */
+const refreshWeather = createEvent()
 
-    // Current weatherF
-    url.searchParams.append(
-      'current',
-      [
-        'temperature_2m',
-        'relative_humidity_2m',
-        'apparent_temperature',
-        'is_day',
-        'precipitation',
-        'rain',
-        'showers',
-        'snowfall',
-        'weather_code',
-        'cloud_cover',
-        'pressure_msl',
-        'surface_pressure',
-        'wind_speed_10m',
-        'wind_direction_10m',
-        'wind_gusts_10m'
-      ].join(',')
-    )
+const $location = createStore<Location | null>(null).on(
+  [fetchWeatherFx.doneData, setWeatherLocationFx.doneData],
+  (_, snapshot) => snapshot.data?.location ?? null
+)
 
-    // Hourly forecast (24 hours)
-    url.searchParams.append(
-      'hourly',
-      [
-        'temperature_2m',
-        'relative_humidity_2m',
-        'apparent_temperature',
-        'precipitation_probability',
-        'precipitation',
-        'weather_code',
-        'cloud_cover',
-        'wind_speed_10m',
-        'pressure_msl'
-      ].join(',')
-    )
+const $weatherData = createStore<WeatherData | null>(null)
+  .on([fetchWeatherFx.doneData, setWeatherLocationFx.doneData], (_, snapshot) => snapshot.data)
+  .on(refreshWeatherFx.doneData, (_, result) => result.data)
 
-    // Daily forecast (7 days)
-    url.searchParams.append(
-      'daily',
-      [
-        'weather_code',
-        'temperature_2m_max',
-        'temperature_2m_min',
-        'apparent_temperature_max',
-        'apparent_temperature_min',
-        'sunrise',
-        'sunset',
-        'precipitation_sum',
-        'precipitation_probability_max',
-        'wind_speed_10m_max'
-      ].join(',')
-    )
+const $weatherPending = createStore(false)
+  .on([fetchWeatherFx, refreshWeatherFx, setWeatherLocationFx], () => true)
+  .on([fetchWeatherFx.finally, refreshWeatherFx.finally, setWeatherLocationFx.finally], () => false)
 
-    // Timezone
-    url.searchParams.append('timezone', location.timezone)
-    url.searchParams.append('forecast_days', '7')
+const $weatherError = createStore<string | null>(null).on(
+  [fetchWeatherFx.doneData, setWeatherLocationFx.doneData],
+  (_, snapshot) => (snapshot.error ? snapshot.error : null)
+)
 
-    const response = await fetch(url.toString())
-
-    if (!response.ok) {
-      throw new Error(`Weather API error: ${response.status}`)
-    }
-
-    return response.json()
-  }
-})
-
-// Show toast on weather error
+// A failure deserves a toast, but only when the user asked for it: a background
+// poll failing silently should not spam the screen.
 sample({
-  clock: weatherQuery.finished.failure,
-  fn: ({ error }) => {
-    const errorMessage = error instanceof Error ? error.message : 'Failed to fetch weather data'
+  clock: refreshWeatherFx.failData,
+  fn: (error) => {
     toast.error('Weather Update Failed', {
-      description: errorMessage,
+      description: error instanceof Error ? error.message : String(error),
       duration: 5000
     })
     return error
@@ -102,45 +53,29 @@ sample({
   target: []
 })
 
-// Auto-refresh every hour using interval
-const { tick: hourlyTick } = interval({
-  timeout: 15 * 60 * 1000, // 1 hour in milliseconds
+// The main process refreshes its cache on demand; the renderer has to ask for the
+// new value because nothing pushes it yet.
+const { tick } = interval({
+  timeout: 15 * 60 * 1000,
   start: sample({
-    clock: $currentLocation,
-    filter: (location): location is Location => Boolean(location)
+    clock: $location,
+    filter: (location): location is Location => location !== null
   }),
   stop: sample({
-    clock: $currentLocation,
+    clock: $location,
     filter: (location) => location === null
   })
 })
 
-// Refresh weather every hour
-sample({
-  clock: hourlyTick,
-  source: $currentLocation,
-  filter: (location): location is Location => Boolean(location),
-  target: weatherQuery.start
-})
+sample({ clock: tick, target: fetchWeatherFx })
+sample({ clock: refreshWeather, target: refreshWeatherFx })
 
-// Fetch weather when location changes
-sample({
-  clock: $currentLocation,
-  filter: (location): location is Location => Boolean(location),
-  target: weatherQuery.start
-})
-
-// Manual refresh
-sample({
-  clock: refreshWeather,
-  source: $currentLocation,
-  filter: (location): location is Location => Boolean(location),
-  target: weatherQuery.start
-})
-
-// Exports
-export const $weatherData = weatherQuery.$data
-export const $weatherPending = weatherQuery.$pending
-export const $weatherError = weatherQuery.$error
-
-$weatherData.watch(console.log)
+export {
+  $location,
+  $weatherData,
+  $weatherError,
+  $weatherPending,
+  fetchWeatherFx,
+  refreshWeather,
+  setWeatherLocationFx
+}

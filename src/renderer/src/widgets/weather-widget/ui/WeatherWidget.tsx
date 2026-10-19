@@ -1,4 +1,4 @@
-import { useUnit } from 'effector-react'
+﻿import { useUnit } from 'effector-react'
 import { $currentLocation } from '@/entities/location'
 import { $weatherData, $weatherPending, refreshWeather } from '@/entities/weather'
 
@@ -61,8 +61,8 @@ export const WeatherWidget = (): ReactNode => {
   }
 
   const current = weather.current
-  const description = getWeatherDescription(current.weather_code)
-  const isDay = current.is_day === 1
+  const description = getWeatherDescription(current.code)
+  const isDay = current.isDay === 1
 
   return (
     <Card className="w-full transition-all hover:bg-muted">
@@ -84,32 +84,32 @@ export const WeatherWidget = (): ReactNode => {
       <CardContent>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="text-4xl font-bold">{Math.round(current.temperature_2m)}°</div>
+            <div className="text-4xl font-bold">{Math.round(current.temperature)}°</div>
             <div>
               <p className="font-medium">{description}</p>
-              <p className="text-sm text-muted-foreground">Feels like {Math.round(current.apparent_temperature)}°</p>
+              <p className="text-sm text-muted-foreground">Feels like {Math.round(current.feelsLike)}°</p>
             </div>
           </div>
 
-          <div className="text-5xl">{isDay ? '☀️' : '🌙'}</div>
+          <div className="text-5xl">{isDay ? 'вЂпёЏ' : 'рџЊ™'}</div>
         </div>
 
         <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
           <div className="flex items-center gap-2">
             <Wind className="h-4 w-4 text-muted-foreground" />
-            <span>{Math.round(current.wind_speed_10m)} km/h</span>
+            <span>{Math.round(current.windSpeed)} {weather.units.windSpeed}</span>
           </div>
           <div className="flex items-center gap-2">
             <Droplet className="h-4 w-4 text-muted-foreground" />
-            <span>{current.relative_humidity_2m}%</span>
+            <span>{current.humidity}%</span>
           </div>
           <div className="flex items-center gap-2">
             <Eye className="h-4 w-4 text-muted-foreground" />
-            <span>{current.cloud_cover}% cloud</span>
+            <span>{current.cloudCover}% cloud</span>
           </div>
           <div className="flex items-center gap-2">
             <Gauge className="h-4 w-4 text-muted-foreground" />
-            <span>{Math.round(current.pressure_msl)} hPa</span>
+            <span>{Math.round(current.pressure)} {weather.units.pressure}</span>
           </div>
         </div>
       </CardContent>

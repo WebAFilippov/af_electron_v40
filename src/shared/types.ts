@@ -21,6 +21,10 @@ export const channels = {
   monitor_get_capabilities: 'monitor:get_capabilities',
   monitor_terminate_process: 'monitor:terminate_process',
 
+  weather_get: 'weather:get',
+  weather_refresh: 'weather:refresh',
+  weather_set_location: 'weather:set_location',
+
   window_on_update: 'window:on_update',
   window_fullscreen: 'window:toggle-fullscreen',
   window_minimaze: 'window:minimize',
@@ -40,13 +44,14 @@ export interface SettingsProps {
   autoLaunch: boolean
   startMinimized: boolean
   checkForUpdatesOnStartup: boolean
-}
-
-export interface LocationProps {
-  version: string
-  autoLaunch: boolean
-  startMinimized: boolean
-  checkForUpdatesOnStartup: boolean
+  /**
+   * City chosen for the weather feature.
+   *
+   * Persisted rather than kept in renderer state: the main process needs it to
+   * fetch weather while the window is closed, and a display device should not lose
+   * its forecast on every restart.
+   */
+  weatherLocation: Location | null
 }
 
 export type Location = {
@@ -58,6 +63,69 @@ export type Location = {
   region?: string
   country: string
 }
+export interface WeatherCurrent {
+  time: string
+  temperature: number
+  feelsLike: number
+  humidity: number
+  /** WMO weather code; the display device maps it to an icon. */
+  code: number
+  /** 1 during the day, 0 at night. */
+  isDay: number
+  precipitation: number
+  cloudCover: number
+  pressure: number
+  windSpeed: number
+  windDirection: number
+  windGusts: number
+}
+
+export interface WeatherDaily {
+  time: string[]
+  codes: number[]
+  temperatureMax: number[]
+  temperatureMin: number[]
+  sunrise: string[]
+  sunset: string[]
+  precipitationSum: number[]
+  precipitationProbabilityMax: number[]
+  windSpeedMax: number[]
+}
+
+export interface WeatherHourly {
+  time: string[]
+  temperature: number[]
+  humidity: number[]
+  feelsLike: number[]
+  precipitationProbability: number[]
+  code: number[]
+  cloudCover: number[]
+  windSpeed: number[]
+}
+
+export interface WeatherData {
+  /** Unix milliseconds when the payload was fetched. */
+  fetchedAt: number
+  location: Location
+  current: WeatherCurrent
+  daily: WeatherDaily
+  hourly: WeatherHourly
+  units: {
+    temperature: string
+    windSpeed: string
+    precipitation: string
+    pressure: string
+  }
+}
+
+export interface WeatherSnapshot {
+  /** Null when no city is configured or the last fetch failed. */
+  data: WeatherData | null
+  pending: boolean
+  /** Reason for the last failure, empty on success. */
+  error: string
+}
+
 
 export const SUPPORTED_LANGUAGES: LanguageApp[] = ['ru', 'en']
 export type LanguageApp = 'ru' | 'en'
@@ -187,6 +255,33 @@ export interface MonitorSystemInfo {
   isAdmin: boolean
 }
 
+export interface MonitorBatteryInfo {
+  /** False on a desktop, which has no battery at all. */
+  hasBattery: boolean
+  /** Charge level in percent, 0-100. */
+  percent: number
+  charging: boolean
+  acConnected: boolean
+  /** Seconds of runtime left, -1 when unknown or charging. */
+  secondsRemaining: number
+  /** "charging", "discharging", "full" or "unknown". */
+  state: string
+}
+
+/**
+ * Processes aggregated by display name.
+ *
+ * A browser or Electron application owns many processes, so an ungrouped ranking
+ * is dominated by duplicates; summing by name makes the figure meaningful.
+ */
+export interface MonitorProcessGroup {
+  name: string
+  imageName: string
+  cpuPercent: number
+  workingSet: number
+  processCount: number
+}
+
 export interface MonitorSnapshot {
   timestamp: number
   cpu: MonitorCpuInfo
@@ -196,6 +291,8 @@ export interface MonitorSnapshot {
   network: MonitorNetworkInfo[]
   gpus: MonitorGpuInfo[]
   system: MonitorSystemInfo
+  /** Battery state; hasBattery is false on a desktop. */
+  battery: MonitorBatteryInfo
   /**
    * Every running process. CPU percentages require two consecutive samples, so
    * the first snapshot after start reports zeros.
@@ -203,6 +300,11 @@ export interface MonitorSnapshot {
   processes: MonitorProcessInfo[]
   /** Active TCP and UDP endpoints with their owning process. */
   connections: MonitorConnectionInfo[]
+  /**
+   * Top processes summed by name. Pre-aggregated because a compact display cannot
+   * show hundreds of rows, and grouping in every consumer would duplicate the work.
+   */
+  topProcesses: MonitorProcessGroup[]
 }
 
 export interface MonitorSample {

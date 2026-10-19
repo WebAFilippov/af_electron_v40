@@ -96,51 +96,48 @@
     },
     "home": {
       "weather": "Погода",
-      "weather_description": "Актуальная информация о погоде в вашем городе",
       "update_title": "Обновления",
       "update_description": "Управляйте обновлениями",
-      "update_content": "Проверяйте доступные обновления.",
       "settings_title": "Настройки",
       "settings_description": "Настройте приложение",
-      "settings_content": "Измените язык, тему оформления и другие параметры приложения."
+      "title": "Главная",
+      "description": "Обзор приложения",
+      "weather_no_city": "Город не выбран",
+      "weather_open": "Открыть прогноз",
+      "weather_pick_city": "Выберите город, чтобы видеть погоду",
+      "monitor_title": "Мониторинг",
+      "monitor_description": "Процессор, память, диски, сеть и процессы"
     },
     "weather": {
-      "not_location_title": "Местоположение",
-      "not_location_or": "ИЛИ",
-      "not_location_detect": "Определить мое местоположение",
-      "not_location_detecting": "Поиск...",
       "fetch_title": "Загружаем данные о погоде...",
       "fetch_description": "Пожалуйста, подождите, пока мы загрузим последние данные о погоде.",
       "fetch_retry": "Повторить",
       "fetch_retry_title": "Не удаётся загрузить данные о погоде",
       "fetch_retry_description": "Проверьте подключение к интернету и попробуйте снова.",
-      "updated": "Обновлено:",
       "feels_like": "Ощущается как",
-      "high": "Макс",
-      "low": "Мин",
       "wind": "Ветер",
       "humidity": "Влажность",
-      "cloud_cover": "Облачность",
       "pressure": "Давление",
       "precipitation": "Осадки",
-      "rain": "дождь",
-      "snow": "снег",
-      "sun_moon": "Солнце и Луна",
       "sunrise": "Восход",
       "sunset": "Закат",
-      "values": {
-        "wind": "{{value}} км/ч {{direction}}",
-        "humidity": "{{value}}%",
-        "cloud_cover": "{{value}}%",
-        "pressure": "{{value}} гПа",
-        "precipitation": "{{value}} мм",
-        "temperature": "{{value}}°"
-      },
-      "hourly_chart": {
-        "title": "Температура на 24 часа",
-        "temperature": "Температура",
-        "feels_like": "Ощущается"
-      }
+      "hourly_title": "Ближайшие часы",
+      "daily_title": "Прогноз на 3 дня",
+      "sun_title": "Солнце",
+      "today": "Сегодня",
+      "now": "сейчас",
+      "gusts": "порывы",
+      "direction": "Направление",
+      "clouds": "Облачность",
+      "daylight_left": "Светло ещё {hours} ч",
+      "title": "Погода",
+      "description": "Текущая погода и прогноз для выбранного города",
+      "refresh": "Обновить",
+      "no_location_title": "Город не выбран",
+      "no_location_description": "Найдите свой город выше, чтобы увидеть погоду",
+      "wind_title": "Ветер",
+      "sun_unavailable": "Данные о солнце недоступны",
+      "dark_now": "Сейчас темно"
     },
     "settings": {
       "title": "Настройки",
@@ -152,7 +149,13 @@
       "help_title": "Справка",
       "help_description": "Повторный показ ознакомительных материалов",
       "help_wizard": "Мастер первого запуска",
-      "help_wizard_action": "Открыть заново"
+      "help_wizard_action": "Открыть заново",
+      "data_title": "Данные",
+      "data_description": "Что приложение хранит на этом компьютере",
+      "data_city": "Город для погоды",
+      "data_city_empty": "не выбран",
+      "data_city_change": "Изменить",
+      "data_storage": "Все настройки и выбранный город хранятся локально в папке профиля приложения. Данные никуда не отправляются, кроме запросов погоды к выбранному сервису."
     },
     "updates": {
       "title": "Обновления",
@@ -308,7 +311,9 @@
       "connection_state_delete_tcb": "удаление",
       "connection_state_unconnected": "без соединения",
       "connection_state_unknown": "неизвестно",
-      "tab_system": "Система"
+      "tab_system": "Система",
+      "overview_battery": "Батарея",
+      "overview_battery_charging": "заряжается"
     }
   },
   "weather_codes": {
@@ -340,5 +345,11 @@
     "95": "Гроза",
     "96": "Гроза с градом",
     "99": "Гроза с сильным градом"
+  },
+  "app": {
+    "tagline": "Мониторинг и погода",
+    "local_user": "Локальный пользователь",
+    "account_soon": "Аккаунты появятся позже",
+    "notifications_soon": "Уведомления появятся позже"
   }
 }

@@ -15,6 +15,8 @@ import { log_app } from './log'
 import { ILogApp } from './log/types'
 import { monitor_app } from './monitor'
 import { IMonitorApp } from './monitor/types'
+import { weather_app } from './weather'
+import { IWeatherApp } from './weather/types'
 
 if (process.contextIsolated) {
   contextBridge.exposeInMainWorld('electron', electronAPI)
@@ -25,6 +27,7 @@ if (process.contextIsolated) {
   contextBridge.exposeInMainWorld('updater_app', updater_app)
   contextBridge.exposeInMainWorld('log_app', log_app)
   contextBridge.exposeInMainWorld('monitor_app', monitor_app)
+  contextBridge.exposeInMainWorld('weather_app', weather_app)
 } else {
   // @ts-ignore (define in dts)
   window.electron = electronAPI
@@ -42,6 +45,8 @@ if (process.contextIsolated) {
   window.log_app = log_app
   // @ts-ignore (define in dts)
   window.monitor_app = monitor_app
+  // @ts-ignore (define in dts)
+  window.weather_app = weather_app
 }
 
 declare global {
@@ -54,5 +59,6 @@ declare global {
     updater_app: IUpdaterApp
     log_app: ILogApp
     monitor_app: IMonitorApp
+    weather_app: IWeatherApp
   }
 }

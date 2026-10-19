@@ -1,9 +1,12 @@
 #include "system.h"
 
 #include "common.h"
+// ReadTopProcessGroups aggregates the process list, which the process module owns.
+#include "processes.h"
 
 #include <lmcons.h>
 
+#include <algorithm>
 #include <cstdlib>
 #include <vector>
 
@@ -37,7 +40,7 @@ std::string ReadBuildRevision() {
 }
 
 // `ProductName` in the registry has reported "Windows 10" for every release
-// since 2016 — including Windows 11 — because Microsoft never updated the value.
+// since 2016 вЂ” including Windows 11 вЂ” because Microsoft never updated the value.
 // The reliable discriminator is the build number: 22000+ is Windows 11.
 std::string ResolveWindowsName(const std::string& registryProductName, const std::string& buildNumber) {
   const long build = buildNumber.empty() ? 0 : std::strtol(buildNumber.c_str(), nullptr, 10);
@@ -128,6 +131,78 @@ bool ReadSystemInfo(SystemInfo& out) {
   }
 
   return true;
+}
+
+bool ReadBatteryInfo(BatteryInfo& out) {
+  // GetSystemPowerStatus is the cheapest source and needs no privileges; the WMI
+  // battery classes are closed to a standard user, the same restriction that blocks
+  // temperature readings.
+  SYSTEM_POWER_STATUS status = {};
+  if (!::GetSystemPowerStatus(&status)) {
+    return false;
+  }
+
+  // BatteryFlag 128 means "no system battery"; a desktop reports exactly that.
+  // Percent 255 means "unknown", which must not be shown as 255%.
+  out.hasBattery = (status.BatteryFlag & 128) == 0 && status.BatteryLifePercent != 255;
+  out.percent = status.BatteryLifePercent == 255 ? 0 : status.BatteryLifePercent;
+  out.acConnected = status.ACLineStatus == 1;
+
+  // Bit 8 is "charging"; bit 1 is "high". Some drivers leave both clear on AC.
+  out.charging = (status.BatteryFlag & 8) != 0;
+
+  if (status.BatteryLifeTime != static_cast<DWORD>(-1)) {
+    out.secondsRemaining = static_cast<int>(status.BatteryLifeTime);
+  }
+
+  if (!out.hasBattery) {
+    out.state = "unknown";
+  } else if (out.charging) {
+    out.state = "charging";
+  } else if (out.percent >= 95 && out.acConnected) {
+    out.state = "full";
+  } else if (!out.acConnected) {
+    out.state = "discharging";
+  } else {
+    out.state = "unknown";
+  }
+
+  return out.hasBattery;
+}
+
+void GroupProcesses(const std::vector<ProcessInfo>& processes, std::vector<ProcessGroupInfo>& out, size_t limit) {
+  // Aggregating by display name keeps a multi-process application from occupying
+  // every slot of the ranking with its own children.
+  std::vector<ProcessGroupInfo> groups;
+  for (const ProcessInfo& process : processes) {
+    const std::string key = process.description.empty() ? process.name : process.description;
+
+    auto existing = std::find_if(groups.begin(), groups.end(),
+                                 [&key](const ProcessGroupInfo& group) { return group.name == key; });
+
+    if (existing == groups.end()) {
+      ProcessGroupInfo group;
+      group.name = key;
+      group.imageName = process.name;
+      group.cpuPercent = process.cpuPercent;
+      group.workingSet = process.workingSetBytes;
+      group.processCount = 1;
+      groups.push_back(std::move(group));
+    } else {
+      existing->cpuPercent += process.cpuPercent;
+      existing->workingSet += process.workingSetBytes;
+      ++existing->processCount;
+    }
+  }
+
+  std::sort(groups.begin(), groups.end(),
+            [](const ProcessGroupInfo& a, const ProcessGroupInfo& b) { return a.cpuPercent > b.cpuPercent; });
+
+  if (groups.size() > limit) {
+    groups.resize(limit);
+  }
+
+  out = std::move(groups);
 }
 
 }  // namespace monitor

@@ -1,14 +1,21 @@
-import { createStore, createEvent, sample } from 'effector'
+import { createEvent, sample } from 'effector'
 
-import { Location } from '@/shared_app/types'
+import type { Location } from '@/shared_app/types'
+import { $location, setWeatherLocationFx } from '@/entities/weather'
+
+/**
+ * Selected city.
+ *
+ * The store itself lives in the weather entity: the main process persists it and
+ * owns the fetch, so keeping a second copy here would let the two disagree.
+ * This re-exports the same store under the name the location feature expects.
+ */
 
 const selectLocation = createEvent<Location>()
 
-const $currentLocation = createStore<Location | null>(null)
-
 sample({
   clock: selectLocation,
-  target: $currentLocation
+  target: setWeatherLocationFx
 })
 
-export { $currentLocation, selectLocation }
+export { $location as $currentLocation, selectLocation }

@@ -9,6 +9,7 @@ export const settingsStore = new Store<SettingsProps>({
     version: app.getVersion(),
     autoLaunch: true,
     startMinimized: false,
-    checkForUpdatesOnStartup: true
+    checkForUpdatesOnStartup: true,
+    weatherLocation: null
   }
 })

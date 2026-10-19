@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { useUnit } from 'effector-react'
-import { Activity, ArrowDown, ArrowUp, HardDrive, MemoryStick } from 'lucide-react'
+import { Activity, ArrowDown, ArrowUp, BatteryCharging, BatteryMedium, HardDrive, MemoryStick } from 'lucide-react'
 
 import { $t } from '@/entities/i18next'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui'
@@ -50,7 +50,7 @@ export const OverviewTab = (): ReactNode => {
     return null
   }
 
-  const { cpu, memory, volumes, network, system, processes, connections } = snapshot
+  const { cpu, memory, volumes, network, system, processes, connections, battery } = snapshot
 
   const cpuHistory = history.map((point) => point.cpu)
   const memoryHistory = history.map((point) => point.memory)
@@ -148,6 +148,25 @@ export const OverviewTab = (): ReactNode => {
               <span className="text-muted-foreground">{t('page.monitor.overview_processes')}</span>
               <span className={cn('font-medium tabular-nums')}>{processes.length}</span>
             </div>
+
+            {/* Battery is only meaningful on a laptop, so a desktop hides the row
+                rather than showing a permanent "no battery". */}
+            {battery.hasBattery && (
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">{t('page.monitor.overview_battery')}</span>
+                <span className="flex items-center gap-1.5 font-medium tabular-nums">
+                  {battery.charging ? (
+                    <BatteryCharging className="h-3.5 w-3.5 text-green-600 dark:text-green-500" />
+                  ) : (
+                    <BatteryMedium className="h-3.5 w-3.5 text-muted-foreground" />
+                  )}
+                  {battery.percent}%
+                  {battery.state === 'charging' && (
+                    <span className="text-xs text-muted-foreground">· {t('page.monitor.overview_battery_charging')}</span>
+                  )}
+                </span>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

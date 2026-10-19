@@ -7,6 +7,8 @@ import { createWindow } from './app/create-window'
 import { i18nextInit } from './modules/i18next/service'
 import { autoUpdater } from './modules/auto-updater/service'
 import { initializeMonitor, shutdownMonitor } from './modules/system-monitor'
+import { initializeWeather } from './modules/weather'
+import { settingsStore } from './modules/settings/store'
 import { logger, loggerInit } from './shared/utils/logger'
 
 const gotTheLock = app.requestSingleInstanceLock()
@@ -40,6 +42,12 @@ if (!gotTheLock) {
       // the renderer asks for its first sample.
       const monitor = initializeMonitor()
       logger.info({ cpu: monitor.cpu, sensors: monitor.sensors }, 'System monitor initialized')
+
+      // Restore the saved city and start fetching in the background. The fetch is
+      // deliberately not awaited: startup must not wait for the network, and the
+      // first read picks the result up.
+      initializeWeather(settingsStore.get('weatherLocation') ?? null)
+      logger.info('Weather initialized')
 
       const window = createWindow()
       const tray = createTray()

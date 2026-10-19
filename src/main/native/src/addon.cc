@@ -1,4 +1,4 @@
-﻿#include <napi.h>
+#include <napi.h>
 
 #include <windows.h>
 
@@ -201,10 +201,7 @@ Napi::Object BuildSensors(Napi::Env env) {
   return sensors;
 }
 
-Napi::Array BuildProcesses(Napi::Env env) {
-  std::vector<ProcessInfo> processes;
-  ReadProcesses(processes);
-
+Napi::Array BuildProcesses(Napi::Env env, const std::vector<ProcessInfo>& processes) {
   Napi::Array result = Napi::Array::New(env, processes.size());
   for (size_t i = 0; i < processes.size(); ++i) {
     const ProcessInfo& p = processes[i];
@@ -260,6 +257,45 @@ Napi::Array BuildConnections(Napi::Env env) {
   return result;
 }
 
+Napi::Object BuildBattery(Napi::Env env) {
+  Napi::Object battery = Napi::Object::New(env);
+
+  BatteryInfo info;
+  const bool present = ReadBatteryInfo(info);
+
+  battery.Set("hasBattery", Napi::Boolean::New(env, present));
+  battery.Set("percent", Napi::Number::New(env, info.percent));
+  battery.Set("charging", Napi::Boolean::New(env, info.charging));
+  battery.Set("acConnected", Napi::Boolean::New(env, info.acConnected));
+  battery.Set("secondsRemaining", Napi::Number::New(env, info.secondsRemaining));
+  battery.Set("state", Napi::String::New(env, info.state));
+
+  return battery;
+}
+
+Napi::Array BuildTopProcesses(Napi::Env env, const std::vector<ProcessInfo>& processes) {
+  // Grouping reuses the list the snapshot already collected. Enumerating again
+  // here would reset the CPU deltas and report 0% for every process.
+  std::vector<ProcessGroupInfo> groups;
+  GroupProcesses(processes, groups, 5);
+
+  Napi::Array result = Napi::Array::New(env, groups.size());
+  for (size_t i = 0; i < groups.size(); ++i) {
+    const ProcessGroupInfo& group = groups[i];
+    Napi::Object item = Napi::Object::New(env);
+
+    item.Set("name", Napi::String::New(env, group.name));
+    item.Set("imageName", Napi::String::New(env, group.imageName));
+    item.Set("cpuPercent", Napi::Number::New(env, group.cpuPercent));
+    item.Set("workingSet", ToBigIntOrNumber(env, group.workingSet));
+    item.Set("processCount", Napi::Number::New(env, group.processCount));
+
+    result.Set(static_cast<uint32_t>(i), item);
+  }
+
+  return result;
+}
+
 Napi::Object BuildSystem(Napi::Env env) {
   Napi::Object system = Napi::Object::New(env);
 
@@ -303,7 +339,15 @@ Napi::Value GetSnapshot(const Napi::CallbackInfo& info) {
     snapshot.Set("gpus", BuildGpus(env));
     snapshot.Set("sensors", BuildSensors(env));
     snapshot.Set("system", BuildSystem(env));
-    snapshot.Set("processes", BuildProcesses(env));
+    snapshot.Set("battery", BuildBattery(env));
+
+    // The process list is read once and reused: per-process CPU is a delta between
+    // two enumerations, so a second read in the same tick would report zeros.
+    std::vector<ProcessInfo> processes;
+    ReadProcesses(processes);
+    snapshot.Set("processes", BuildProcesses(env, processes));
+    snapshot.Set("topProcesses", BuildTopProcesses(env, processes));
+
     snapshot.Set("connections", BuildConnections(env));
     return snapshot;
   } catch (...) {

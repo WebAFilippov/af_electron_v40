@@ -96,13 +96,17 @@
     },
     "home": {
       "weather": "Weather",
-      "weather_description": "Current weather information for your city",
       "update_title": "Updates",
       "update_description": "Manage updates",
-      "update_content": "Check for available updates.",
       "settings_title": "Settings",
       "settings_description": "Customize the app",
-      "settings_content": "Change language, theme, and other app settings."
+      "title": "Home",
+      "description": "Application overview",
+      "weather_no_city": "No city selected",
+      "weather_open": "Open forecast",
+      "weather_pick_city": "Pick a city to see the weather",
+      "monitor_title": "Monitoring",
+      "monitor_description": "CPU, memory, disks, network and processes"
     },
     "settings": {
       "title": "Settings",
@@ -114,7 +118,13 @@
       "help_title": "Help",
       "help_description": "Show the introductory material again",
       "help_wizard": "First-run wizard",
-      "help_wizard_action": "Open again"
+      "help_wizard_action": "Open again",
+      "data_title": "Data",
+      "data_description": "What the app keeps on this computer",
+      "data_city": "Weather city",
+      "data_city_empty": "not selected",
+      "data_city_change": "Change",
+      "data_storage": "All settings and the selected city are stored locally in the app profile folder. Nothing is sent anywhere except weather requests to the chosen service."
     },
     "updates": {
       "title": "Updates",
@@ -270,45 +280,40 @@
       "connection_state_delete_tcb": "deleting",
       "connection_state_unconnected": "unconnected",
       "connection_state_unknown": "unknown",
-      "tab_system": "System"
+      "tab_system": "System",
+      "overview_battery": "Battery",
+      "overview_battery_charging": "charging"
     },
     "weather": {
-      "not_location_title": "Location",
-      "not_location_or": "OR",
-      "not_location_detect": "Detect my location",
-      "not_location_detecting": "Searching...",
       "fetch_title": "Loading weather data...",
       "fetch_description": "Please wait while we load the latest weather data.",
       "fetch_retry": "Retry",
       "fetch_retry_title": "Unable to load weather data",
       "fetch_retry_description": "Check your internet connection and try again.",
-      "updated": "Updated:",
       "feels_like": "Feels like",
-      "high": "High",
-      "low": "Low",
       "wind": "Wind",
       "humidity": "Humidity",
-      "cloud_cover": "Cloud Cover",
       "pressure": "Pressure",
       "precipitation": "Precipitation",
-      "rain": "rain",
-      "snow": "snow",
-      "sun_moon": "Sun & Moon",
       "sunrise": "Sunrise",
       "sunset": "Sunset",
-      "values": {
-        "wind": "{{value}} km/h {{direction}}",
-        "humidity": "{{value}}%",
-        "cloud_cover": "{{value}}%",
-        "pressure": "{{value}} hPa",
-        "precipitation": "{{value}} mm",
-        "temperature": "{{value}}Р’В°"
-      },
-      "hourly_chart": {
-        "title": "Temperature for 24 hours",
-        "temperature": "Temperature",
-        "feels_like": "Feels like"
-      }
+      "hourly_title": "Next hours",
+      "daily_title": "Three-day forecast",
+      "sun_title": "Sun",
+      "today": "Today",
+      "now": "now",
+      "gusts": "gusts",
+      "direction": "Direction",
+      "clouds": "Cloud cover",
+      "daylight_left": "{hours} h of daylight left",
+      "title": "Weather",
+      "description": "Current conditions and forecast for the selected city",
+      "refresh": "Refresh",
+      "no_location_title": "No city selected",
+      "no_location_description": "Search for your city above to see the weather",
+      "wind_title": "Wind",
+      "sun_unavailable": "Sun data is unavailable",
+      "dark_now": "It is dark now"
     }
   },
   "weather_codes": {
@@ -340,5 +345,11 @@
     "95": "Thunderstorm",
     "96": "Thunderstorm with slight hail",
     "99": "Thunderstorm with heavy hail"
+  },
+  "app": {
+    "tagline": "Monitoring & weather",
+    "local_user": "Local user",
+    "account_soon": "Accounts are coming later",
+    "notifications_soon": "Notifications are coming later"
   }
 }

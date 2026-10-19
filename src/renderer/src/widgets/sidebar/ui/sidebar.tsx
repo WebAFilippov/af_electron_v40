@@ -13,16 +13,11 @@ import {
   SidebarFooter,
   Avatar,
   AvatarFallback,
-  AvatarImage,
   Separator,
   Card,
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuLabel,
-  DropdownMenuItem,
-  DropdownMenuSeparator
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
 } from '@/shared/ui'
 
 import { cn } from '@/shared/lib'
@@ -31,10 +26,36 @@ import { NavLink, Outlet } from 'react-router'
 import { NAVIGATION_LIST } from '../model/navigation-list'
 import { useUnit } from 'effector-react'
 import { SidebarBreadcrumbs } from './sidebar-bredcrumb'
-import { Bell, CloudSun, Trash2 } from 'lucide-react'
+import { Bell, CloudSun } from 'lucide-react'
 import { $t } from '@/entities/i18next'
 import { $isFullscreen } from '@/widgets/window-control-panel/model'
 import { useScrollRestoration } from '@/shared/hooks'
+
+/**
+ * Application shell.
+ *
+ * Elements that would do nothing are shown disabled with an explanation rather than
+ * as live-looking controls: a bell that does nothing on click and an account menu
+ * with placeholder entries both read as bugs. They are kept visible so the layout
+ * still matches the intended product, and marked clearly as not available yet.
+ */
+
+interface DisabledHintProps {
+  label: string
+  children: ReactNode
+}
+
+/** Wraps an inert control with a tooltip explaining why it does nothing. */
+const DisabledHint = ({ label, children }: DisabledHintProps): ReactNode => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <span tabIndex={0} aria-disabled className="cursor-not-allowed">
+        {children}
+      </span>
+    </TooltipTrigger>
+    <TooltipContent side="bottom">{label}</TooltipContent>
+  </Tooltip>
+)
 
 export function SidebarWidget(): ReactNode {
   const t = useUnit($t)
@@ -46,7 +67,6 @@ export function SidebarWidget(): ReactNode {
     <SidebarProvider className="flex flex-1 flex-col w-screen h-screen">
       <div className="flex flex-1">
         <Sidebar variant="inset" className="top-9 h-[calc(100svh-36px)] flex flex-col">
-          {/* Header with Logo */}
           <SidebarHeader className="p-4">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
@@ -54,14 +74,13 @@ export function SidebarWidget(): ReactNode {
               </div>
               <div className="flex flex-col">
                 <span className="text-lg font-bold leading-none">Effectory</span>
-                <span className="text-xs text-muted-foreground">Weather App</span>
+                <span className="text-xs text-muted-foreground">{t('app.tagline')}</span>
               </div>
             </div>
           </SidebarHeader>
 
           <Separator className="mx-4 w-[calc(100%-32px)]" />
 
-          {/* Navigation Menu */}
           <SidebarContent className="flex-1">
             <SidebarGroup>
               <SidebarGroupContent>
@@ -90,37 +109,17 @@ export function SidebarWidget(): ReactNode {
           <Separator className="mx-4 w-[calc(100%-32px)]" />
 
           <SidebarFooter className="p-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Card className="px-2 py-3 flex items-center gap-3 select-none cursor-pointer hover:bg-muted transition-all">
-                  <Avatar size="lg" className=" rounded-md">
-                    <AvatarImage src="avatar.jpg" alt="UserAvatar" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                  <div className="flex flex-1 flex-col overflow-hidden">
-                    <span className="truncate text-sm font-medium">Пользователь</span>
-                    <span className="truncate text-xs text-muted-foreground">user@example.com</span>
-                  </div>
-                </Card>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuItem>Option</DropdownMenuItem>
-                  <DropdownMenuItem>Option</DropdownMenuItem>
-                  <DropdownMenuItem>Option</DropdownMenuItem>
-                  <DropdownMenuItem>Option</DropdownMenuItem>
-                  <DropdownMenuItem>Option</DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem variant="destructive">
-                    <Trash2 />
-                    Выйти
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <DisabledHint label={t('app.account_soon')}>
+              <Card className="w-full px-2 py-3 flex items-center gap-3 select-none opacity-60">
+                <Avatar size="lg" className="rounded-md">
+                  <AvatarFallback>AF</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-1 flex-col overflow-hidden">
+                  <span className="truncate text-sm font-medium">{t('app.local_user')}</span>
+                  <span className="truncate text-xs text-muted-foreground">{t('app.account_soon')}</span>
+                </div>
+              </Card>
+            </DisabledHint>
           </SidebarFooter>
         </Sidebar>
 
@@ -141,9 +140,11 @@ export function SidebarWidget(): ReactNode {
                 <SidebarBreadcrumbs />
               </div>
 
-              <div>
-                <Bell size={22} />
-              </div>
+              <DisabledHint label={t('app.notifications_soon')}>
+                <span className="flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground/50">
+                  <Bell size={20} />
+                </span>
+              </DisabledHint>
             </div>
           </header>
           <div
