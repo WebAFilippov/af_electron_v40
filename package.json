@@ -1,6 +1,6 @@
 {
   "name": "af_electron",
-  "version": "5.0.0",
+  "version": "7.0.0",
   "productname": "Effectory App",
   "description": "Description Effectory App",
   "main": "./out/main/main.js",

@@ -1,11 +1,13 @@
-export type IPApiResponse = {
-  status: 'success' | 'fail'
+export type IpWhoResponse = {
+  success: boolean
   message?: string
-  query: string
-  city: string
-  regionName: string
-  country: string
-  lat: number
-  lon: number
-  timezone: string
+  ip?: string
+  city?: string | null
+  region?: string | null
+  country?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  timezone?: {
+    id?: string | null
+  } | null
 }

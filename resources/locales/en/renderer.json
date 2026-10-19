@@ -72,7 +72,8 @@
     },
     "detect-location": {
       "pending_detect": "Detecting",
-      "detect": "Detect"
+      "detect": "Detect",
+      "detect_hint": "Detect the city by IP address"
     }
   },
   "widgets": {
@@ -289,7 +290,6 @@
       "fetch_description": "Please wait while we load the latest weather data.",
       "fetch_retry": "Retry",
       "fetch_retry_title": "Unable to load weather data",
-      "fetch_retry_description": "Check your internet connection and try again.",
       "feels_like": "Feels like",
       "wind": "Wind",
       "humidity": "Humidity",
@@ -309,11 +309,21 @@
       "title": "Weather",
       "description": "Current conditions and forecast for the selected city",
       "refresh": "Refresh",
-      "no_location_title": "No city selected",
-      "no_location_description": "Search for your city above to see the weather",
       "wind_title": "Wind",
       "sun_unavailable": "Sun data is unavailable",
-      "dark_now": "It is dark now"
+      "dark_now": "It is dark now",
+      "detecting_title": "Detecting your city",
+      "detecting_description": "This will take a few seconds",
+      "no_city_title": "Could not detect your city",
+      "no_city_description": "Search for your city above or try detecting it again",
+      "no_city_offline_title": "No internet connection",
+      "no_city_offline_description": "Without a network the city cannot be detected. Check the connection or pick a city manually",
+      "detect_again": "Detect again",
+      "error_offline": "No internet connection. Check your network and try again",
+      "error_timeout": "The weather service is not responding. Try again later",
+      "error_server": "Could not load the weather. Try again",
+      "stale_title": "This data may be out of date",
+      "city_not_selected": "No city selected"
     }
   },
   "weather_codes": {
